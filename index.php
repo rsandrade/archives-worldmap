@@ -1,4 +1,33 @@
-﻿<?php
+<?php
+/**
+
+Archives World Map
+Created by Ricardo Sodré Andrade (http://ricardo.arquivista.net/english)
+February 2017
+
+You can contribute with this software: 
+- Adding new archives to the map: https://map.arquivista.net
+- Coding: https://github.com/rsandrade/archives-worldmap
+- Translating: https://map.arquivista.net/about
+- Funding: https://map.arquivista.net/about
+
+======
+    Archives World Map is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+======
+
+**/
+
 $f3 = require('etc/fatfree/lib/base.php');
 require('etc/recaptcha/src/autoload.php');
 require('etc/Mobile-Detect-2.8.24/Mobile_Detect.php');
