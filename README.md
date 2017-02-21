@@ -20,7 +20,7 @@ The open and collaborative Archives World Map (https://map.arquivista.net)
 
 **Roadmap**
 
-I expect to go ahead with Archives World Map and develop some new features:
+I expect to go ahead with Archives World Map and develop some new features
 
     Admin area for users edit their contributions or manage changes
     More functions in API
