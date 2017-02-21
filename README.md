@@ -20,3 +20,8 @@ I expect to go ahead with Archives World Map and develop some new features:
     More functions in API
     Modify the add form to be easier
     A new field to input a control ID (Wikidata, ISIL?)
+
+**Mainteded by**
+
+Ricardo Sodré Andrade (https://github.com/rsandrade)
+Website: http://ricardo.arquivista.net/english
