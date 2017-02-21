@@ -14,9 +14,9 @@ The open and collaborative Archives World Map (https://map.arquivista.net)
 
 **Translations**
 
-    Brazilian Portuguese
-    English
-    Polish (soon)
+    Brazilian Portuguese, by Ricardo Sodré Andrade
+    English, by Ricardo Sodré Andrade
+    Polish (soon), promised by Anna Sobczak
 
 **Roadmap**
 
