@@ -12,6 +12,12 @@ The open and collaborative Archives World Map (https://map.arquivista.net)
     Leaflet
     Mobile-Detect 2.8
 
+**Translated to**
+
+    Brazilian Portuguese
+    English
+    Polish (soon)
+
 **Roadmap**
 
 I expect to go ahead with Archives World Map and develop some new features:
@@ -21,7 +27,7 @@ I expect to go ahead with Archives World Map and develop some new features:
     Modify the add form to be easier
     A new field to input a control ID (Wikidata, ISIL?)
 
-**Mainteded by**
+**Maintened by**
 
-Ricardo Sodré Andrade (https://github.com/rsandrade)
-Website: http://ricardo.arquivista.net/english
+    Ricardo Sodré Andrade (https://github.com/rsandrade)
+    Website: http://ricardo.arquivista.net/english
