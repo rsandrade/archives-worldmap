@@ -8,7 +8,7 @@ The open and collaborative Archives World Map (https://map.arquivista.net)
     SQLite 3.11.0
     Bootstrap 3.3.7
     Awesomplete
-    Recaptcha
+    Google Recaptcha
     Leaflet
     Mobile-Detect 2.8
 
