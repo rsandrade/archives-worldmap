@@ -22,7 +22,7 @@ Archives World Map try to be ISDIAH compliance using the mandatory fields.
 
 **Roadmap**
 
-I expect to go ahead with Archives World Map and develop some new features
+I expect to develop that new features soon
 
     Admin area for users edit their contributions or manage changes
     More functions in API
