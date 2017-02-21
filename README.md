@@ -12,7 +12,7 @@ The open and collaborative Archives World Map (https://map.arquivista.net)
     Leaflet
     Mobile-Detect 2.8
 
-**Translated to**
+**Translations**
 
     Brazilian Portuguese
     English
