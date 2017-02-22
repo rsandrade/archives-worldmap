@@ -1,0 +1,10 @@
+To install you need to put the following lines at /etc/apache2/envvars and edit with your preferences:
+
+##
+## ARCHIVES WORLD MAP CONFIG
+##
+export AWM_PRIVATE_KEY_RECAPCHA='PRIVATE KEY FROM GOOGLE RECAPTCHA'
+export AWM_DATABASE_PATH='/var/www/ArchivesMap.db'
+export AWM_HTTPS_URL='https://map.arquivista.net'
+export AWM_LOG_PATH='/var/www/archivesworldmap.log'
+export AWM_BCRYPT_SALT='BCRYPT SALT WITH 22 CHARACTERS'
