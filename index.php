@@ -8,7 +8,7 @@ February 2017
 You can contribute with this software: 
 - Adding new archives to the map: https://map.arquivista.net
 - Coding: https://github.com/rsandrade/archives-worldmap
-- Translating: https://map.arquivista.net/about
+- Translating: https://map.arquivista.net/about or GitHub
 - Funding: https://map.arquivista.net/about
 
 ======
@@ -31,21 +31,29 @@ You can contribute with this software:
 $f3 = require('etc/fatfree/lib/base.php');
 require('etc/recaptcha/src/autoload.php');
 require('etc/Mobile-Detect-2.8.24/Mobile_Detect.php');
+
+// Configuration using environment vars (see awm-config.sh script)
+$f3->set('AWM_PRIVATE_KEY_RECAPCHA', getenv('AWM_PRIVATE_KEY_RECAPCHA'));
+$f3->set('AWM_DATABASE_PATH', getenv('AWM_DATABASE_PATH')); // 
+$f3->set('AWM_HTTPS_URL', getenv('AWM_HTTPS_URL')); // your https URL to force redirection
+$f3->set('AWM_LOG_PATH', getenv('AWM_LOG_PATH')); // put in a directory hidden from webserver
+$f3->set('AWM_BCRYPT_SALT', getenv('AWM_BCRYPT_SALT'));
+
 $f3->set('DEBUG', 0);
 $f3->set('CACHE', TRUE);
 $f3->set('TZ','America/Bahia');
 $f3->set('LOCALES','etc/dict/');
-$f3->set('log', new Log('etc/archivesworldmap.log')); // put in a directory hidden from webserver
+$f3->set('log', new Log($f3->get('AWM_LOG_PATH')); 
 $f3->set('LANGUAGE', $_COOKIE['language']);
 $f3->set('FALLBACK','en-US');
 
-// Force SSL
+// Force SSL - if you dont want it, comment next three lines
 if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') {
-	header("Location: https://map.arquivista.net" . $_SERVER['REQUEST_URI']);
+	header("Location: " . $f3->get('AWM_DATABASE') . $_SERVER['REQUEST_URI']);
 }
 
 // SQLite database - you can put in a directory without access from public by webserver
-$f3->set('mapdb', new \DB\SQL('sqlite:/var/www/ArchivesMap.db'));
+$f3->set('mapdb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE')));
 
 // COOKIE LANGUAGE
 if($f3->get('GET.language')){
@@ -94,7 +102,7 @@ $f3->route('POST /proc-addmap',
    function($f3) {
       $f3->set('page','proc-addmap');
 
-		$recaptcha = new \ReCaptcha\ReCaptcha('SERVER SIDE KEY'); // https://www.google.com/recaptcha/
+		$recaptcha = new \ReCaptcha\ReCaptcha($f3->set('AWM_PRIVATE_KEY_RECAPCHA')); // https://www.google.com/recaptcha/
 		$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 		if ($resp->isSuccess()) {
 		  // verified!
@@ -148,7 +156,7 @@ $f3->route('POST|GET /list',
 		if (!$f3->get('SESSION.logon')){
 
 		  // REMEMBER TO PUT A BCRYPT SALT IN NEXT LINE
-		  if($f3->get('auth')->login($f3->get('POST.user'),$crypt->hash($f3->get('POST.pass'), 'BCRYPT-SALT-22-CHARACTERS')) == FALSE){
+		  if($f3->get('auth')->login($f3->get('POST.user'),$crypt->hash($f3->get('POST.pass'), $f3->get('AWM_BCRYPT_SALT'))) == FALSE){
 			$f3->clear('SESSION.logon');
 			session_commit();
 			$f3->reroute('/');
@@ -376,7 +384,7 @@ $f3->route('GET /api',
       $f3->set('page','api');
 	  
 	  // Setting up the database
-	  $f3->set('apidb', new \DB\SQL('sqlite:/var/www/ArchivesMap.db'));
+	  $f3->set('apidb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE')));
 
 	  $f3->set('result',$f3->get('apidb')->exec(array('SELECT id,nome FROM arquivos WHERE status = "verified"'), NULL));
 	  header('Content-Type: application/json');
@@ -392,7 +400,7 @@ $f3->route('GET /stats',
       $f3->set('page','stats');
 	  
 	  // Setting up the database
-	  $f3->set('statsdb', new \DB\SQL('sqlite:/var/www/ArchivesMap.db'));
+	  $f3->set('statsdb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE')));
 
 	  // Quantidade de instituicoes verificadas
 	  $f3->set('res', $f3->get('statsdb')->exec('SELECT id FROM arquivos WHERE status = "verified"')); 
