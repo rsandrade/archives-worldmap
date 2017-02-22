@@ -1,4 +1,4 @@
-To install you need to put the following lines at /etc/apache2/envvars and edit with your preferences:
+To install you need to put the following lines at /etc/apache2/envvars and edit with your preferences (run 'service apache2 restart' after edit the file to apply the changes):
 
 ##
 ## ARCHIVES WORLD MAP CONFIG
