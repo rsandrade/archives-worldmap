@@ -5,7 +5,7 @@ Archives World Map try to be ISDIAH compliance using the mandatory fields.
 
 **The Archives World Map runs on**
 
-    PHP 7.0 (will run with 5.4+) and APCu
+    PHP 7.0 (will run with 5.4+)
     Fat-Free Framework 3.6
     SQLite 3.11.0
     Bootstrap 3.3.7
