@@ -41,7 +41,7 @@ $f3->set('AWM_BCRYPT_SALT', getenv('AWM_BCRYPT_SALT'));
 
 // Fat-Free configs
 $f3->set('DEBUG', 0);
-$f3->set('CACHE', TRUE);
+$f3->set('CACHE', FALSE);
 $f3->set('TZ','America/Bahia');
 $f3->set('LOCALES','etc/dict/');
 $f3->set('log', new Log($f3->get('AWM_LOG_PATH'))); 
