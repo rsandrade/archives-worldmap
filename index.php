@@ -53,7 +53,7 @@ if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') {
 }
 
 // SQLite database - you can put in a directory without access from public by webserver
-$f3->set('mapdb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE')));
+$f3->set('mapdb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE_PATH')));
 
 // COOKIE LANGUAGE
 if($f3->get('GET.language')){
@@ -384,7 +384,7 @@ $f3->route('GET /api',
       $f3->set('page','api');
 	  
 	  // Setting up the database
-	  $f3->set('apidb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE')));
+	  $f3->set('apidb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE_PATH')));
 
 	  $f3->set('result',$f3->get('apidb')->exec(array('SELECT id,nome FROM arquivos WHERE status = "verified"'), NULL));
 	  header('Content-Type: application/json');
@@ -400,7 +400,7 @@ $f3->route('GET /stats',
       $f3->set('page','stats');
 	  
 	  // Setting up the database
-	  $f3->set('statsdb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE')));
+	  $f3->set('statsdb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE_PATH')));
 
 	  // Quantidade de instituicoes verificadas
 	  $f3->set('res', $f3->get('statsdb')->exec('SELECT id FROM arquivos WHERE status = "verified"')); 
