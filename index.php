@@ -32,7 +32,7 @@ $f3 = require('etc/fatfree/lib/base.php');
 require('etc/recaptcha/src/autoload.php');
 require('etc/Mobile-Detect-2.8.24/Mobile_Detect.php');
 
-// Configuration using environment vars (see awm-config.sh script)
+// Configuration using environment vars (see INSTALL text file)
 $f3->set('AWM_PRIVATE_KEY_RECAPCHA', getenv('AWM_PRIVATE_KEY_RECAPCHA'));
 $f3->set('AWM_DATABASE_PATH', getenv('AWM_DATABASE_PATH')); // 
 $f3->set('AWM_HTTPS_URL', getenv('AWM_HTTPS_URL')); // your https URL to force redirection
