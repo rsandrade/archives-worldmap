@@ -387,7 +387,7 @@ $f3->route('GET /api',
 	  // Setting up the database
 	  $f3->set('apidb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE_PATH')));
 
-	  $f3->set('result',$f3->get('apidb')->exec(array('SELECT id,nome FROM arquivos WHERE status = "verified"'), NULL, 600));
+	  $f3->set('result',$f3->get('apidb')->exec(array('SELECT id,nome FROM arquivos WHERE status = "verified"'), NULL));
 	  header('Content-Type: application/json');
 	  header('charset=utf-8');
 	  header('Access-Control-Allow-Origin: *');
