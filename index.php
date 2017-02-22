@@ -32,13 +32,14 @@ $f3 = require('etc/fatfree/lib/base.php');
 require('etc/recaptcha/src/autoload.php');
 require('etc/Mobile-Detect-2.8.24/Mobile_Detect.php');
 
-// Configuration using environment vars (see INSTALL text file)
+// Config environment vars (check INSTALL text file for instructions)
 $f3->set('AWM_PRIVATE_KEY_RECAPCHA', getenv('AWM_PRIVATE_KEY_RECAPCHA'));
 $f3->set('AWM_DATABASE_PATH', getenv('AWM_DATABASE_PATH')); // 
 $f3->set('AWM_HTTPS_URL', getenv('AWM_HTTPS_URL')); // your https URL to force redirection
 $f3->set('AWM_LOG_PATH', getenv('AWM_LOG_PATH')); // put in a directory hidden from webserver
 $f3->set('AWM_BCRYPT_SALT', getenv('AWM_BCRYPT_SALT'));
 
+// Fat-Free configs
 $f3->set('DEBUG', 0);
 $f3->set('CACHE', TRUE);
 $f3->set('TZ','America/Bahia');
