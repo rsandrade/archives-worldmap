@@ -24,7 +24,8 @@ Archives World Map try to be ISDIAH compliance using the mandatory fields.
 
 I expect to develop that new features soon
 
-    Admin area for users edit their contributions or manage changes
+    Pagination for results in /listall admin page
+    Private area for users edit their contributions and/or manage changes
     More functions in API
     Modify the add form to be easier
     A new field to input a control ID (Wikidata, ISIL?)
