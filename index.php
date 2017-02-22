@@ -49,7 +49,7 @@ $f3->set('FALLBACK','en-US');
 
 // Force SSL - if you dont want it, comment next three lines
 if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') {
-	header("Location: " . $f3->get('AWM_DATABASE') . $_SERVER['REQUEST_URI']);
+	header("Location: " . $f3->get('AWM_HTTPS_URL') . $_SERVER['REQUEST_URI']);
 }
 
 // SQLite database - you can put in a directory without access from public by webserver
