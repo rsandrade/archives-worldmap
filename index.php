@@ -36,7 +36,7 @@ require('etc/phpdotenv/src/Dotenv.php');
 require('etc/phpdotenv/src/Loader.php');
 require('etc/phpdotenv/src/Validator.php');
 
-$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv = new Dotenv\Dotenv('/var/www/');
 $dotenv->load();
 
 // Config environment vars (check INSTALL text file for instructions)
