@@ -33,9 +33,6 @@ require('etc/recaptcha/src/autoload.php');
 require('etc/Mobile-Detect-2.8.24/Mobile_Detect.php');
 require('etc/recaptcha/src/autoload.php');
 
-$dotenv = new Dotenv\Dotenv('etc/phpdotenv/');
-$dotenv->load();
-
 // Config environment vars (check INSTALL text file for instructions)
 $f3->set('AWM_PRIVATE_KEY_RECAPCHA', getenv('AWM_PRIVATE_KEY_RECAPCHA'));
 $f3->set('AWM_DATABASE_PATH', getenv('AWM_DATABASE_PATH')); // 
