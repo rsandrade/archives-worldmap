@@ -1,4 +1,4 @@
-To install you need to:
+To install you will need to:
 
 1) Execute the git clone commands below in 'etc' folder:
 
@@ -6,13 +6,13 @@ git clone https://github.com/LeaVerou/awesomplete.git
 git clone https://github.com/google/recaptcha.git
 git clone https://github.com/vlucas/phpdotenv.git
 
-2) Create the file named '.env' outside the archives-world (maybe at /root or your homedir) and put the lines below. Edit the vars with the values of your preferences. Remember that data are very sensitive and can't be reached by users from webserver.
+2) Create a file named '.env' outside the archives-world dir (maybe at /root or your homedir) and put the lines below. Edit the vars with the values of your preference or needs. Remember that data are very sensitive and can't be reached by users from webserver.
 
 ##
 ## ARCHIVES WORLD MAP CONFIG
 ##
-AWM_PRIVATE_KEY_RECAPCHA='PRIVATE KEY FROM GOOGLE RECAPTCHA'
-AWM_DATABASE_PATH='/var/www/ArchivesMap.db'
-AWM_HTTPS_URL='https://map.arquivista.net'
-AWM_LOG_PATH='/var/www/archivesworldmap.log'
-AWM_BCRYPT_SALT='BCRYPT SALT WITH 22 CHARACTERS'
+AWM_PRIVATE_KEY_RECAPCHA='PRIVATE KEY FROM GOOGLE RECAPTCHA'  # recapcha private key
+AWM_DATABASE_PATH='/var/www/ArchivesMap.db'                   # where doyou want to keep your database
+AWM_HTTPS_URL='https://map.arquivista.net'                    # the https of your url
+AWM_LOG_PATH='/var/www/archivesworldmap.log'                  # where do you want to keep your logs
+AWM_BCRYPT_SALT='BCRYPT SALT WITH 22 CHARACTERS'              # A 22 characters Salt for generate bcrypt
