@@ -1,17 +1,18 @@
 To install you need to:
 
-1) Execute the two git clone command in Archives-worldmap's etc/ folder:
+1) Execute the git clone commands below in 'etc' folder:
 
 git clone https://github.com/LeaVerou/awesomplete.git
 git clone https://github.com/google/recaptcha.git
+git clone https://github.com/vlucas/phpdotenv.git
 
-2) put the following lines at /etc/apache2/envvars and edit with your preferences (run 'service apache2 restart' after edit the file to apply the changes in apache environment):
+2) Create the file named '.env' in archives-world map root dir and put the lines below. Edit the vars with the values of your preferences:
 
 ##
 ## ARCHIVES WORLD MAP CONFIG
 ##
-export AWM_PRIVATE_KEY_RECAPCHA='PRIVATE KEY FROM GOOGLE RECAPTCHA'
-export AWM_DATABASE_PATH='/var/www/ArchivesMap.db'
-export AWM_HTTPS_URL='https://map.arquivista.net'
-export AWM_LOG_PATH='/var/www/archivesworldmap.log'
-export AWM_BCRYPT_SALT='BCRYPT SALT WITH 22 CHARACTERS'
+AWM_PRIVATE_KEY_RECAPCHA='PRIVATE KEY FROM GOOGLE RECAPTCHA'
+AWM_DATABASE_PATH='/var/www/ArchivesMap.db'
+AWM_HTTPS_URL='https://map.arquivista.net'
+AWM_LOG_PATH='/var/www/archivesworldmap.log'
+AWM_BCRYPT_SALT='BCRYPT SALT WITH 22 CHARACTERS'
