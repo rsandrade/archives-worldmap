@@ -32,6 +32,13 @@ $f3 = require('etc/fatfree/lib/base.php');
 require('etc/recaptcha/src/autoload.php');
 require('etc/Mobile-Detect-2.8.24/Mobile_Detect.php');
 
+require('etc/phpdotenv/src/Dotenv.php');
+require('etc/phpdotenv/src/Loader.php');
+require('etc/phpdotenv/src/Validator.php');
+
+$dotenv = new Dotenv\Dotenv(__DIR__);
+$dotenv->load();
+
 // Config environment vars (check INSTALL text file for instructions)
 $f3->set('AWM_PRIVATE_KEY_RECAPCHA', getenv('AWM_PRIVATE_KEY_RECAPCHA'));
 $f3->set('AWM_DATABASE_PATH', getenv('AWM_DATABASE_PATH')); // 
