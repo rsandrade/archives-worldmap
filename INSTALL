@@ -6,7 +6,7 @@ git clone https://github.com/LeaVerou/awesomplete.git
 git clone https://github.com/google/recaptcha.git
 git clone https://github.com/vlucas/phpdotenv.git
 
-2) Create the file named '.env' in archives-world map root dir and put the lines below. Edit the vars with the values of your preferences:
+2) Create the file named '.env' outside the archives-world (maybe at /root or your homedir) and put the lines below. Edit the vars with the values of your preferences. Remember that data are very sensitive and can't be reached by users from webserver.
 
 ##
 ## ARCHIVES WORLD MAP CONFIG
