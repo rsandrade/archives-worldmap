@@ -1,5 +1,5 @@
 # Archives World Map
-The open and collaborative Archives World Map (https://map.arquivista.net)
+The open and collaborative Archives World Map (https://map.arquivista.net), a dataset of public archives geolocalization.
 
 ISDIAH compliance with the mandatory fields.
 
