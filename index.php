@@ -31,8 +31,9 @@ You can contribute with this software:
 $f3 = require('etc/fatfree/lib/base.php');
 require('etc/recaptcha/src/autoload.php');
 require('etc/Mobile-Detect-2.8.24/Mobile_Detect.php');
+require('etc/recaptcha/src/autoload.php');
 
-$dotenv = new Dotenv\Dotenv('etc/');
+$dotenv = new Dotenv\Dotenv('etc/phpdotenv/');
 $dotenv->load();
 
 // Config environment vars (check INSTALL text file for instructions)
