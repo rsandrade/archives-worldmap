@@ -1,7 +1,7 @@
 # Archives World Map
 The open and collaborative Archives World Map (https://map.arquivista.net)
 
-Archives World Map try to be ISDIAH compliance using the mandatory fields.
+ISDIAH compliance with the mandatory fields.
 
 **The Archives World Map runs on**
 
