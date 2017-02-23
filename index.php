@@ -110,7 +110,7 @@ $f3->route('POST /proc-addmap',
    function($f3) {
       $f3->set('page','proc-addmap');
 
-		$recaptcha = new \ReCaptcha\ReCaptcha($f3->set('AWM_PRIVATE_KEY_RECAPCHA')); // https://www.google.com/recaptcha/
+		$recaptcha = new \ReCaptcha\ReCaptcha($f3->get('AWM_PRIVATE_KEY_RECAPCHA')); // https://www.google.com/recaptcha/
 		$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 		if ($resp->isSuccess()) {
 		  // verified!
