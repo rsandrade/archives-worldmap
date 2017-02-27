@@ -44,7 +44,7 @@ return array(
 'dict_search' => 'Search',
 'dict_searchresults' => 'Search result for',
 'dict_searchourdatabase' => 'Search our database',
-'dict_awmwascreatedby' => 'Archives World Map was created by<br><a href="http://ricardo.arquivista.net/english" target="_blank">Ricardo Sodré Andrade</a>',
+'dict_awmwascreatedby' => 'Archives World Map (<a href="https://github.com/rsandrade/archives-worldmap" target="_blank">GitHub</a>) was created by<br><a href="http://ricardo.arquivista.net/english" target="_blank">Ricardo Sodré Andrade</a>',
 'dict_infoarchives' => 'Information about the Institution', 
 'dict_stats' => 'Stats',
 'dict_statsof' => 'Stats of Archives World Map',
