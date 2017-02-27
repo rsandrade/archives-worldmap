@@ -1,0 +1,57 @@
+---
+swagger: '2.0'
+info:
+  version: 0.0.1
+  title: Archives World Map
+paths:
+  /archives:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown
+      description: |
+        Gets `Archives` objects.
+      # This is array of GET operation parameters:
+      parameters:
+        # An example parameter that is in query and is required
+        -
+          name: country
+          in: query
+          description: Specifies the country of the archives retrieved
+          required: false
+          type: string
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            title: ArrayOfCountries
+            type: array
+            items:
+              title: Archives
+              type: object
+              properties:
+                name:
+                  type: string
+                identifier:
+                  type: string
+                address:
+                  type: string
+                city:
+                  type: string
+                state-district:
+                  type: string
+                country:
+                  type: string
+                url:
+                  type: string
+                email:
+                  type: string
+                latitude:
+                  type: number
+                longitude:
+                  type: number
+                colaborator:
+                  type: string
