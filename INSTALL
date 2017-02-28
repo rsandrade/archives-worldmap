@@ -19,6 +19,6 @@ AWM_BCRYPT_SALT='BCRYPT SALT WITH 22 CHARACTERS'              # A 22 characters 
 
 3) Create a SQLite database with name and path mentioned in AWM_DATABASE_PATH. Use the schema below and dont forget to create at least one user with a Bcrypt password in "hash" field using the salt of AWM_BCRYPT_SALT.
 
-CREATE TABLE "arquivos" ( `id` INTEGER NOT NULL, `latitude` TEXT NOT NULL, `longitude` TEXT NOT NULL, `nome` TEXT NOT NULL, `logradouro` TEXT, `cidade` TEXT NOT NULL, `estado` TEXT, `pais` TEXT NOT NULL, `url` TEXT, `email` TEXT, `status` TEXT DEFAULT 'waiting', `contributor` TEXT, `contributoremail` TEXT, identificador text, imported TEXT, PRIMARY KEY(`id`) )
+CREATE TABLE "arquivos" ( `id` INTEGER NOT NULL, `latitude` TEXT NOT NULL, `longitude` TEXT NOT NULL, `nome` TEXT NOT NULL, `logradouro` TEXT, `cidade` TEXT NOT NULL, `estado` TEXT, `pais` TEXT NOT NULL, `url` TEXT, `email` TEXT, `status` TEXT DEFAULT 'waiting', `contributor` TEXT, `contributoremail` TEXT, identificador TEXT, imported TEXT, PRIMARY KEY(`id`) )
 
 CREATE TABLE "usuarios" ( `id` INTEGER, `login` TEXT NOT NULL, hash TEXT, PRIMARY KEY(`id`) )
