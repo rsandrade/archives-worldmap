@@ -316,19 +316,6 @@ $f3->route('GET /about',
    }
 );
 
-$f3->route('GET /api-dev',
-   function($f3) {
-      $f3->set('page','api');
-	  
-	  $f3->set('sql', new DB\SQL\Mapper($f3->get('mapdb'), 'arquivos'));
-
-	  $res = $f3->get('sql')->load(array('status = ?', 'verified'));
-
-	  foreach ($res as $row) 
-		echo json_encode($res->cast());
-   }
-);
-
 $f3->route('GET /contact',
    function($f3) {
       $f3->set('page','contact');
@@ -420,6 +407,28 @@ $f3->route('GET /stats',
 	  
 	  
 	  echo \Template::instance()->render('etc/templates/default.html');
+   }
+);
+
+$f3->route('GET /api-dev/',
+   function($f3) {
+      $f3->set('page','api-dev');
+	  
+		// Setting up the database
+		$f3->set('apidb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE_PATH')));
+
+		$res = $f3->get('sql')->load(array('status = ?', 'verified'));
+		
+		class Item {
+			function get(){
+				foreach ($res as $row) 
+				echo json_encode($res->cast());
+			}
+			function post() {}
+			function put() {}
+			function delete() {}
+			$f3->map('/api1/archives/@item','Item');
+		}
    }
 );
 
