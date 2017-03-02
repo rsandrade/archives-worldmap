@@ -410,26 +410,4 @@ $f3->route('GET /stats',
    }
 );
 
-$f3->route('GET /api-dev/',
-   function($f3) {
-      $f3->set('page','api-dev');
-	  
-		// Setting up the database
-		$f3->set('apidb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE_PATH')));
-
-		$res = $f3->get('sql')->load(array('status = ?', 'verified'));
-		
-		class Item {
-			function get(){
-				foreach ($res as $row) 
-				echo json_encode($res->cast());
-			}
-			function post() {}
-			function put() {}
-			function delete() {}
-			$f3->map('/api1/archives/@item','Item');
-		}
-   }
-);
-
 $f3->run();
