@@ -79,18 +79,18 @@ $f3->route('GET /',
 	  $device = new Mobile_Detect;
 
 	  if($device->isMobile()){
-		$f3->set('sizemap', 'width: 325px; height: 450px;');
+      $f3->set('sizemap', 'width: 325px; height: 450px;');
 	  } else {
-		$f3->set('sizemap', 'width: 700px; height: 450px;');
+      $f3->set('sizemap', 'width: 700px; height: 450px;');
 	  }
 	  
 	  foreach ($registros as $locais){
 		  $pinos .= 'var marker' . 
 		    $locais['id'] . ' = L.marker([' . 
-			$locais['latitude'] . ',' . 
-			$locais['longitude'] . ']).addTo(mymap)'.
-			'.bindPopup(\'' . html_entity_decode($locais['nome']) . 
-			'<br><a href=\"./info/' . $locais['id'] . '\">info</a>' . '\');';
+        $locais['latitude'] . ',' . 
+        $locais['longitude'] . ']).addTo(mymap)'.
+        '.bindPopup(\'' . html_entity_decode($locais['nome']) . 
+        '<br><a href=\"./info/' . $locais['id'] . '\">info</a>' . '\');';
 	  }
 	  $f3->set('pinagem', $pinos);
 	  
@@ -169,8 +169,8 @@ $f3->route('POST|GET /list',
 			session_commit();
 			$f3->reroute('/');
 		  } else {
-			new \DB\SQL\Session($f3->get('mapdb'));
-			$f3->set('SESSION.logon', 'sim');
+        new \DB\SQL\Session($f3->get('mapdb'));
+        $f3->set('SESSION.logon', 'sim');
 		  };
 	  }
 
@@ -188,15 +188,20 @@ $f3->route('POST|GET /listall',
 
 	  // Checking if is admin
 	  if($f3->get('SESSION.logon') != 'sim'){
-		$f3->reroute('/');
+      $f3->reroute('/');
 	  }
-	  // Setting up the database
+	  // Setting up the database (not pagination)
 	  $f3->set('sql', new DB\SQL\Mapper($f3->get('mapdb'), 'arquivos'));
-	  
-	  $f3->set('lista', $f3->get('sql')->find(array()));
-	  
-	  
-	  echo \Template::instance()->render('etc/templates/default.html');
+ 
+    // Old, do not enable pagination (lists everything)
+    //$f3->set('lista', $f3->get('sql')->find(array()));
+    
+    // Enable pagination, not elegant but works
+    $f3->set('lista', $f3->get('mapdb')->exec('SELECT * FROM arquivos ORDER BY id DESC LIMIT "20" OFFSET ?', $f3->get('GET.since')));
+    $f3->set('back', $f3->get('GET.since')-20);
+    $f3->set('forward', $f3->get('GET.since')+20);
+    
+    echo \Template::instance()->render('etc/templates/default.html');
    }
 );
 

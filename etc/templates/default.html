@@ -104,12 +104,12 @@
 			</script>
 		</check>
 		<check if="{{ @page=='listmap' || @page=='listallmap' }}">
-			<a href="/logout">logout</a>
-			<table width="90%">
+			<p><a href="/logout">logout</a></p>
+			<table width="95%">
 			  <tr>
 				<th width="8"><center>ID</th>
-				<th width="50"><center>{{ @dict_institution }}</center></th>
-				<th width="10"><center>{{ @dict_archivescountry }}</center></th>
+				<th width="55"><center>{{ @dict_institution }}</center></th>
+				<th width="5"><center>{{ @dict_archivescountry }}</center></th>
 				<th width="10"><center>{{ @dict_archiveslatitude }}</center></th>
 				<th width="10"><center>{{ @dict_archiveslongitude}}</center></th>
 				<th width="10"><center>{{ @dict_map }}</center></th>
@@ -126,7 +126,13 @@
 				<td><center><a href="./edit/{{ @item.id }}">editar</a></center></td>
 			  </tr>
 			</repeat>
-			</table>
+   
+      </table>
+      <br>
+      <check if="{{ @page=='listallmap' }}">
+        <a href="https://map.arquivista.net/listall?since={{ @back }}"><< Back</a>  - 
+        <a href="https://map.arquivista.net/listall?since={{ @forward }}">Forward >></a>
+			</check>
 		</check>
 				
 		<check if="{{ @page=='editmap' }}">
