@@ -197,6 +197,9 @@ $f3->route('POST|GET /listall',
     //$f3->set('lista', $f3->get('sql')->find(array()));
     
     // Enable pagination, not elegant but works
+    if(empty($f3->get('GET.since'))) {
+      $f3->get('GET.since') == 0;
+    }
     $f3->set('lista', $f3->get('mapdb')->exec('SELECT * FROM arquivos ORDER BY id DESC LIMIT "20" OFFSET ?', $f3->get('GET.since')));
     $f3->set('back', $f3->get('GET.since')-20);
     $f3->set('forward', $f3->get('GET.since')+20);
