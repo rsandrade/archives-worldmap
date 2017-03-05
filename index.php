@@ -47,7 +47,7 @@ $f3->set('AWM_LOG_PATH', getenv('AWM_LOG_PATH')); // put in a directory hidden f
 $f3->set('AWM_BCRYPT_SALT', getenv('AWM_BCRYPT_SALT'));
 
 // Fat-Free configs
-$f3->set('DEBUG', 0);
+$f3->set('DEBUG', 3);
 $f3->set('CACHE', TRUE);
 $f3->set('TZ','America/Bahia');
 $f3->set('LOCALES','etc/dict/');
@@ -197,12 +197,15 @@ $f3->route('POST|GET /listall',
     //$f3->set('lista', $f3->get('sql')->find(array()));
     
     // Enable pagination, not elegant but works
-    if(empty($f3->get('GET.since'))) {
-      $f3->get('GET.since') == 0;
+    if($f3->get('GET.since') == '') {
+      $f3->set('since', 0);
+    } else {
+      $f3->set('since', $f3->get('GET.since'));
     }
-    $f3->set('lista', $f3->get('mapdb')->exec('SELECT * FROM arquivos ORDER BY id DESC LIMIT "20" OFFSET ?', $f3->get('GET.since')));
-    $f3->set('back', $f3->get('GET.since')-20);
-    $f3->set('forward', $f3->get('GET.since')+20);
+    
+    $f3->set('lista', $f3->get('mapdb')->exec('SELECT * FROM arquivos ORDER BY id DESC LIMIT "20" OFFSET ?', $f3->get('since')));
+    $f3->set('back', $f3->get('since')-20);
+    $f3->set('forward', $f3->get('since')+20);
     
     echo \Template::instance()->render('etc/templates/default.html');
    }
