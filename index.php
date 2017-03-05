@@ -47,7 +47,7 @@ $f3->set('AWM_LOG_PATH', getenv('AWM_LOG_PATH')); // put in a directory hidden f
 $f3->set('AWM_BCRYPT_SALT', getenv('AWM_BCRYPT_SALT'));
 
 // Fat-Free configs
-$f3->set('DEBUG', 3);
+$f3->set('DEBUG', 0);
 $f3->set('CACHE', TRUE);
 $f3->set('TZ','America/Bahia');
 $f3->set('LOCALES','etc/dict/');
