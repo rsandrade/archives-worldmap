@@ -51,4 +51,5 @@ return array(
 'dict_institutionsdb' => 'Institutions',
 'dict_top10countries' => 'Top 10 (countries)',
 'dict_decimaldegreesplease' => 'If possible, in <a href="https://en.wikipedia.org/wiki/Decimal_degrees" target="_blank">Decimal Degrees</a>',
+'dict_facebookcommunity' => 'Facebook Community',
 );

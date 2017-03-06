@@ -51,4 +51,5 @@ return array(
 'dict_institutionsdb' => 'Instituições',
 'dict_top10countries' => 'Top 10 (países)',
 'dict_decimaldegreesplease' => 'Se possível, em <a href="https://pt.wikipedia.org/wiki/Coordenadas_geogr%C3%A1ficas#Graus_Decimais" target="_blank">Decimal Degrees</a>',
+'dict_facebookcommunity' => 'Comunidade no Facebook',
 );
