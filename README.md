@@ -16,8 +16,9 @@ ISDIAH compliance with the mandatory fields.
 
 **Translations**
 
-    Brazilian Portuguese, by Ricardo Sodré Andrade
-    English, by Ricardo Sodré Andrade
+    Português, by Ricardo Sodré Andrade (Universidade Federal da Bahia)
+    English, by Ricardo Sodré Andrade (Universidade Federal da Bahia)
+    Spanish, by Maria Pilar Gil Garcia (Universidad de Castilla-La Mancha)
     Polish (soon), promised by Anna Sobczak
 
 **Roadmap**
