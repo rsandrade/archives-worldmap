@@ -29,7 +29,7 @@ I expect to develop that new features soon
     Modify the add form to be easier
     A new field to input a control ID (Wikidata, ISIL?)
 
-**Maintened by**
+**Maintained by**
 
     Ricardo Sodré Andrade (https://github.com/rsandrade)
     Website: http://ricardo.arquivista.net/english
