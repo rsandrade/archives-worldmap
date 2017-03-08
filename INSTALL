@@ -6,7 +6,7 @@ git clone https://github.com/LeaVerou/awesomplete.git
 git clone https://github.com/google/recaptcha.git
 git clone https://github.com/vlucas/phpdotenv.git
 
-2) Create a file named '.env' outside the archives-world dir (maybe at /root or your homedir) and put the lines below. Edit the vars with the values of your preference or needs. Remember that data are very sensitive and can't be reached by users from webserver.
+2) Create a file named '.env' outside the archives-world dir (maybe at /root or your homedir - you need to put the choosed dir in "Config phpdotenv" section at index.php) and put the lines below. Edit the vars with the values of your preference or needs. Remember that data are very sensitive and can't be reached by users from webserver.
 
 ##
 ## ARCHIVES WORLD MAP CONFIG
