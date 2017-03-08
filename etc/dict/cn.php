@@ -1,5 +1,5 @@
 <?php
-// Internacionalizacao EN_US
+// Internacionalizacao cn
 return array(
 'dict_projectname' => 'Archives World Map',
 'dict_theopenandcollaborative' => 'The open and collaborative',
