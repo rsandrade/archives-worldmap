@@ -3,7 +3,7 @@
 return array(
 'dict_projectname' => 'Archives World Map',
 'dict_theopenandcollaborative' => 'The open and collaborative',
-'dict_Languages' => '转换语言',
+'dict_Languages' => '中文',
 'dict_archivesname' => '机构 (面向公众开放的档案馆)',
 'dict_archivesaddress' => '地址',
 'dict_archivescity' => '城市',
