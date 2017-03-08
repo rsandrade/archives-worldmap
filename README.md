@@ -19,6 +19,7 @@ ISDIAH compliance with the mandatory fields.
     Português, by Ricardo Sodré Andrade (Universidade Federal da Bahia)
     English, by Ricardo Sodré Andrade (Universidade Federal da Bahia)
     Spanish, by Maria Pilar Gil Garcia (Universidad de Castilla-La Mancha)
+    Chinese, by Sybil (Renmin University of China)
 
 **Roadmap**
 
