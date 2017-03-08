@@ -28,6 +28,8 @@ You can contribute with this software:
 
 **/
 
+// configs =========================================================
+
 $f3 = require('etc/fatfree/lib/base.php');
 require('etc/recaptcha/src/autoload.php');
 require('etc/Mobile-Detect-2.8.24/Mobile_Detect.php');
@@ -60,6 +62,8 @@ $f3->set('FALLBACK','en-US');
 if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != 'on') {
 	header("Location: " . $f3->get('AWM_HTTPS_URL') . $_SERVER['REQUEST_URI']);
 }
+
+// End of configs =========================================================
 
 // SQLite database - you can put in a directory without access from public by webserver
 $f3->set('mapdb', new \DB\SQL('sqlite:' . $f3->get('AWM_DATABASE_PATH')));
