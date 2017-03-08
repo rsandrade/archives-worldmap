@@ -87,11 +87,11 @@ $f3->route('GET /',
 	  
 	  foreach ($registros as $locais){
 	    $pinos .= 'var marker' . 
-	      $locais['id'] . ' = L.marker([' . 
+	    $locais['id'] . ' = L.marker([' . 
             $locais['latitude'] . ',' . 
             $locais['longitude'] . ']).addTo(mymap)'.
-              '.bindPopup(\'' . html_entity_decode($locais['nome']) . 
-              '<br><a href=\"./info/' . $locais['id'] . '\">info</a>' . '\');';
+            '.bindPopup(\'' . html_entity_decode($locais['nome']) . 
+            '<br><a href=\"./info/' . $locais['id'] . '\">info</a>' . '\');';
 	  }
 	  $f3->set('pinagem', $pinos);
 	  
@@ -111,32 +111,32 @@ $f3->route('POST /proc-addmap',
    function($f3) {
       $f3->set('page','proc-addmap');
 
-		$recaptcha = new \ReCaptcha\ReCaptcha($f3->get('AWM_PRIVATE_KEY_RECAPCHA')); // https://www.google.com/recaptcha/
-		$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
-		if ($resp->isSuccess()) {
-		  // verified!
+	  $recaptcha = new \ReCaptcha\ReCaptcha($f3->get('AWM_PRIVATE_KEY_RECAPCHA')); // https://www.google.com/recaptcha/
+	  $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+	if ($resp->isSuccess()) {
+	  // verified!
 
-		  // Setting up the database
-		  $f3->set('sql', new DB\SQL\Mapper($f3->get('mapdb'), 'arquivos'));
+	  // Setting up the database
+	  $f3->set('sql', new DB\SQL\Mapper($f3->get('mapdb'), 'arquivos'));
 
-		  $f3->get('sql')->latitude = 			$f3->get('POST.latitude');
-		  $f3->get('sql')->longitude = 			$f3->get('POST.longitude');
-		  $f3->get('sql')->nome = 			$f3->get('POST.nome');
-		  $f3->get('sql')->identificador = 		$f3->get('POST.identificador');
-		  $f3->get('sql')->logradouro = 		$f3->get('POST.logradouro');
-		  $f3->get('sql')->cidade = 			$f3->get('POST.cidade');
-		  $f3->get('sql')->estado = 			$f3->get('POST.estado');
-		  $f3->get('sql')->pais = 			$f3->get('POST.pais');
-		  $f3->get('sql')->url = 			$f3->get('POST.url');
-		  $f3->get('sql')->email = 			$f3->get('POST.email');
-		  $f3->get('sql')->contributor = 		$f3->get('POST.contributor');
-		  $f3->get('sql')->contributoremail = 		$f3->get('POST.contributoremail');
-		  $f3->get('sql')->status = 			'waiting';
-		  $f3->get('sql')->save();
-			 
-		  // Criar log de inserção
-		$f3->get('log')->write($f3->get('POST.nome') . ' (' . $f3->get('POST.latitude') . ',' . 
-			$f3->get('POST.longitude') . ') was added or changed.');
+	  $f3->get('sql')->latitude = 			$f3->get('POST.latitude');
+	  $f3->get('sql')->longitude = 			$f3->get('POST.longitude');
+	  $f3->get('sql')->nome = 			$f3->get('POST.nome');
+	  $f3->get('sql')->identificador = 		$f3->get('POST.identificador');
+	  $f3->get('sql')->logradouro = 		$f3->get('POST.logradouro');
+	  $f3->get('sql')->cidade = 			$f3->get('POST.cidade');
+	  $f3->get('sql')->estado = 			$f3->get('POST.estado');
+	  $f3->get('sql')->pais = 			$f3->get('POST.pais');
+	  $f3->get('sql')->url = 			$f3->get('POST.url');
+	  $f3->get('sql')->email = 			$f3->get('POST.email');
+	  $f3->get('sql')->contributor = 		$f3->get('POST.contributor');
+	  $f3->get('sql')->contributoremail = 		$f3->get('POST.contributoremail');
+	  $f3->get('sql')->status = 			'waiting';
+	  $f3->get('sql')->save();
+
+	  // Criar log de inserção
+	$f3->get('log')->write($f3->get('POST.nome') . ' (' . $f3->get('POST.latitude') . ',' . 
+		$f3->get('POST.longitude') . ') was added or changed.');
 
 			 
 	} else {
@@ -155,16 +155,16 @@ $f3->route('POST|GET /list',
 	  // Setting up the database
 	  $f3->set('sql', new DB\SQL\Mapper($f3->get('mapdb'), 'arquivos'));
 
-	  // Logando area administrativa
+	  // Entering in admin panel
 	  $f3->set('admin', new DB\SQL\Mapper($f3->get('mapdb'), 'usuarios'));
 	  $crypt = \Bcrypt::instance();
 	  $f3->set('auth', new \Auth($f3->get('admin'), array('id'=>'login', 'pw'=>'hash'))); // login e hash
 
-	  // Verificando login e senha do admin
-	  	  // Verificando se é admin
+	  // Checking admin login and password
+	  	  // Checking if is admin
 		if (!$f3->get('SESSION.logon')){
 
-		  // REMEMBER TO PUT A BCRYPT SALT IN NEXT LINE
+		  // WILL USE BCRYPT SALT IN ENV VARS
 		  if($f3->get('auth')->login($f3->get('POST.user'),$crypt->hash($f3->get('POST.pass'), $f3->get('AWM_BCRYPT_SALT'))) == FALSE){
 			$f3->clear('SESSION.logon');
 			session_commit();
@@ -194,7 +194,7 @@ $f3->route('POST|GET /listall',
 	  // Setting up the database (not pagination)
 	  $f3->set('sql', new DB\SQL\Mapper($f3->get('mapdb'), 'arquivos'));
  
-    // Old, do not enable pagination (lists everything)
+    // Old; do not enable pagination (lists everything)
     //$f3->set('lista', $f3->get('sql')->find(array()));
     
     // Enable pagination, not elegant but works
@@ -216,7 +216,7 @@ $f3->route('GET /edit/@id',
    function($f3) {
       $f3->set('page','editmap');
 
-	  // Verificando se é admin
+	  // Checking if is admin
 	  if($f3->get('SESSION.logon') != 'sim'){
 		$f3->reroute('/');
 	  }
@@ -234,7 +234,7 @@ $f3->route('POST /proc-editmap/@id',
    function($f3) {
       $f3->set('page','proc-editmap');
 
-	  // Verificando se é admin
+	  // Checking if is admin
 	  if($f3->get('SESSION.logon') != 'sim'){
 		$f3->reroute('/');
 	  }
@@ -284,7 +284,7 @@ $f3->route('GET /del/@id',
    function($f3) {
       $f3->set('page','proc-delmap');
 
-	  // Verificando se é admin
+	  // Checking if is admin
 	  if($f3->get('SESSION.logon') != 'sim'){
 		$f3->reroute('/');
 	  }
@@ -295,7 +295,7 @@ $f3->route('GET /del/@id',
 	  $f3->get('sql')->load(array('id = ?', $f3->get('PARAMS.id')));
 	  $f3->get('sql')->erase();
 	  
-	  // Criar log de remoção
+	  // Que tal criar log de remoção?
 			
 	  $f3->reroute('/list');
    }
