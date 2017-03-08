@@ -79,18 +79,18 @@ $f3->route('GET /',
 	  $device = new Mobile_Detect;
 
 	  if($device->isMobile()){
-      $f3->set('sizemap', 'width: 325px; height: 450px;');
+      	    $f3->set('sizemap', 'width: 325px; height: 450px;');
 	  } else {
-      $f3->set('sizemap', 'width: 700px; height: 450px;');
+      	    $f3->set('sizemap', 'width: 700px; height: 450px;');
 	  }
 	  
 	  foreach ($registros as $locais){
-		  $pinos .= 'var marker' . 
-		    $locais['id'] . ' = L.marker([' . 
-        $locais['latitude'] . ',' . 
-        $locais['longitude'] . ']).addTo(mymap)'.
-        '.bindPopup(\'' . html_entity_decode($locais['nome']) . 
-        '<br><a href=\"./info/' . $locais['id'] . '\">info</a>' . '\');';
+	    $pinos .= 'var marker' . 
+	      $locais['id'] . ' = L.marker([' . 
+            $locais['latitude'] . ',' . 
+            $locais['longitude'] . ']).addTo(mymap)'.
+              '.bindPopup(\'' . html_entity_decode($locais['nome']) . 
+              '<br><a href=\"./info/' . $locais['id'] . '\">info</a>' . '\');';
 	  }
 	  $f3->set('pinagem', $pinos);
 	  
