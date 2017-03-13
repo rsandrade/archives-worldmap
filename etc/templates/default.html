@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta property="og:image" content="https://map.arquivista.net/etc/mapa.png" />
+	<meta property="og:image" content="{{ @BASE }}/etc/mapa.png" />
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 	<meta name="description" content="The Open and Collaborative Archives World Map, a public archives geolocalization dataset.">
 	<meta name="keywords" content="archives, map, collaborative, open">
 	<meta name="author" content="Ricardo Sodré Andrade">
-	<link rel="shortcut icon" href="https://map.arquivista.net/etc/templates/favicon.ico">
+	<link rel="shortcut icon" href="{{ @BASE }}/etc/templates/favicon.ico">
 
 
     <title>Archives World Map</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ @BASE }}/etc/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/css/starter-template.css" rel="stylesheet">
+    <link href="{{ @BASE }}/etc/bootstrap-3.3.7-dist/css/starter-template.css" rel="stylesheet">
 
 	<!-- Leaflet -->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
@@ -28,7 +28,7 @@
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	
 	<!-- Awesomplete css -->
-	<link rel="stylesheet" href="https://map.arquivista.net/etc/awesomplete/awesomplete.css" />
+	<link rel="stylesheet" href="{{ @BASE }}/etc/awesomplete/awesomplete.css" />
 	
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -59,15 +59,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="https://map.arquivista.net">Archives World Map</a>
+          <a class="navbar-brand" href="{{ @BASE }}">Archives World Map</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="https://map.arquivista.net/">{{ @dict_home }}</a></li>
-            <li><a href="https://map.arquivista.net/add">{{ @dict_addarchives }}</a></li>
-			<li><a href="https://map.arquivista.net/search">{{ @dict_search }}</a></li>
-			<li><a href="https://map.arquivista.net/stats">{{ @dict_stats }}</a></li>
-            <li><a href="https://map.arquivista.net/about">{{ @dict_about }}</a></li>
+            <li class="active"><a href="{{ @BASE }}/">{{ @dict_home }}</a></li>
+            <li><a href="{{ @BASE }}/add">{{ @dict_addarchives }}</a></li>
+			<li><a href="{{ @BASE }}/search">{{ @dict_search }}</a></li>
+			<li><a href="{{ @BASE }}/stats">{{ @dict_stats }}</a></li>
+            <li><a href="{{ @BASE }}/about">{{ @dict_about }}</a></li>
 			<li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -106,7 +106,7 @@
 					maxZoom: 18,
 					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
 					'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
-					'Archives geo and data &copy; <a href="https://map.arquivista.net">Archives World Map</a>',
+					'Archives geo and data &copy; <a href="{{ @BASE }}">Archives World Map</a>',
 					id: 'mapbox.streets'
 				}).addTo(mymap);
 
@@ -141,8 +141,8 @@
       </table>
       <br>
       <check if="{{ @page=='listallmap' }}">
-        <a href="https://map.arquivista.net/listall?since={{ @back }}"><< Back</a>  - 
-        <a href="https://map.arquivista.net/listall?since={{ @forward }}">Forward >></a>
+        <a href="{{ @BASE }}/listall?since={{ @back }}"><< Back</a>  - 
+        <a href="{{ @BASE }}/listall?since={{ @forward }}">Forward >></a>
 			</check>
 		</check>
 				
@@ -699,7 +699,7 @@
 			  <tr>
 				<td><center>{{ @item.nome }}</center></td>
 				<td><center>{{ @item.pais }}</center></td>
-				<td><center><a href="https://map.arquivista.net/info/{{ @item.id }}">info</center></td>
+				<td><center><a href="{{ @BASE }}/info/{{ @item.id }}">info</center></td>
 			  </tr>
 			</repeat>
 			</table>
@@ -718,16 +718,16 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/jquery.min.js"><\/script>')</script>
-    <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{ @BASE }}/etc/bootstrap-3.3.7-dist/js/jquery.min.js"><\/script>')</script>
+    <script src="{{ @BASE }}/etc/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="{{ @BASE }}/etc/bootstrap-3.3.7-dist/js/ie10-viewport-bug-workaround.js"></script>
 	
 	<check if="{{ @page=='search' }}">
-		<script src="https://map.arquivista.net/etc/awesomplete/awesomplete.js" async></script>
+		<script src="{{ @BASE }}/etc/awesomplete/awesomplete.js" async></script>
 		<script>
 		var ajax = new XMLHttpRequest();
-		ajax.open("GET", "https://map.arquivista.net/api", true);
+		ajax.open("GET", "{{ @BASE }}/api", true);
 		ajax.onload = function() {
 			var list = JSON.parse(ajax.responseText).map(function(i) { return i.nome; });
 			new Awesomplete(document.querySelector("#busca-api input"),{ list: list });
