@@ -47,7 +47,7 @@ return array(
 'dict_awmwascreatedby' => '档案馆世界地图 (<a href="https://github.com/rsandrade/archives-worldmap" target="_blank">GitHub</a>)创始人是<br><a href="http://ricardo.arquivista.net/english" target="_blank">Ricardo Sodré Andrade</a>',
 'dict_infoarchives' => '关于机构的信息', 
 'dict_stats' => '统计数据',
-'dict_statsof' => '的数据',
+'dict_statsof' => '数据统计',
 'dict_institutionsdb' => '机构数据库',
 'dict_top10countries' => '排名前10的国家',
 'dict_decimaldegreesplease' => '如果可以的话，请采用<a href="https://en.wikipedia.org/wiki/Decimal_degrees" target="_blank">十进制形式</a>',
