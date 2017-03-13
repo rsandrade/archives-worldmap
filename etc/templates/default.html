@@ -722,18 +722,19 @@
     <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/ie10-viewport-bug-workaround.js"></script>
-
-	<script src="https://map.arquivista.net/etc/awesomplete/awesomplete.js" async></script>
-	<script>
-	var ajax = new XMLHttpRequest();
-	ajax.open("GET", "https://map.arquivista.net/api", true);
-	ajax.onload = function() {
-		var list = JSON.parse(ajax.responseText).map(function(i) { return i.nome; });
-		new Awesomplete(document.querySelector("#busca-api input"),{ list: list });
-	};
-	ajax.send();
-	</script>
 	
+	<check if="{{ @page=='search' }}">
+		<script src="https://map.arquivista.net/etc/awesomplete/awesomplete.js" async></script>
+		<script>
+		var ajax = new XMLHttpRequest();
+		ajax.open("GET", "https://map.arquivista.net/api", true);
+		ajax.onload = function() {
+			var list = JSON.parse(ajax.responseText).map(function(i) { return i.nome; });
+			new Awesomplete(document.querySelector("#busca-api input"),{ list: list });
+		};
+		ajax.send();
+		</script>
+	</check>
 	
   </body>
 </html> 
