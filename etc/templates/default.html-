@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:image" content="https://map.arquivista.net/etc/mapa.png" />
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="The Open and Collaborative Archives World Map, a public archives geolocalization dataset.">
+	<meta name="keywords" content="archives, map, collaborative, open">
+	<meta name="author" content="Ricardo Sodré Andrade">
+	<link rel="shortcut icon" href="https://map.arquivista.net/etc/templates/favicon.ico">
+
+
+    <title>Archives World Map</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/css/starter-template.css" rel="stylesheet">
+
+	<!-- Leaflet -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+	
+	<!-- reCaptcha -->
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	
+	<!-- Awesomplete css -->
+	<link rel="stylesheet" href="https://map.arquivista.net/etc/awesomplete/awesomplete.css" />
+	
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="https://map.arquivista.net">Archives World Map</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="https://map.arquivista.net/">{{ @dict_home }}</a></li>
+            <li><a href="https://map.arquivista.net/add">{{ @dict_addarchives }}</a></li>
+			<li><a href="https://map.arquivista.net/search">{{ @dict_search }}</a></li>
+			<li><a href="https://map.arquivista.net/stats">{{ @dict_stats }}</a></li>
+            <li><a href="https://map.arquivista.net/about">{{ @dict_about }}</a></li>
+			<li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="home">
+	  <!-- Conteúdo oriundo do ff3 -->
+	
+		<check if="{{ @page=='mapa' }}">
+		
+			<!-- Archives World Map home -->
+			<!--<h1>Archives World Map</h1>
+			<p class="lead">{{ @dict_theopenandcollaborative }}</p>-->
+<!--
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:320px;height:100px"
+     data-ad-client="ca-pub-7782822980648918"
+     data-ad-slot="1062084952"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script><br><hr>-->
+			
+			<p><a href="https://www.facebook.com/archivesworldmap/" target="_blank">{{ @dict_facebookcommunity }}</a></p>
+
+			<small>{{ @dict_Languages }}: <a href="?language=en-US">English</a> | <a href="?language=es">Español</a> | <a href="?language=pt-BR">Português</a> | <a href="?language=cn">汉语/漢語</a></small><br>
+			
+			<br>
+			<div id="mapid" style="{{ @sizemap | raw }} margin: 0 auto"></div>
+			<script>
+ 
+				var mymap = L.map('mapid').setView([21.525484, -12.572412], 2);
+
+				L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYXJxdWl2aXN0YW5ldCIsImEiOiJjaXlwOXAzN2EwMDM0NDRwY3h0aG1yejB2In0.kGvUj7knV4iUH1OSnSqzdw', {
+					maxZoom: 18,
+					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+					'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
+					'Archives geo and data &copy; <a href="https://map.arquivista.net">Archives World Map</a>',
+					id: 'mapbox.streets'
+				}).addTo(mymap);
+
+				{{ @pinagem | raw }}
+				
+			</script>
+		</check>
+		<check if="{{ @page=='listmap' || @page=='listallmap' }}">
+			<p><a href="/logout">logout</a></p>
+			<table width="95%">
+			  <tr>
+				<th width="8"><center>ID</th>
+				<th width="55"><center>{{ @dict_institution }}</center></th>
+				<th width="5"><center>{{ @dict_archivescountry }}</center></th>
+				<th width="10"><center>{{ @dict_archiveslatitude }}</center></th>
+				<th width="10"><center>{{ @dict_archiveslongitude}}</center></th>
+				<th width="10"><center>{{ @dict_map }}</center></th>
+				<th width="10"><center>Ações</th>
+			  </tr>
+			<repeat group="{{ @lista }}" value="{{ @item }}">
+			  <tr>
+				<td><center>{{ @item.id }}</center></td>
+				<td><center><check if="{{ @item.status=='waiting' }}"><b></check>{{ @item.nome }}<check if="{{ @item.status=='waiting' }}"></b></check></center></td>
+				<td><center>{{ @item.pais }}</center></td>
+				<td><center>{{ @item.latitude }}</center></td>
+				<td><center>{{ @item.longitude }}</center></td>
+				<td><center><a href="http://maps.google.com/?q={{ @item.latitude }},{{ @item.longitude }}" target="_blank">Google Maps</a></center></td>
+				<td><center><a href="./edit/{{ @item.id }}">editar</a></center></td>
+			  </tr>
+			</repeat>
+   
+      </table>
+      <br>
+      <check if="{{ @page=='listallmap' }}">
+        <a href="https://map.arquivista.net/listall?since={{ @back }}"><< Back</a>  - 
+        <a href="https://map.arquivista.net/listall?since={{ @forward }}">Forward >></a>
+			</check>
+		</check>
+				
+		<check if="{{ @page=='editmap' }}">
+		<repeat group="{{ @lista }}" value="{{ @item }}">
+		<form action="/proc-editmap/{{ @item.id }}" method="POST">
+		  <p>
+		  {{ @dict_archivesname }}<br>
+		  <input type="text" name="nome" value="{{ @item.nome }}" size="50" required>
+		  <p>
+		  {{ @dict_identifier }}<br>
+		  <input type="text" name="identificador" value="{{ @item.identificador }}" size="50">
+		  <p>
+		  {{ @dict_archivesaddress }}<br>
+		  <input type="text" name="logradouro" value="{{ @item.logradouro }}" size="50">
+		  <p>
+		  {{ @dict_archivescity }}<br>
+		  <input type="text" name="cidade" value="{{ @item.cidade }}" size="50">
+		  <p>
+		  {{ @dict_archivesdistrict }}<br>
+		  <input type="text" name="estado" value="{{ @item.estado }}" size="50">
+		  <p>
+		  {{ @dict_archivescountry }}<br>
+		  <input type="text" name="pais" value="{{ @item.pais }}" size="50">
+		  <p>
+		  {{ @dict_archivesurl }}<br>
+		  <input type="url" name="url" value="{{ @item.url }}" size="50">
+		  <p>
+		  {{ @dict_archivesemail }}<br>
+		  <input type="email" name="email" value="{{ @item.email }}" size="50">
+		  <p>
+		  {{ @dict_archiveslatitude }}<br>
+		  <input type="text" name="latitude" value="{{ @item.latitude }}" size="50" required>
+		  <p>
+		  {{ @dict_archiveslongitude }}<br>
+		  <input type="text" name="longitude" value="{{ @item.longitude }}" size="50" required>
+		  <br>
+		  <br>
+		  {{ @dict_archivesyourname }}<br>
+		  <input type="text" name="contributor" value="{{ @item.contributor }}" size="50">
+		  <br>
+		  {{ @dict_archivesyouremail }}<br>
+		  <input type="text" name="contributoremail" value="{{ @item.contributoremail }}" size="50">
+		  <br>
+		  {{ @dict_archivesstatus }}<br>
+		  <select name="status">
+				<option value="waiting" <check if="{{ @item.status == 'waiting' }}">selected</check>>Waiting</option>
+				<option value="verified" <check if="{{ @item.status == 'verified' }}">selected</check>>Verified</option>
+		  </select>
+		  <br>
+		  <br>
+		  <input type="submit" value="{{ @dict_sendtoinclusion }}">
+		</form> 
+		<p><a href="../del/{{ @item.id }}">deletar registro</a>
+		</repeat>
+		</check>
+
+		<check if="{{ @page=='infomap' }}">
+			<repeat group="{{ @lista }}" value="{{ @item }}">
+			
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- Middle post -->
+			<ins class="adsbygoogle"
+				 style="display:block"
+				 data-ad-client="ca-pub-7782822980648918"
+				 data-ad-slot="4084570559"
+				 data-ad-format="auto"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			<hr>
+			<br>
+			<div style="text-align: left;">
+			<h2>{{ @dict_infoarchives }}</h2>
+			<form>
+			<p>
+			  {{ @dict_institution }}<br>
+			  <input type="text" name="nome" value="{{ @item.nome | raw }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_identifier }}<br>
+			  <input type="text" name="identificador" value="{{ @item.identificador }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivesaddress }}<br>
+			  <input type="text" name="logradouro" value="{{ @item.logradouro }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivescity }}<br>
+			  <input type="text" name="cidade" value="{{ @item.cidade }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivesdistrict }}<br>
+			  <input type="text" name="estado" value="{{ @item.estado }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivescountry }}<br>
+			  <input type="text" name="pais" value="{{ @item.pais }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivesurl }}<br>
+			  <a href="{{ @item.url }}" target="_blank">{{ @item.url }}</a>
+			  <p>
+			  {{ @dict_archivesemail }} <br>
+			  <input type="email" name="email" value="{{ @item.email }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_location }}:<br>
+			  [<a href="https://www.openstreetmap.org/?mlat={{ @item.latitude }}&mlon={{ @item.longitude }}#map=16/{{ @item.latitude }}/{{ @item.longitude }}" target="_blank">OpenStreetMap</a>] [<a href="http://maps.google.com/?q={{ @item.latitude }},{{ @item.longitude }}" target="_blank">Google Maps</a>] <br>
+			  <p>
+			  {{ @dict_collaborator }}<br>
+			  <input type="text" name="contributor" value="{{ @item.contributor }}" readonly="readonly" size="35">
+ 
+			</form> 
+			</div>
+			</repeat>
+		</check>
+
+		<check if="{{ @page=='addmap' }}">
+		<div style="text-align: left;">
+			<h2>{{ @dict_addarchives }}</h2>
+			<form action="/proc-addmap" method="POST">
+			  <p>
+			  {{ @dict_archivesname }}*<br><small>{{ @dict_nameauthorisedform | raw }}</small><br>
+			  <input type="text" name="nome" value="" size="35" required>
+			  <p>
+			  {{ @dict_identifier }}<br><small>{{ @dict_identifierform | raw }}</small><br>
+			  <input type="text" name="identificador" value="" size="35">
+			  <p>
+			  {{ @dict_archivesaddress }}<br>
+			  <input type="text" name="logradouro" value="" size="35">
+			  <p>
+			  {{ @dict_archivescity }}<br>
+			  <input type="text" name="cidade" value="" size="35">
+			  <p>
+			  {{ @dict_archivesdistrict }}<br>
+			  <input type="text" name="estado" value="" size="35">
+			  <p>
+			  {{ @dict_archivescountry }}*<br>
+			  <select name="pais">
+					<option value="AF">Afghanistan</option>
+					<option value="AX">Åland Islands</option>
+					<option value="AL">Albania</option>
+					<option value="DZ">Algeria</option>
+					<option value="AS">American Samoa</option>
+					<option value="AD">Andorra</option>
+					<option value="AO">Angola</option>
+					<option value="AI">Anguilla</option>
+					<option value="AQ">Antarctica</option>
+					<option value="AG">Antigua and Barbuda</option>
+					<option value="AR">Argentina</option>
+					<option value="AM">Armenia</option>
+					<option value="AW">Aruba</option>
+					<option value="AU">Australia</option>
+					<option value="AT">Austria</option>
+					<option value="AZ">Azerbaijan</option>
+					<option value="BS">Bahamas</option>
+					<option value="BH">Bahrain</option>
+					<option value="BD">Bangladesh</option>
+					<option value="BB">Barbados</option>
+					<option value="BY">Belarus</option>
+					<option value="BE">Belgium</option>
+					<option value="BZ">Belize</option>
+					<option value="BJ">Benin</option>
+					<option value="BM">Bermuda</option>
+					<option value="BT">Bhutan</option>
+					<option value="BO">Bolivia, Plurinational State of</option>
+					<option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+					<option value="BA">Bosnia and Herzegovina</option>
+					<option value="BW">Botswana</option>
+					<option value="BV">Bouvet Island</option>
+					<option value="BR">Brazil</option>
+					<option value="IO">British Indian Ocean Territory</option>
+					<option value="BN">Brunei Darussalam</option>
+					<option value="BG">Bulgaria</option>
+					<option value="BF">Burkina Faso</option>
+					<option value="BI">Burundi</option>
+					<option value="KH">Cambodia</option>
+					<option value="CM">Cameroon</option>
+					<option value="CA">Canada</option>
+					<option value="CV">Cape Verde</option>
+					<option value="KY">Cayman Islands</option>
+					<option value="CF">Central African Republic</option>
+					<option value="TD">Chad</option>
+					<option value="CL">Chile</option>
+					<option value="CN">China</option>
+					<option value="CX">Christmas Island</option>
+					<option value="CC">Cocos (Keeling) Islands</option>
+					<option value="CO">Colombia</option>
+					<option value="KM">Comoros</option>
+					<option value="CG">Congo</option>
+					<option value="CD">Congo, the Democratic Republic of the</option>
+					<option value="CK">Cook Islands</option>
+					<option value="CR">Costa Rica</option>
+					<option value="CI">Côte d'Ivoire</option>
+					<option value="HR">Croatia</option>
+					<option value="CU">Cuba</option>
+					<option value="CW">Curaçao</option>
+					<option value="CY">Cyprus</option>
+					<option value="CZ">Czech Republic</option>
+					<option value="DK">Denmark</option>
+					<option value="DJ">Djibouti</option>
+					<option value="DM">Dominica</option>
+					<option value="DO">Dominican Republic</option>
+					<option value="EC">Ecuador</option>
+					<option value="EG">Egypt</option>
+					<option value="SV">El Salvador</option>
+					<option value="GQ">Equatorial Guinea</option>
+					<option value="ER">Eritrea</option>
+					<option value="EE">Estonia</option>
+					<option value="ET">Ethiopia</option>
+					<option value="FK">Falkland Islands (Malvinas)</option>
+					<option value="FO">Faroe Islands</option>
+					<option value="FJ">Fiji</option>
+					<option value="FI">Finland</option>
+					<option value="FR">France</option>
+					<option value="GF">French Guiana</option>
+					<option value="PF">French Polynesia</option>
+					<option value="TF">French Southern Territories</option>
+					<option value="GA">Gabon</option>
+					<option value="GM">Gambia</option>
+					<option value="GE">Georgia</option>
+					<option value="DE">Germany</option>
+					<option value="GH">Ghana</option>
+					<option value="GI">Gibraltar</option>
+					<option value="GR">Greece</option>
+					<option value="GL">Greenland</option>
+					<option value="GD">Grenada</option>
+					<option value="GP">Guadeloupe</option>
+					<option value="GU">Guam</option>
+					<option value="GT">Guatemala</option>
+					<option value="GG">Guernsey</option>
+					<option value="GN">Guinea</option>
+					<option value="GW">Guinea-Bissau</option>
+					<option value="GY">Guyana</option>
+					<option value="HT">Haiti</option>
+					<option value="HM">Heard Island and McDonald Islands</option>
+					<option value="VA">Holy See (Vatican City State)</option>
+					<option value="HN">Honduras</option>
+					<option value="HK">Hong Kong</option>
+					<option value="HU">Hungary</option>
+					<option value="IS">Iceland</option>
+					<option value="IN">India</option>
+					<option value="ID">Indonesia</option>
+					<option value="IR">Iran, Islamic Republic of</option>
+					<option value="IQ">Iraq</option>
+					<option value="IE">Ireland</option>
+					<option value="IM">Isle of Man</option>
+					<option value="IL">Israel</option>
+					<option value="IT">Italy</option>
+					<option value="JM">Jamaica</option>
+					<option value="JP">Japan</option>
+					<option value="JE">Jersey</option>
+					<option value="JO">Jordan</option>
+					<option value="KZ">Kazakhstan</option>
+					<option value="KE">Kenya</option>
+					<option value="KI">Kiribati</option>
+					<option value="KP">Korea, Democratic People's Republic of</option>
+					<option value="KR">Korea, Republic of</option>
+					<option value="KW">Kuwait</option>
+					<option value="KG">Kyrgyzstan</option>
+					<option value="LA">Lao People's Democratic Republic</option>
+					<option value="LV">Latvia</option>
+					<option value="LB">Lebanon</option>
+					<option value="LS">Lesotho</option>
+					<option value="LR">Liberia</option>
+					<option value="LY">Libya</option>
+					<option value="LI">Liechtenstein</option>
+					<option value="LT">Lithuania</option>
+					<option value="LU">Luxembourg</option>
+					<option value="MO">Macao</option>
+					<option value="MK">Macedonia, the former Yugoslav Republic of</option>
+					<option value="MG">Madagascar</option>
+					<option value="MW">Malawi</option>
+					<option value="MY">Malaysia</option>
+					<option value="MV">Maldives</option>
+					<option value="ML">Mali</option>
+					<option value="MT">Malta</option>
+					<option value="MH">Marshall Islands</option>
+					<option value="MQ">Martinique</option>
+					<option value="MR">Mauritania</option>
+					<option value="MU">Mauritius</option>
+					<option value="YT">Mayotte</option>
+					<option value="MX">Mexico</option>
+					<option value="FM">Micronesia, Federated States of</option>
+					<option value="MD">Moldova, Republic of</option>
+					<option value="MC">Monaco</option>
+					<option value="MN">Mongolia</option>
+					<option value="ME">Montenegro</option>
+					<option value="MS">Montserrat</option>
+					<option value="MA">Morocco</option>
+					<option value="MZ">Mozambique</option>
+					<option value="MM">Myanmar</option>
+					<option value="NA">Namibia</option>
+					<option value="NR">Nauru</option>
+					<option value="NP">Nepal</option>
+					<option value="NL">Netherlands</option>
+					<option value="NC">New Caledonia</option>
+					<option value="NZ">New Zealand</option>
+					<option value="NI">Nicaragua</option>
+					<option value="NE">Niger</option>
+					<option value="NG">Nigeria</option>
+					<option value="NU">Niue</option>
+					<option value="NF">Norfolk Island</option>
+					<option value="MP">Northern Mariana Islands</option>
+					<option value="NO">Norway</option>
+					<option value="OM">Oman</option>
+					<option value="PK">Pakistan</option>
+					<option value="PW">Palau</option>
+					<option value="PS">Palestinian Territory, Occupied</option>
+					<option value="PA">Panama</option>
+					<option value="PG">Papua New Guinea</option>
+					<option value="PY">Paraguay</option>
+					<option value="PE">Peru</option>
+					<option value="PH">Philippines</option>
+					<option value="PN">Pitcairn</option>
+					<option value="PL">Poland</option>
+					<option value="PT">Portugal</option>
+					<option value="PR">Puerto Rico</option>
+					<option value="QA">Qatar</option>
+					<option value="RE">Réunion</option>
+					<option value="RO">Romania</option>
+					<option value="RU">Russian Federation</option>
+					<option value="RW">Rwanda</option>
+					<option value="BL">Saint Barthélemy</option>
+					<option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
+					<option value="KN">Saint Kitts and Nevis</option>
+					<option value="LC">Saint Lucia</option>
+					<option value="MF">Saint Martin (French part)</option>
+					<option value="PM">Saint Pierre and Miquelon</option>
+					<option value="VC">Saint Vincent and the Grenadines</option>
+					<option value="WS">Samoa</option>
+					<option value="SM">San Marino</option>
+					<option value="ST">Sao Tome and Principe</option>
+					<option value="SA">Saudi Arabia</option>
+					<option value="SN">Senegal</option>
+					<option value="RS">Serbia</option>
+					<option value="SC">Seychelles</option>
+					<option value="SL">Sierra Leone</option>
+					<option value="SG">Singapore</option>
+					<option value="SX">Sint Maarten (Dutch part)</option>
+					<option value="SK">Slovakia</option>
+					<option value="SI">Slovenia</option>
+					<option value="SB">Solomon Islands</option>
+					<option value="SO">Somalia</option>
+					<option value="ZA">South Africa</option>
+					<option value="GS">South Georgia and the South Sandwich Islands</option>
+					<option value="SS">South Sudan</option>
+					<option value="ES">Spain</option>
+					<option value="LK">Sri Lanka</option>
+					<option value="SD">Sudan</option>
+					<option value="SR">Suriname</option>
+					<option value="SJ">Svalbard and Jan Mayen</option>
+					<option value="SZ">Swaziland</option>
+					<option value="SE">Sweden</option>
+					<option value="CH">Switzerland</option>
+					<option value="SY">Syrian Arab Republic</option>
+					<option value="TW">Taiwan, Province of China</option>
+					<option value="TJ">Tajikistan</option>
+					<option value="TZ">Tanzania, United Republic of</option>
+					<option value="TH">Thailand</option>
+					<option value="TL">Timor-Leste</option>
+					<option value="TG">Togo</option>
+					<option value="TK">Tokelau</option>
+					<option value="TO">Tonga</option>
+					<option value="TT">Trinidad and Tobago</option>
+					<option value="TN">Tunisia</option>
+					<option value="TR">Turkey</option>
+					<option value="TM">Turkmenistan</option>
+					<option value="TC">Turks and Caicos Islands</option>
+					<option value="TV">Tuvalu</option>
+					<option value="UG">Uganda</option>
+					<option value="UA">Ukraine</option>
+					<option value="AE">United Arab Emirates</option>
+					<option value="GB">United Kingdom</option>
+					<option value="US">United States</option>
+					<option value="UM">United States Minor Outlying Islands</option>
+					<option value="UY">Uruguay</option>
+					<option value="UZ">Uzbekistan</option>
+					<option value="VU">Vanuatu</option>
+					<option value="VE">Venezuela, Bolivarian Republic of</option>
+					<option value="VN">Viet Nam</option>
+					<option value="VG">Virgin Islands, British</option>
+					<option value="VI">Virgin Islands, U.S.</option>
+					<option value="WF">Wallis and Futuna</option>
+					<option value="EH">Western Sahara</option>
+					<option value="YE">Yemen</option>
+					<option value="ZM">Zambia</option>
+					<option value="ZW">Zimbabwe</option>
+				</select>
+			  <p>
+			  {{ @dict_archivesurl }}<br>
+			  <input type="url" name="url" value="" size="35">
+			  <p>
+			  {{ @dict_archivesemail }}<br>
+			  <input type="email" name="email" value="" size="35">
+			  <p>
+			  {{ @dict_archiveslatitude }}*<br><small>{{ @dict_decimaldegreesplease | raw }}. {{ @dict_howfindcoordinates | raw }}</small><br>
+			  <input type="text" name="latitude" value="" required size="35">
+			  <p>
+			  {{ @dict_archiveslongitude }}*<br><small>{{ @dict_decimaldegreesplease | raw }}. {{ @dict_howfindcoordinates | raw }}</small><br>
+			  <input type="text" name="longitude" value="" required size="35">
+			  <br>
+			  <br>
+			  {{ @dict_collaborator }}<br><small>{{ @dict_collaboratoryou }}</small><br>
+			  <input type="text" name="contributor" value="" size="35">
+			  <p>
+			  {{ @dict_collaboratoremail }}<br><small>{{ @dict_collaboratoremailobs }}</small><br>
+			  <input type="text" name="contributoremail" value="" size="35">
+			  <br><br>
+			  <div class="g-recaptcha" data-sitekey="6LfYUxQUAAAAADfxBIQkBcT7SocM_Z1R5kZufEJN"></div>  
+			  <br><br>
+			  <input type="submit" value="{{ @dict_sendtoinclusion }}">
+			</form> 
+			</div> 
+			</repeat>
+		</check>
+		
+		<check if="{{ @page=='login' }}">
+			<form action="/list" method="POST">
+			
+			   Login:<br>
+			  <input type="text" name="user" size="20" value="">
+			  <br>
+			  Senha:<br>
+			  <input type="password" name="pass" size="20" value="">
+
+			  <br>
+			
+			  <input type="submit" value="Entrar">
+			</form> 
+		</check>
+		
+		
+		<check if="{{ @page=='add-done' }}">
+
+			  <br> {{ @dict_adddone | raw }}
+
+		</check>
+		
+		<check if="{{ @page=='add-fail' }}">
+
+			  <br> {{ @dict_addfail | raw }}
+
+		</check>
+		
+		<check if="{{ @page=='about' }}">
+		<div style="text-align: left;">
+			{{ @dict_textabout | raw }}
+		</div>
+		
+		<div style="text-align: left;">
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="hosted_button_id" value="NKGPPEVWZBL4L">
+			<table>
+			<tr><td><input type="hidden" name="on0" value="Archives World Map">Archives World Map</td></tr><tr><td><select name="os0">
+				<option value="Novice Cartographer">Novice Cartographer : €3,00 EUR - mensalmente</option>
+				<option value="Amateur Cartographer">Amateur Cartographer : €5,00 EUR - mensalmente</option>
+				<option value="True Cartographer">True Cartographer : €10,00 EUR - mensalmente</option>
+				<option value="Epic Cartographer">Epic Cartographer : €15,00 EUR - mensalmente</option>
+			</select> </td></tr>
+			</table>
+			<input type="hidden" name="currency_code" value="EUR">
+			<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribe_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+			<img alt="" border="0" src="https://www.paypalobjects.com/pt_BR/i/scr/pixel.gif" width="1" height="1">
+			</form>
+		</div>
+	
+		
+		</check>
+
+		<check if="{{ @page=='stats' }}">
+
+			<div style="text-align: left;">
+			<h2>{{ @dict_statsof }}</h2>
+				<ul> 
+					<li>{{ @dict_institutionsdb }}
+						<ul>
+							<li>{{ @qtdinstituicoes }}</li>
+						</ul>
+					</li>
+					<li>{{ @dict_top10countries }}
+						<ul>
+							<li>{{ @paisesverificados[0]['pais'] }} - {{ @paisesverificados[0]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[1]['pais'] }} - {{ @paisesverificados[1]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[2]['pais'] }} - {{ @paisesverificados[2]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[3]['pais'] }} - {{ @paisesverificados[3]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[4]['pais'] }} - {{ @paisesverificados[4]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[5]['pais'] }} - {{ @paisesverificados[5]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[6]['pais'] }} - {{ @paisesverificados[6]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[7]['pais'] }} - {{ @paisesverificados[7]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[8]['pais'] }} - {{ @paisesverificados[8]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[9]['pais'] }} - {{ @paisesverificados[9]['visits'] }} {{ @dict_institutionsdb }}</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</check>
+		
+		<check if="{{ @page=='contact' }}">
+		
+			{{ @dict_textcontactpage | raw }}
+		
+		</check>
+		
+				
+		</check>
+		
+		<check if="{{ @page=='thankyou' }}">
+		
+			{{ @dict_textthankyoupage | raw }}
+		
+		</check>
+		
+		</check>
+		 
+		<check if="{{ @page=='search' }}">
+		
+		<section id="busca-api">
+			<form action="/search/result" method="GET">
+			<table width="90%">
+			  <tr>
+				<th width="8">{{ @dict_search }}:</th>
+			  </tr>
+			  <tr>
+				<th width="15">
+				  <input type="text" name="q" size="30" minlength="4"> 
+				</th>
+
+			  </tr>
+			 <table />
+			<br>
+			</form> 
+		</section>
+		</check>
+		
+		<check if="{{ @page=='search-result' }}">
+		
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- Middle post -->
+			<ins class="adsbygoogle"
+				 style="display:block"
+				 data-ad-client="ca-pub-7782822980648918"
+				 data-ad-slot="4084570559"
+				 data-ad-format="auto"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			<hr>
+			<br>
+			<h3>{{ @dict_searchresults }}:</b> "{{ @GET.q }}"</h3> 
+			<table width="90%" border="1">
+			  <tr>
+				<th width="50"><center>{{ @dict_institution }}</center></th>
+				<th width="10"><center>{{ @dict_archivescountry }}</center></th>
+				<th width="5"><center></center></th>
+				
+			  </tr>
+			<repeat group="{{ @lista }}" value="{{ @item }}">
+			  <tr>
+				<td><center>{{ @item.nome }}</center></td>
+				<td><center>{{ @item.pais }}</center></td>
+				<td><center><a href="https://map.arquivista.net/info/{{ @item.id }}">info</center></td>
+			  </tr>
+			</repeat>
+			</table>
+		</check>
+		<br><p>
+
+			<hr width="80">
+			<small>{{ @dict_awmwascreatedby | raw }}</small></p>
+		
+	 </div><!-- /.home -->
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/jquery.min.js"><\/script>')</script>
+    <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/ie10-viewport-bug-workaround.js"></script>
+
+	<script src="https://map.arquivista.net/etc/awesomplete/awesomplete.js" async></script>
+	<script>
+	var ajax = new XMLHttpRequest();
+	ajax.open("GET", "https://map.arquivista.net/api", true);
+	ajax.onload = function() {
+		var list = JSON.parse(ajax.responseText).map(function(i) { return i.nome; });
+		new Awesomplete(document.querySelector("#busca-api input"),{ list: list });
+	};
+	ajax.send();
+	</script>
+	
+	
+  </body>
+</html> 
+
+          </button>
+          <a class="navbar-brand" href="https://map.arquivista.net">Archives World Map</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="https://map.arquivista.net/">{{ @dict_home }}</a></li>
+            <li><a href="https://map.arquivista.net/add">{{ @dict_addarchives }}</a></li>
+			<li><a href="https://map.arquivista.net/search">{{ @dict_search }}</a></li>
+			<li><a href="https://map.arquivista.net/stats">{{ @dict_stats }}</a></li>
+            <li><a href="https://map.arquivista.net/about">{{ @dict_about }}</a></li>
+			<li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="home">
+	  <!-- Conteúdo oriundo do ff3 -->
+	
+		<check if="{{ @page=='mapa' }}">
+		
+			<!-- Archives World Map home -->
+			<!--<h1>Archives World Map</h1>
+			<p class="lead">{{ @dict_theopenandcollaborative }}</p>-->
+<!--
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:320px;height:100px"
+     data-ad-client="ca-pub-7782822980648918"
+     data-ad-slot="1062084952"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script><br><hr>-->
+			
+			<p><a href="https://www.facebook.com/archivesworldmap/" target="_blank">{{ @dict_facebookcommunity }}</a></p>
+			<small>{{ @dict_Languages }}: <a href="?language=en-US">English</a> | <a href="?language=es">Castellano</a> | <a href="?language=pt-BR">Português</a> | <a href="?language=cn">汉语/漢語</a></small><br>
+			<br>
+			<div id="mapid" style="{{ @sizemap | raw }} margin: 0 auto"></div>
+			<script>
+ 
+				var mymap = L.map('mapid').setView([21.525484, -12.572412], 2);
+
+				L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYXJxdWl2aXN0YW5ldCIsImEiOiJjaXlwOXAzN2EwMDM0NDRwY3h0aG1yejB2In0.kGvUj7knV4iUH1OSnSqzdw', {
+					maxZoom: 18,
+					attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+					'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a> | ' +
+					'Archives geo and data &copy; <a href="https://map.arquivista.net">Archives World Map</a>',
+					id: 'mapbox.streets'
+				}).addTo(mymap);
+
+				{{ @pinagem | raw }}
+				
+			</script>
+		</check>
+		<check if="{{ @page=='listmap' || @page=='listallmap' }}">
+			<p><a href="/logout">logout</a></p>
+			<table width="95%">
+			  <tr>
+				<th width="8"><center>ID</th>
+				<th width="55"><center>{{ @dict_institution }}</center></th>
+				<th width="5"><center>{{ @dict_archivescountry }}</center></th>
+				<th width="10"><center>{{ @dict_archiveslatitude }}</center></th>
+				<th width="10"><center>{{ @dict_archiveslongitude}}</center></th>
+				<th width="10"><center>{{ @dict_map }}</center></th>
+				<th width="10"><center>Ações</th>
+			  </tr>
+			<repeat group="{{ @lista }}" value="{{ @item }}">
+			  <tr>
+				<td><center>{{ @item.id }}</center></td>
+				<td><center><check if="{{ @item.status=='waiting' }}"><b></check>{{ @item.nome }}<check if="{{ @item.status=='waiting' }}"></b></check></center></td>
+				<td><center>{{ @item.pais }}</center></td>
+				<td><center>{{ @item.latitude }}</center></td>
+				<td><center>{{ @item.longitude }}</center></td>
+				<td><center><a href="http://maps.google.com/?q={{ @item.latitude }},{{ @item.longitude }}" target="_blank">Google Maps</a></center></td>
+				<td><center><a href="./edit/{{ @item.id }}">editar</a></center></td>
+			  </tr>
+			</repeat>
+   
+      </table>
+      <br>
+      <check if="{{ @page=='listallmap' }}">
+        <a href="https://map.arquivista.net/listall?since={{ @back }}"><< Back</a>  - 
+        <a href="https://map.arquivista.net/listall?since={{ @forward }}">Forward >></a>
+			</check>
+		</check>
+				
+		<check if="{{ @page=='editmap' }}">
+		<repeat group="{{ @lista }}" value="{{ @item }}">
+		<form action="/proc-editmap/{{ @item.id }}" method="POST">
+		  <p>
+		  {{ @dict_archivesname }}<br>
+		  <input type="text" name="nome" value="{{ @item.nome }}" size="50" required>
+		  <p>
+		  {{ @dict_identifier }}<br>
+		  <input type="text" name="identificador" value="{{ @item.identificador }}" size="50">
+		  <p>
+		  {{ @dict_archivesaddress }}<br>
+		  <input type="text" name="logradouro" value="{{ @item.logradouro }}" size="50">
+		  <p>
+		  {{ @dict_archivescity }}<br>
+		  <input type="text" name="cidade" value="{{ @item.cidade }}" size="50">
+		  <p>
+		  {{ @dict_archivesdistrict }}<br>
+		  <input type="text" name="estado" value="{{ @item.estado }}" size="50">
+		  <p>
+		  {{ @dict_archivescountry }}<br>
+		  <input type="text" name="pais" value="{{ @item.pais }}" size="50">
+		  <p>
+		  {{ @dict_archivesurl }}<br>
+		  <input type="url" name="url" value="{{ @item.url }}" size="50">
+		  <p>
+		  {{ @dict_archivesemail }}<br>
+		  <input type="email" name="email" value="{{ @item.email }}" size="50">
+		  <p>
+		  {{ @dict_archiveslatitude }}<br>
+		  <input type="text" name="latitude" value="{{ @item.latitude }}" size="50" required>
+		  <p>
+		  {{ @dict_archiveslongitude }}<br>
+		  <input type="text" name="longitude" value="{{ @item.longitude }}" size="50" required>
+		  <br>
+		  <br>
+		  {{ @dict_archivesyourname }}<br>
+		  <input type="text" name="contributor" value="{{ @item.contributor }}" size="50">
+		  <br>
+		  {{ @dict_archivesyouremail }}<br>
+		  <input type="text" name="contributoremail" value="{{ @item.contributoremail }}" size="50">
+		  <br>
+		  {{ @dict_archivesstatus }}<br>
+		  <select name="status">
+				<option value="waiting" <check if="{{ @item.status == 'waiting' }}">selected</check>>Waiting</option>
+				<option value="verified" <check if="{{ @item.status == 'verified' }}">selected</check>>Verified</option>
+		  </select>
+		  <br>
+		  <br>
+		  <input type="submit" value="{{ @dict_sendtoinclusion }}">
+		</form> 
+		<p><a href="../del/{{ @item.id }}">deletar registro</a>
+		</repeat>
+		</check>
+
+		<check if="{{ @page=='infomap' }}">
+			<repeat group="{{ @lista }}" value="{{ @item }}">
+			
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- Middle post -->
+			<ins class="adsbygoogle"
+				 style="display:block"
+				 data-ad-client="ca-pub-7782822980648918"
+				 data-ad-slot="4084570559"
+				 data-ad-format="auto"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			<hr>
+			<br>
+			<div style="text-align: left;">
+			<h2>{{ @dict_infoarchives }}</h2>
+			<form>
+			<p>
+			  {{ @dict_institution }}<br>
+			  <input type="text" name="nome" value="{{ @item.nome | raw }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_identifier }}<br>
+			  <input type="text" name="identificador" value="{{ @item.identificador }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivesaddress }}<br>
+			  <input type="text" name="logradouro" value="{{ @item.logradouro }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivescity }}<br>
+			  <input type="text" name="cidade" value="{{ @item.cidade }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivesdistrict }}<br>
+			  <input type="text" name="estado" value="{{ @item.estado }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivescountry }}<br>
+			  <input type="text" name="pais" value="{{ @item.pais }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_archivesurl }}<br>
+			  <a href="{{ @item.url }}" target="_blank">{{ @item.url }}</a>
+			  <p>
+			  {{ @dict_archivesemail }} <br>
+			  <input type="email" name="email" value="{{ @item.email }}" readonly="readonly" size="35">
+			  <p>
+			  {{ @dict_location }}:<br>
+			  [<a href="https://www.openstreetmap.org/?mlat={{ @item.latitude }}&mlon={{ @item.longitude }}#map=16/{{ @item.latitude }}/{{ @item.longitude }}" target="_blank">OpenStreetMap</a>] [<a href="http://maps.google.com/?q={{ @item.latitude }},{{ @item.longitude }}" target="_blank">Google Maps</a>] <br>
+			  <p>
+			  {{ @dict_collaborator }}<br>
+			  <input type="text" name="contributor" value="{{ @item.contributor }}" readonly="readonly" size="35">
+ 
+			</form> 
+			</div>
+			</repeat>
+		</check>
+
+		<check if="{{ @page=='addmap' }}">
+		<div style="text-align: left;">
+			<h2>{{ @dict_addarchives }}</h2>
+			<form action="/proc-addmap" method="POST">
+			  <p>
+			  {{ @dict_archivesname }}*<br><small>{{ @dict_nameauthorisedform | raw }}</small><br>
+			  <input type="text" name="nome" value="" size="35" required>
+			  <p>
+			  {{ @dict_identifier }}<br><small>{{ @dict_identifierform | raw }}</small><br>
+			  <input type="text" name="identificador" value="" size="35">
+			  <p>
+			  {{ @dict_archivesaddress }}<br>
+			  <input type="text" name="logradouro" value="" size="35">
+			  <p>
+			  {{ @dict_archivescity }}<br>
+			  <input type="text" name="cidade" value="" size="35">
+			  <p>
+			  {{ @dict_archivesdistrict }}<br>
+			  <input type="text" name="estado" value="" size="35">
+			  <p>
+			  {{ @dict_archivescountry }}*<br>
+			  <select name="pais">
+					<option value="AF">Afghanistan</option>
+					<option value="AX">Åland Islands</option>
+					<option value="AL">Albania</option>
+					<option value="DZ">Algeria</option>
+					<option value="AS">American Samoa</option>
+					<option value="AD">Andorra</option>
+					<option value="AO">Angola</option>
+					<option value="AI">Anguilla</option>
+					<option value="AQ">Antarctica</option>
+					<option value="AG">Antigua and Barbuda</option>
+					<option value="AR">Argentina</option>
+					<option value="AM">Armenia</option>
+					<option value="AW">Aruba</option>
+					<option value="AU">Australia</option>
+					<option value="AT">Austria</option>
+					<option value="AZ">Azerbaijan</option>
+					<option value="BS">Bahamas</option>
+					<option value="BH">Bahrain</option>
+					<option value="BD">Bangladesh</option>
+					<option value="BB">Barbados</option>
+					<option value="BY">Belarus</option>
+					<option value="BE">Belgium</option>
+					<option value="BZ">Belize</option>
+					<option value="BJ">Benin</option>
+					<option value="BM">Bermuda</option>
+					<option value="BT">Bhutan</option>
+					<option value="BO">Bolivia, Plurinational State of</option>
+					<option value="BQ">Bonaire, Sint Eustatius and Saba</option>
+					<option value="BA">Bosnia and Herzegovina</option>
+					<option value="BW">Botswana</option>
+					<option value="BV">Bouvet Island</option>
+					<option value="BR">Brazil</option>
+					<option value="IO">British Indian Ocean Territory</option>
+					<option value="BN">Brunei Darussalam</option>
+					<option value="BG">Bulgaria</option>
+					<option value="BF">Burkina Faso</option>
+					<option value="BI">Burundi</option>
+					<option value="KH">Cambodia</option>
+					<option value="CM">Cameroon</option>
+					<option value="CA">Canada</option>
+					<option value="CV">Cape Verde</option>
+					<option value="KY">Cayman Islands</option>
+					<option value="CF">Central African Republic</option>
+					<option value="TD">Chad</option>
+					<option value="CL">Chile</option>
+					<option value="CN">China</option>
+					<option value="CX">Christmas Island</option>
+					<option value="CC">Cocos (Keeling) Islands</option>
+					<option value="CO">Colombia</option>
+					<option value="KM">Comoros</option>
+					<option value="CG">Congo</option>
+					<option value="CD">Congo, the Democratic Republic of the</option>
+					<option value="CK">Cook Islands</option>
+					<option value="CR">Costa Rica</option>
+					<option value="CI">Côte d'Ivoire</option>
+					<option value="HR">Croatia</option>
+					<option value="CU">Cuba</option>
+					<option value="CW">Curaçao</option>
+					<option value="CY">Cyprus</option>
+					<option value="CZ">Czech Republic</option>
+					<option value="DK">Denmark</option>
+					<option value="DJ">Djibouti</option>
+					<option value="DM">Dominica</option>
+					<option value="DO">Dominican Republic</option>
+					<option value="EC">Ecuador</option>
+					<option value="EG">Egypt</option>
+					<option value="SV">El Salvador</option>
+					<option value="GQ">Equatorial Guinea</option>
+					<option value="ER">Eritrea</option>
+					<option value="EE">Estonia</option>
+					<option value="ET">Ethiopia</option>
+					<option value="FK">Falkland Islands (Malvinas)</option>
+					<option value="FO">Faroe Islands</option>
+					<option value="FJ">Fiji</option>
+					<option value="FI">Finland</option>
+					<option value="FR">France</option>
+					<option value="GF">French Guiana</option>
+					<option value="PF">French Polynesia</option>
+					<option value="TF">French Southern Territories</option>
+					<option value="GA">Gabon</option>
+					<option value="GM">Gambia</option>
+					<option value="GE">Georgia</option>
+					<option value="DE">Germany</option>
+					<option value="GH">Ghana</option>
+					<option value="GI">Gibraltar</option>
+					<option value="GR">Greece</option>
+					<option value="GL">Greenland</option>
+					<option value="GD">Grenada</option>
+					<option value="GP">Guadeloupe</option>
+					<option value="GU">Guam</option>
+					<option value="GT">Guatemala</option>
+					<option value="GG">Guernsey</option>
+					<option value="GN">Guinea</option>
+					<option value="GW">Guinea-Bissau</option>
+					<option value="GY">Guyana</option>
+					<option value="HT">Haiti</option>
+					<option value="HM">Heard Island and McDonald Islands</option>
+					<option value="VA">Holy See (Vatican City State)</option>
+					<option value="HN">Honduras</option>
+					<option value="HK">Hong Kong</option>
+					<option value="HU">Hungary</option>
+					<option value="IS">Iceland</option>
+					<option value="IN">India</option>
+					<option value="ID">Indonesia</option>
+					<option value="IR">Iran, Islamic Republic of</option>
+					<option value="IQ">Iraq</option>
+					<option value="IE">Ireland</option>
+					<option value="IM">Isle of Man</option>
+					<option value="IL">Israel</option>
+					<option value="IT">Italy</option>
+					<option value="JM">Jamaica</option>
+					<option value="JP">Japan</option>
+					<option value="JE">Jersey</option>
+					<option value="JO">Jordan</option>
+					<option value="KZ">Kazakhstan</option>
+					<option value="KE">Kenya</option>
+					<option value="KI">Kiribati</option>
+					<option value="KP">Korea, Democratic People's Republic of</option>
+					<option value="KR">Korea, Republic of</option>
+					<option value="KW">Kuwait</option>
+					<option value="KG">Kyrgyzstan</option>
+					<option value="LA">Lao People's Democratic Republic</option>
+					<option value="LV">Latvia</option>
+					<option value="LB">Lebanon</option>
+					<option value="LS">Lesotho</option>
+					<option value="LR">Liberia</option>
+					<option value="LY">Libya</option>
+					<option value="LI">Liechtenstein</option>
+					<option value="LT">Lithuania</option>
+					<option value="LU">Luxembourg</option>
+					<option value="MO">Macao</option>
+					<option value="MK">Macedonia, the former Yugoslav Republic of</option>
+					<option value="MG">Madagascar</option>
+					<option value="MW">Malawi</option>
+					<option value="MY">Malaysia</option>
+					<option value="MV">Maldives</option>
+					<option value="ML">Mali</option>
+					<option value="MT">Malta</option>
+					<option value="MH">Marshall Islands</option>
+					<option value="MQ">Martinique</option>
+					<option value="MR">Mauritania</option>
+					<option value="MU">Mauritius</option>
+					<option value="YT">Mayotte</option>
+					<option value="MX">Mexico</option>
+					<option value="FM">Micronesia, Federated States of</option>
+					<option value="MD">Moldova, Republic of</option>
+					<option value="MC">Monaco</option>
+					<option value="MN">Mongolia</option>
+					<option value="ME">Montenegro</option>
+					<option value="MS">Montserrat</option>
+					<option value="MA">Morocco</option>
+					<option value="MZ">Mozambique</option>
+					<option value="MM">Myanmar</option>
+					<option value="NA">Namibia</option>
+					<option value="NR">Nauru</option>
+					<option value="NP">Nepal</option>
+					<option value="NL">Netherlands</option>
+					<option value="NC">New Caledonia</option>
+					<option value="NZ">New Zealand</option>
+					<option value="NI">Nicaragua</option>
+					<option value="NE">Niger</option>
+					<option value="NG">Nigeria</option>
+					<option value="NU">Niue</option>
+					<option value="NF">Norfolk Island</option>
+					<option value="MP">Northern Mariana Islands</option>
+					<option value="NO">Norway</option>
+					<option value="OM">Oman</option>
+					<option value="PK">Pakistan</option>
+					<option value="PW">Palau</option>
+					<option value="PS">Palestinian Territory, Occupied</option>
+					<option value="PA">Panama</option>
+					<option value="PG">Papua New Guinea</option>
+					<option value="PY">Paraguay</option>
+					<option value="PE">Peru</option>
+					<option value="PH">Philippines</option>
+					<option value="PN">Pitcairn</option>
+					<option value="PL">Poland</option>
+					<option value="PT">Portugal</option>
+					<option value="PR">Puerto Rico</option>
+					<option value="QA">Qatar</option>
+					<option value="RE">Réunion</option>
+					<option value="RO">Romania</option>
+					<option value="RU">Russian Federation</option>
+					<option value="RW">Rwanda</option>
+					<option value="BL">Saint Barthélemy</option>
+					<option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
+					<option value="KN">Saint Kitts and Nevis</option>
+					<option value="LC">Saint Lucia</option>
+					<option value="MF">Saint Martin (French part)</option>
+					<option value="PM">Saint Pierre and Miquelon</option>
+					<option value="VC">Saint Vincent and the Grenadines</option>
+					<option value="WS">Samoa</option>
+					<option value="SM">San Marino</option>
+					<option value="ST">Sao Tome and Principe</option>
+					<option value="SA">Saudi Arabia</option>
+					<option value="SN">Senegal</option>
+					<option value="RS">Serbia</option>
+					<option value="SC">Seychelles</option>
+					<option value="SL">Sierra Leone</option>
+					<option value="SG">Singapore</option>
+					<option value="SX">Sint Maarten (Dutch part)</option>
+					<option value="SK">Slovakia</option>
+					<option value="SI">Slovenia</option>
+					<option value="SB">Solomon Islands</option>
+					<option value="SO">Somalia</option>
+					<option value="ZA">South Africa</option>
+					<option value="GS">South Georgia and the South Sandwich Islands</option>
+					<option value="SS">South Sudan</option>
+					<option value="ES">Spain</option>
+					<option value="LK">Sri Lanka</option>
+					<option value="SD">Sudan</option>
+					<option value="SR">Suriname</option>
+					<option value="SJ">Svalbard and Jan Mayen</option>
+					<option value="SZ">Swaziland</option>
+					<option value="SE">Sweden</option>
+					<option value="CH">Switzerland</option>
+					<option value="SY">Syrian Arab Republic</option>
+					<option value="TW">Taiwan, Province of China</option>
+					<option value="TJ">Tajikistan</option>
+					<option value="TZ">Tanzania, United Republic of</option>
+					<option value="TH">Thailand</option>
+					<option value="TL">Timor-Leste</option>
+					<option value="TG">Togo</option>
+					<option value="TK">Tokelau</option>
+					<option value="TO">Tonga</option>
+					<option value="TT">Trinidad and Tobago</option>
+					<option value="TN">Tunisia</option>
+					<option value="TR">Turkey</option>
+					<option value="TM">Turkmenistan</option>
+					<option value="TC">Turks and Caicos Islands</option>
+					<option value="TV">Tuvalu</option>
+					<option value="UG">Uganda</option>
+					<option value="UA">Ukraine</option>
+					<option value="AE">United Arab Emirates</option>
+					<option value="GB">United Kingdom</option>
+					<option value="US">United States</option>
+					<option value="UM">United States Minor Outlying Islands</option>
+					<option value="UY">Uruguay</option>
+					<option value="UZ">Uzbekistan</option>
+					<option value="VU">Vanuatu</option>
+					<option value="VE">Venezuela, Bolivarian Republic of</option>
+					<option value="VN">Viet Nam</option>
+					<option value="VG">Virgin Islands, British</option>
+					<option value="VI">Virgin Islands, U.S.</option>
+					<option value="WF">Wallis and Futuna</option>
+					<option value="EH">Western Sahara</option>
+					<option value="YE">Yemen</option>
+					<option value="ZM">Zambia</option>
+					<option value="ZW">Zimbabwe</option>
+				</select>
+			  <p>
+			  {{ @dict_archivesurl }}<br>
+			  <input type="url" name="url" value="" size="35">
+			  <p>
+			  {{ @dict_archivesemail }}<br>
+			  <input type="email" name="email" value="" size="35">
+			  <p>
+			  {{ @dict_archiveslatitude }}*<br><small>{{ @dict_decimaldegreesplease | raw }}. {{ @dict_howfindcoordinates | raw }}</small><br>
+			  <input type="text" name="latitude" value="" required size="35">
+			  <p>
+			  {{ @dict_archiveslongitude }}*<br><small>{{ @dict_decimaldegreesplease | raw }}. {{ @dict_howfindcoordinates | raw }}</small><br>
+			  <input type="text" name="longitude" value="" required size="35">
+			  <br>
+			  <br>
+			  {{ @dict_collaborator }}<br><small>{{ @dict_collaboratoryou }}</small><br>
+			  <input type="text" name="contributor" value="" size="35">
+			  <p>
+			  {{ @dict_collaboratoremail }}<br><small>{{ @dict_collaboratoremailobs }}</small><br>
+			  <input type="text" name="contributoremail" value="" size="35">
+			  <br><br>
+			  <div class="g-recaptcha" data-sitekey="6LfYUxQUAAAAADfxBIQkBcT7SocM_Z1R5kZufEJN"></div>  
+			  <br><br>
+			  <input type="submit" value="{{ @dict_sendtoinclusion }}">
+			</form> 
+			</div> 
+			</repeat>
+		</check>
+		
+		<check if="{{ @page=='login' }}">
+			<form action="/list" method="POST">
+			
+			   Login:<br>
+			  <input type="text" name="user" size="20" value="">
+			  <br>
+			  Senha:<br>
+			  <input type="password" name="pass" size="20" value="">
+
+			  <br>
+			
+			  <input type="submit" value="Entrar">
+			</form> 
+		</check>
+		
+		
+		<check if="{{ @page=='add-done' }}">
+
+			  <br> {{ @dict_adddone | raw }}
+
+		</check>
+		
+		<check if="{{ @page=='add-fail' }}">
+
+			  <br> {{ @dict_addfail | raw }}
+
+		</check>
+		
+		<check if="{{ @page=='about' }}">
+		<div style="text-align: left;">
+			{{ @dict_textabout | raw }}
+		</div>
+		
+		<div style="text-align: left;">
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="hosted_button_id" value="NKGPPEVWZBL4L">
+			<table>
+			<tr><td><input type="hidden" name="on0" value="Archives World Map">Archives World Map</td></tr><tr><td><select name="os0">
+				<option value="Novice Cartographer">Novice Cartographer : €3,00 EUR - mensalmente</option>
+				<option value="Amateur Cartographer">Amateur Cartographer : €5,00 EUR - mensalmente</option>
+				<option value="True Cartographer">True Cartographer : €10,00 EUR - mensalmente</option>
+				<option value="Epic Cartographer">Epic Cartographer : €15,00 EUR - mensalmente</option>
+			</select> </td></tr>
+			</table>
+			<input type="hidden" name="currency_code" value="EUR">
+			<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_subscribe_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+			<img alt="" border="0" src="https://www.paypalobjects.com/pt_BR/i/scr/pixel.gif" width="1" height="1">
+			</form>
+		</div>
+	
+		
+		</check>
+
+		<check if="{{ @page=='stats' }}">
+
+			<div style="text-align: left;">
+			<h2>{{ @dict_statsof }}</h2>
+				<ul> 
+					<li>{{ @dict_institutionsdb }}
+						<ul>
+							<li>{{ @qtdinstituicoes }}</li>
+						</ul>
+					</li>
+					<li>{{ @dict_top10countries }}
+						<ul>
+							<li>{{ @paisesverificados[0]['pais'] }} - {{ @paisesverificados[0]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[1]['pais'] }} - {{ @paisesverificados[1]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[2]['pais'] }} - {{ @paisesverificados[2]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[3]['pais'] }} - {{ @paisesverificados[3]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[4]['pais'] }} - {{ @paisesverificados[4]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[5]['pais'] }} - {{ @paisesverificados[5]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[6]['pais'] }} - {{ @paisesverificados[6]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[7]['pais'] }} - {{ @paisesverificados[7]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[8]['pais'] }} - {{ @paisesverificados[8]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li>{{ @paisesverificados[9]['pais'] }} - {{ @paisesverificados[9]['visits'] }} {{ @dict_institutionsdb }}</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</check>
+		
+		<check if="{{ @page=='contact' }}">
+		
+			{{ @dict_textcontactpage | raw }}
+		
+		</check>
+		
+				
+		</check>
+		
+		<check if="{{ @page=='thankyou' }}">
+		
+			{{ @dict_textthankyoupage | raw }}
+		
+		</check>
+		
+		</check>
+		 
+		<check if="{{ @page=='search' }}">
+		
+		<section id="busca-api">
+			<form action="/search/result" method="GET">
+			<table width="90%">
+			  <tr>
+				<th width="8">{{ @dict_search }}:</th>
+			  </tr>
+			  <tr>
+				<th width="15">
+				  <input type="text" name="q" size="30" minlength="4"> 
+				</th>
+
+			  </tr>
+			 <table />
+			<br>
+			</form> 
+		</section>
+		</check>
+		
+		<check if="{{ @page=='search-result' }}">
+		
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- Middle post -->
+			<ins class="adsbygoogle"
+				 style="display:block"
+				 data-ad-client="ca-pub-7782822980648918"
+				 data-ad-slot="4084570559"
+				 data-ad-format="auto"></ins>
+			<script>
+			(adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
+			<hr>
+			<br>
+			<h3>{{ @dict_searchresults }}:</b> "{{ @GET.q }}"</h3> 
+			<table width="90%" border="1">
+			  <tr>
+				<th width="50"><center>{{ @dict_institution }}</center></th>
+				<th width="10"><center>{{ @dict_archivescountry }}</center></th>
+				<th width="5"><center></center></th>
+				
+			  </tr>
+			<repeat group="{{ @lista }}" value="{{ @item }}">
+			  <tr>
+				<td><center>{{ @item.nome }}</center></td>
+				<td><center>{{ @item.pais }}</center></td>
+				<td><center><a href="https://map.arquivista.net/info/{{ @item.id }}">info</center></td>
+			  </tr>
+			</repeat>
+			</table>
+		</check>
+		<br><p>
+
+			<hr width="80">
+			<small>{{ @dict_awmwascreatedby | raw }}</small></p>
+		
+	 </div><!-- /.home -->
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/jquery.min.js"><\/script>')</script>
+    <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/ie10-viewport-bug-workaround.js"></script>
+
+	<script src="https://map.arquivista.net/etc/awesomplete/awesomplete.js" async></script>
+	<script>
+	var ajax = new XMLHttpRequest();
+	ajax.open("GET", "https://map.arquivista.net/api", true);
+	ajax.onload = function() {
+		var list = JSON.parse(ajax.responseText).map(function(i) { return i.nome; });
+		new Awesomplete(document.querySelector("#busca-api input"),{ list: list });
+	};
+	ajax.send();
+	</script>
+	
+	
+  </body>
+</html> 

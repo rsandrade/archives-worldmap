@@ -63,11 +63,11 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="https://map.arquivista.net/">{{ @dict_home }}</a></li>
-            <li><a href="https://map.arquivista.net/add">{{ @dict_addarchives }}</a></li>
-			<li><a href="https://map.arquivista.net/search">{{ @dict_search }}</a></li>
-			<li><a href="https://map.arquivista.net/stats">{{ @dict_stats }}</a></li>
-            <li><a href="https://map.arquivista.net/about">{{ @dict_about }}</a></li>
+            <li class="active"><a href="https://map.arquivista.net/"><?php echo $dict_home; ?></a></li>
+            <li><a href="https://map.arquivista.net/add"><?php echo $dict_addarchives; ?></a></li>
+			<li><a href="https://map.arquivista.net/search"><?php echo $dict_search; ?></a></li>
+			<li><a href="https://map.arquivista.net/stats"><?php echo $dict_stats; ?></a></li>
+            <li><a href="https://map.arquivista.net/about"><?php echo $dict_about; ?></a></li>
 			<li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -79,11 +79,11 @@
       <div class="home">
 	  <!-- Conteúdo oriundo do ff3 -->
 	
-		<check if="{{ @page=='mapa' }}">
+		<?php if ($page=='mapa'): ?>
 		
 			<!-- Archives World Map home -->
 			<!--<h1>Archives World Map</h1>
-			<p class="lead">{{ @dict_theopenandcollaborative }}</p>-->
+			<p class="lead"><?php echo $dict_theopenandcollaborative; ?></p>-->
 <!--
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <ins class="adsbygoogle"
@@ -94,10 +94,10 @@
 (adsbygoogle = window.adsbygoogle || []).push({});
 </script><br><hr>-->
 			
-			<p><a href="https://www.facebook.com/archivesworldmap/" target="_blank">{{ @dict_facebookcommunity }}</a></p>
-			<small>{{ @dict_Languages }}: <a href="?language=en-US">English</a> | <a href="?language=es">Español</a> | <a href="?language=pt-BR">Português</a> | <a href="?language=cn">中文</a></small><br>
+			<p><a href="https://www.facebook.com/archivesworldmap/" target="_blank"><?php echo $dict_facebookcommunity; ?></a></p>
+			<small><?php echo $dict_Languages; ?>: <a href="?language=en-US">English</a> | <a href="?language=es">Español</a> | <a href="?language=pt-BR">Português</a> | <a href="?language=cn">中文</a></small><br>
 			<br>
-			<div id="mapid" style="{{ @sizemap | raw }} margin: 0 auto"></div>
+			<div id="mapid" style="<?php echo $this->raw($sizemap); ?> margin: 0 auto"></div>
 			<script>
  
 				var mymap = L.map('mapid').setView([21.525484, -12.572412], 2);
@@ -110,98 +110,99 @@
 					id: 'mapbox.streets'
 				}).addTo(mymap);
 
-				{{ @pinagem | raw }}
+				<?php echo $this->raw($pinagem); ?>
+
 				
 			</script>
-		</check>
-		<check if="{{ @page=='listmap' || @page=='listallmap' }}">
+		<?php endif; ?>
+		<?php if ($page=='listmap' || $page=='listallmap'): ?>
 			<p><a href="/logout">logout</a></p>
 			<table width="95%">
 			  <tr>
 				<th width="8"><center>ID</th>
-				<th width="55"><center>{{ @dict_institution }}</center></th>
-				<th width="5"><center>{{ @dict_archivescountry }}</center></th>
-				<th width="10"><center>{{ @dict_archiveslatitude }}</center></th>
-				<th width="10"><center>{{ @dict_archiveslongitude}}</center></th>
-				<th width="10"><center>{{ @dict_map }}</center></th>
+				<th width="55"><center><?php echo $dict_institution; ?></center></th>
+				<th width="5"><center><?php echo $dict_archivescountry; ?></center></th>
+				<th width="10"><center><?php echo $dict_archiveslatitude; ?></center></th>
+				<th width="10"><center><?php echo $dict_archiveslongitude; ?></center></th>
+				<th width="10"><center><?php echo $dict_map; ?></center></th>
 				<th width="10"><center>Ações</th>
 			  </tr>
-			<repeat group="{{ @lista }}" value="{{ @item }}">
+			<?php foreach (($lista?:[]) as $item): ?>
 			  <tr>
-				<td><center>{{ @item.id }}</center></td>
-				<td><center><check if="{{ @item.status=='waiting' }}"><b></check>{{ @item.nome }}<check if="{{ @item.status=='waiting' }}"></b></check></center></td>
-				<td><center>{{ @item.pais }}</center></td>
-				<td><center>{{ @item.latitude }}</center></td>
-				<td><center>{{ @item.longitude }}</center></td>
-				<td><center><a href="http://maps.google.com/?q={{ @item.latitude }},{{ @item.longitude }}" target="_blank">Google Maps</a></center></td>
-				<td><center><a href="./edit/{{ @item.id }}">editar</a></center></td>
+				<td><center><?php echo $item['id']; ?></center></td>
+				<td><center><?php if ($item['status']=='waiting'): ?><b><?php endif; ?><?php echo $item['nome']; ?><?php if ($item['status']=='waiting'): ?></b><?php endif; ?></center></td>
+				<td><center><?php echo $item['pais']; ?></center></td>
+				<td><center><?php echo $item['latitude']; ?></center></td>
+				<td><center><?php echo $item['longitude']; ?></center></td>
+				<td><center><a href="http://maps.google.com/?q=<?php echo $item['latitude']; ?>,<?php echo $item['longitude']; ?>" target="_blank">Google Maps</a></center></td>
+				<td><center><a href="./edit/<?php echo $item['id']; ?>">editar</a></center></td>
 			  </tr>
-			</repeat>
+			<?php endforeach; ?>
    
       </table>
       <br>
-      <check if="{{ @page=='listallmap' }}">
-        <a href="https://map.arquivista.net/listall?since={{ @back }}"><< Back</a>  - 
-        <a href="https://map.arquivista.net/listall?since={{ @forward }}">Forward >></a>
-			</check>
-		</check>
+      <?php if ($page=='listallmap'): ?>
+        <a href="https://map.arquivista.net/listall?since=<?php echo $back; ?>"><< Back</a>  - 
+        <a href="https://map.arquivista.net/listall?since=<?php echo $forward; ?>">Forward >></a>
+			<?php endif; ?>
+		<?php endif; ?>
 				
-		<check if="{{ @page=='editmap' }}">
-		<repeat group="{{ @lista }}" value="{{ @item }}">
-		<form action="/proc-editmap/{{ @item.id }}" method="POST">
+		<?php if ($page=='editmap'): ?>
+		<?php foreach (($lista?:[]) as $item): ?>
+		<form action="/proc-editmap/<?php echo $item['id']; ?>" method="POST">
 		  <p>
-		  {{ @dict_archivesname }}<br>
-		  <input type="text" name="nome" value="{{ @item.nome }}" size="50" required>
+		  <?php echo $dict_archivesname; ?><br>
+		  <input type="text" name="nome" value="<?php echo $item['nome']; ?>" size="50" required>
 		  <p>
-		  {{ @dict_identifier }}<br>
-		  <input type="text" name="identificador" value="{{ @item.identificador }}" size="50">
+		  <?php echo $dict_identifier; ?><br>
+		  <input type="text" name="identificador" value="<?php echo $item['identificador']; ?>" size="50">
 		  <p>
-		  {{ @dict_archivesaddress }}<br>
-		  <input type="text" name="logradouro" value="{{ @item.logradouro }}" size="50">
+		  <?php echo $dict_archivesaddress; ?><br>
+		  <input type="text" name="logradouro" value="<?php echo $item['logradouro']; ?>" size="50">
 		  <p>
-		  {{ @dict_archivescity }}<br>
-		  <input type="text" name="cidade" value="{{ @item.cidade }}" size="50">
+		  <?php echo $dict_archivescity; ?><br>
+		  <input type="text" name="cidade" value="<?php echo $item['cidade']; ?>" size="50">
 		  <p>
-		  {{ @dict_archivesdistrict }}<br>
-		  <input type="text" name="estado" value="{{ @item.estado }}" size="50">
+		  <?php echo $dict_archivesdistrict; ?><br>
+		  <input type="text" name="estado" value="<?php echo $item['estado']; ?>" size="50">
 		  <p>
-		  {{ @dict_archivescountry }}<br>
-		  <input type="text" name="pais" value="{{ @item.pais }}" size="50">
+		  <?php echo $dict_archivescountry; ?><br>
+		  <input type="text" name="pais" value="<?php echo $item['pais']; ?>" size="50">
 		  <p>
-		  {{ @dict_archivesurl }}<br>
-		  <input type="url" name="url" value="{{ @item.url }}" size="50">
+		  <?php echo $dict_archivesurl; ?><br>
+		  <input type="url" name="url" value="<?php echo $item['url']; ?>" size="50">
 		  <p>
-		  {{ @dict_archivesemail }}<br>
-		  <input type="email" name="email" value="{{ @item.email }}" size="50">
+		  <?php echo $dict_archivesemail; ?><br>
+		  <input type="email" name="email" value="<?php echo $item['email']; ?>" size="50">
 		  <p>
-		  {{ @dict_archiveslatitude }}<br>
-		  <input type="text" name="latitude" value="{{ @item.latitude }}" size="50" required>
+		  <?php echo $dict_archiveslatitude; ?><br>
+		  <input type="text" name="latitude" value="<?php echo $item['latitude']; ?>" size="50" required>
 		  <p>
-		  {{ @dict_archiveslongitude }}<br>
-		  <input type="text" name="longitude" value="{{ @item.longitude }}" size="50" required>
+		  <?php echo $dict_archiveslongitude; ?><br>
+		  <input type="text" name="longitude" value="<?php echo $item['longitude']; ?>" size="50" required>
 		  <br>
 		  <br>
-		  {{ @dict_archivesyourname }}<br>
-		  <input type="text" name="contributor" value="{{ @item.contributor }}" size="50">
+		  <?php echo $dict_archivesyourname; ?><br>
+		  <input type="text" name="contributor" value="<?php echo $item['contributor']; ?>" size="50">
 		  <br>
-		  {{ @dict_archivesyouremail }}<br>
-		  <input type="text" name="contributoremail" value="{{ @item.contributoremail }}" size="50">
+		  <?php echo $dict_archivesyouremail; ?><br>
+		  <input type="text" name="contributoremail" value="<?php echo $item['contributoremail']; ?>" size="50">
 		  <br>
-		  {{ @dict_archivesstatus }}<br>
+		  <?php echo $dict_archivesstatus; ?><br>
 		  <select name="status">
-				<option value="waiting" <check if="{{ @item.status == 'waiting' }}">selected</check>>Waiting</option>
-				<option value="verified" <check if="{{ @item.status == 'verified' }}">selected</check>>Verified</option>
+				<option value="waiting" <?php if ($item['status'] == 'waiting'): ?>selected<?php endif; ?>>Waiting</option>
+				<option value="verified" <?php if ($item['status'] == 'verified'): ?>selected<?php endif; ?>>Verified</option>
 		  </select>
 		  <br>
 		  <br>
-		  <input type="submit" value="{{ @dict_sendtoinclusion }}">
+		  <input type="submit" value="<?php echo $dict_sendtoinclusion; ?>">
 		</form> 
-		<p><a href="../del/{{ @item.id }}">deletar registro</a>
-		</repeat>
-		</check>
+		<p><a href="../del/<?php echo $item['id']; ?>">deletar registro</a>
+		<?php endforeach; ?>
+		<?php endif; ?>
 
-		<check if="{{ @page=='infomap' }}">
-			<repeat group="{{ @lista }}" value="{{ @item }}">
+		<?php if ($page=='infomap'): ?>
+			<?php foreach (($lista?:[]) as $item): ?>
 			
 			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 			<!-- Middle post -->
@@ -216,65 +217,65 @@
 			<hr>
 			<br>
 			<div style="text-align: left;">
-			<h2>{{ @dict_infoarchives }}</h2>
+			<h2><?php echo $dict_infoarchives; ?></h2>
 			<form>
 			<p>
-			  {{ @dict_institution }}<br>
-			  <input type="text" name="nome" value="{{ @item.nome | raw }}" readonly="readonly" size="35">
+			  <?php echo $dict_institution; ?><br>
+			  <input type="text" name="nome" value="<?php echo $this->raw($item['nome']); ?>" readonly="readonly" size="35">
 			  <p>
-			  {{ @dict_identifier }}<br>
-			  <input type="text" name="identificador" value="{{ @item.identificador }}" readonly="readonly" size="35">
+			  <?php echo $dict_identifier; ?><br>
+			  <input type="text" name="identificador" value="<?php echo $item['identificador']; ?>" readonly="readonly" size="35">
 			  <p>
-			  {{ @dict_archivesaddress }}<br>
-			  <input type="text" name="logradouro" value="{{ @item.logradouro }}" readonly="readonly" size="35">
+			  <?php echo $dict_archivesaddress; ?><br>
+			  <input type="text" name="logradouro" value="<?php echo $item['logradouro']; ?>" readonly="readonly" size="35">
 			  <p>
-			  {{ @dict_archivescity }}<br>
-			  <input type="text" name="cidade" value="{{ @item.cidade }}" readonly="readonly" size="35">
+			  <?php echo $dict_archivescity; ?><br>
+			  <input type="text" name="cidade" value="<?php echo $item['cidade']; ?>" readonly="readonly" size="35">
 			  <p>
-			  {{ @dict_archivesdistrict }}<br>
-			  <input type="text" name="estado" value="{{ @item.estado }}" readonly="readonly" size="35">
+			  <?php echo $dict_archivesdistrict; ?><br>
+			  <input type="text" name="estado" value="<?php echo $item['estado']; ?>" readonly="readonly" size="35">
 			  <p>
-			  {{ @dict_archivescountry }}<br>
-			  <input type="text" name="pais" value="{{ @item.pais }}" readonly="readonly" size="35">
+			  <?php echo $dict_archivescountry; ?><br>
+			  <input type="text" name="pais" value="<?php echo $item['pais']; ?>" readonly="readonly" size="35">
 			  <p>
-			  {{ @dict_archivesurl }}<br>
-			  <a href="{{ @item.url }}" target="_blank">{{ @item.nome }}</a>
+			  <?php echo $dict_archivesurl; ?><br>
+			  <a href="<?php echo $item['url']; ?>" target="_blank"><?php echo $item['nome']; ?></a>
 			  <p>
-			  {{ @dict_archivesemail }} <br>
-			  <input type="email" name="email" value="{{ @item.email }}" readonly="readonly" size="35">
+			  <?php echo $dict_archivesemail; ?> <br>
+			  <input type="email" name="email" value="<?php echo $item['email']; ?>" readonly="readonly" size="35">
 			  <p>
-			  {{ @dict_location }}:<br>
-			  [<a href="https://www.openstreetmap.org/?mlat={{ @item.latitude }}&mlon={{ @item.longitude }}#map=16/{{ @item.latitude }}/{{ @item.longitude }}" target="_blank">OpenStreetMap</a>] [<a href="http://maps.google.com/?q={{ @item.latitude }},{{ @item.longitude }}" target="_blank">Google Maps</a>] <br>
+			  <?php echo $dict_location; ?>:<br>
+			  [<a href="https://www.openstreetmap.org/?mlat=<?php echo $item['latitude']; ?>&mlon=<?php echo $item['longitude']; ?>#map=16/<?php echo $item['latitude']; ?>/<?php echo $item['longitude']; ?>" target="_blank">OpenStreetMap</a>] [<a href="http://maps.google.com/?q=<?php echo $item['latitude']; ?>,<?php echo $item['longitude']; ?>" target="_blank">Google Maps</a>] <br>
 			  <p>
-			  {{ @dict_collaborator }}<br>
-			  <input type="text" name="contributor" value="{{ @item.contributor }}" readonly="readonly" size="35">
+			  <?php echo $dict_collaborator; ?><br>
+			  <input type="text" name="contributor" value="<?php echo $item['contributor']; ?>" readonly="readonly" size="35">
  
 			</form> 
 			</div>
-			</repeat>
-		</check>
+			<?php endforeach; ?>
+		<?php endif; ?>
 
-		<check if="{{ @page=='addmap' }}">
+		<?php if ($page=='addmap'): ?>
 		<div style="text-align: left;">
-			<h2>{{ @dict_addarchives }}</h2>
+			<h2><?php echo $dict_addarchives; ?></h2>
 			<form action="/proc-addmap" method="POST">
 			  <p>
-			  {{ @dict_archivesname }}*<br><small>{{ @dict_nameauthorisedform | raw }}</small><br>
+			  <?php echo $dict_archivesname; ?>*<br><small><?php echo $this->raw($dict_nameauthorisedform); ?></small><br>
 			  <input type="text" name="nome" value="" size="35" required>
 			  <p>
-			  {{ @dict_identifier }}<br><small>{{ @dict_identifierform | raw }}</small><br>
+			  <?php echo $dict_identifier; ?><br><small><?php echo $this->raw($dict_identifierform); ?></small><br>
 			  <input type="text" name="identificador" value="" size="35">
 			  <p>
-			  {{ @dict_archivesaddress }}<br>
+			  <?php echo $dict_archivesaddress; ?><br>
 			  <input type="text" name="logradouro" value="" size="35">
 			  <p>
-			  {{ @dict_archivescity }}<br>
+			  <?php echo $dict_archivescity; ?><br>
 			  <input type="text" name="cidade" value="" size="35">
 			  <p>
-			  {{ @dict_archivesdistrict }}<br>
+			  <?php echo $dict_archivesdistrict; ?><br>
 			  <input type="text" name="estado" value="" size="35">
 			  <p>
-			  {{ @dict_archivescountry }}*<br>
+			  <?php echo $dict_archivescountry; ?>*<br>
 			  <select name="pais">
 					<option value="AF">Afghanistan</option>
 					<option value="AX">Åland Islands</option>
@@ -527,34 +528,34 @@
 					<option value="ZW">Zimbabwe</option>
 				</select>
 			  <p>
-			  {{ @dict_archivesurl }}<br>
+			  <?php echo $dict_archivesurl; ?><br>
 			  <input type="url" name="url" value="" size="35">
 			  <p>
-			  {{ @dict_archivesemail }}<br>
+			  <?php echo $dict_archivesemail; ?><br>
 			  <input type="email" name="email" value="" size="35">
 			  <p>
-			  {{ @dict_archiveslatitude }}*<br><small>{{ @dict_decimaldegreesplease | raw }}. {{ @dict_howfindcoordinates | raw }}</small><br>
+			  <?php echo $dict_archiveslatitude; ?>*<br><small><?php echo $this->raw($dict_decimaldegreesplease); ?>. <?php echo $this->raw($dict_howfindcoordinates); ?></small><br>
 			  <input type="text" name="latitude" value="" required size="35">
 			  <p>
-			  {{ @dict_archiveslongitude }}*<br><small>{{ @dict_decimaldegreesplease | raw }}. {{ @dict_howfindcoordinates | raw }}</small><br>
+			  <?php echo $dict_archiveslongitude; ?>*<br><small><?php echo $this->raw($dict_decimaldegreesplease); ?>. <?php echo $this->raw($dict_howfindcoordinates); ?></small><br>
 			  <input type="text" name="longitude" value="" required size="35">
 			  <br>
 			  <br>
-			  {{ @dict_collaborator }}<br><small>{{ @dict_collaboratoryou }}</small><br>
+			  <?php echo $dict_collaborator; ?><br><small><?php echo $dict_collaboratoryou; ?></small><br>
 			  <input type="text" name="contributor" value="" size="35">
 			  <p>
-			  {{ @dict_collaboratoremail }}<br><small>{{ @dict_collaboratoremailobs }}</small><br>
+			  <?php echo $dict_collaboratoremail; ?><br><small><?php echo $dict_collaboratoremailobs; ?></small><br>
 			  <input type="text" name="contributoremail" value="" size="35">
 			  <br><br>
 			  <div class="g-recaptcha" data-sitekey="6LfYUxQUAAAAADfxBIQkBcT7SocM_Z1R5kZufEJN"></div>  
 			  <br><br>
-			  <input type="submit" value="{{ @dict_sendtoinclusion }}">
+			  <input type="submit" value="<?php echo $dict_sendtoinclusion; ?>">
 			</form> 
 			</div> 
-			</repeat>
-		</check>
+			
+		<?php endif; ?>
 		
-		<check if="{{ @page=='login' }}">
+		<?php if ($page=='login'): ?>
 			<form action="/list" method="POST">
 			
 			   Login:<br>
@@ -567,24 +568,27 @@
 			
 			  <input type="submit" value="Entrar">
 			</form> 
-		</check>
+		<?php endif; ?>
 		
 		
-		<check if="{{ @page=='add-done' }}">
+		<?php if ($page=='add-done'): ?>
 
-			  <br> {{ @dict_adddone | raw }}
+			  <br> <?php echo $this->raw($dict_adddone); ?>
 
-		</check>
+
+		<?php endif; ?>
 		
-		<check if="{{ @page=='add-fail' }}">
+		<?php if ($page=='add-fail'): ?>
 
-			  <br> {{ @dict_addfail | raw }}
+			  <br> <?php echo $this->raw($dict_addfail); ?>
 
-		</check>
+
+		<?php endif; ?>
 		
-		<check if="{{ @page=='about' }}">
+		<?php if ($page=='about'): ?>
 		<div style="text-align: left;">
-			{{ @dict_textabout | raw }}
+			<?php echo $this->raw($dict_textabout); ?>
+
 		</div>
 		
 		<div style="text-align: left;">
@@ -606,60 +610,64 @@
 		</div>
 	
 		
-		</check>
+		<?php endif; ?>
 
-		<check if="{{ @page=='stats' }}">
+		<?php if ($page=='stats'): ?>
 
 			<div style="text-align: left;">
-			<h2>{{ @dict_statsof }}</h2>
+			<h2><?php echo $dict_statsof; ?></h2>
 				<ul> 
-					<li>{{ @dict_institutionsdb }}
+					<li><?php echo $dict_institutionsdb; ?>
+
 						<ul>
-							<li>{{ @qtdinstituicoes }}</li>
+							<li><?php echo $qtdinstituicoes; ?></li>
 						</ul>
 					</li>
-					<li>{{ @dict_top10countries }}
+					<li><?php echo $dict_top10countries; ?>
+
 						<ul>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[0]['pais'] }}.PNG" title="{{ @paisesverificados[0]['pais'] }}"> - {{ @paisesverificados[0]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[1]['pais'] }}.PNG" title="{{ @paisesverificados[1]['pais'] }}"> - {{ @paisesverificados[1]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[2]['pais'] }}.PNG" title="{{ @paisesverificados[2]['pais'] }}"> - {{ @paisesverificados[2]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[3]['pais'] }}.PNG" title="{{ @paisesverificados[3]['pais'] }}"> - {{ @paisesverificados[3]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[4]['pais'] }}.PNG" title="{{ @paisesverificados[4]['pais'] }}"> - {{ @paisesverificados[4]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[5]['pais'] }}.PNG" title="{{ @paisesverificados[5]['pais'] }}"> - {{ @paisesverificados[5]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[6]['pais'] }}.PNG" title="{{ @paisesverificados[6]['pais'] }}"> - {{ @paisesverificados[6]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[7]['pais'] }}.PNG" title="{{ @paisesverificados[7]['pais'] }}"> - {{ @paisesverificados[7]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[8]['pais'] }}.PNG" title="{{ @paisesverificados[8]['pais'] }}"> - {{ @paisesverificados[8]['visits'] }} {{ @dict_institutionsdb }}</li>
-							<li><img src="https://map.arquivista.net/etc/flags/{{ @paisesverificados[9]['pais'] }}.PNG" title="{{ @paisesverificados[9]['pais'] }}"> - {{ @paisesverificados[9]['visits'] }} {{ @dict_institutionsdb }}</li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['0']['pais']; ?>.PNG" title="<?php echo $paisesverificados['0']['pais']; ?>"> - <?php echo $paisesverificados['0']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['1']['pais']; ?>.PNG" title="<?php echo $paisesverificados['1']['pais']; ?>"> - <?php echo $paisesverificados['1']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['2']['pais']; ?>.PNG" title="<?php echo $paisesverificados['2']['pais']; ?>"> - <?php echo $paisesverificados['2']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['3']['pais']; ?>.PNG" title="<?php echo $paisesverificados['3']['pais']; ?>"> - <?php echo $paisesverificados['3']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['4']['pais']; ?>.PNG" title="<?php echo $paisesverificados['4']['pais']; ?>"> - <?php echo $paisesverificados['4']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['5']['pais']; ?>.PNG" title="<?php echo $paisesverificados['5']['pais']; ?>"> - <?php echo $paisesverificados['5']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['6']['pais']; ?>.PNG" title="<?php echo $paisesverificados['6']['pais']; ?>"> - <?php echo $paisesverificados['6']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['7']['pais']; ?>.PNG" title="<?php echo $paisesverificados['7']['pais']; ?>"> - <?php echo $paisesverificados['7']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['8']['pais']; ?>.PNG" title="<?php echo $paisesverificados['8']['pais']; ?>"> - <?php echo $paisesverificados['8']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
+							<li><img src="https://map.arquivista.net/etc/flags/<?php echo $paisesverificados['9']['pais']; ?>.PNG" title="<?php echo $paisesverificados['9']['pais']; ?>"> - <?php echo $paisesverificados['9']['visits']; ?> <?php echo $dict_institutionsdb; ?></li>
 						</ul>
 					</li>
 				</ul>
 			</div>
-		</check>
+		<?php endif; ?>
 		
-		<check if="{{ @page=='contact' }}">
+		<?php if ($page=='contact'): ?>
 		
-			{{ @dict_textcontactpage | raw }}
+			<?php echo $this->raw($dict_textcontactpage); ?>
+
 		
-		</check>
+		<?php endif; ?>
 		
 				
-		</check>
 		
-		<check if="{{ @page=='thankyou' }}">
 		
-			{{ @dict_textthankyoupage | raw }}
+		<?php if ($page=='thankyou'): ?>
 		
-		</check>
+			<?php echo $this->raw($dict_textthankyoupage); ?>
+
 		
-		</check>
+		<?php endif; ?>
+		
+		
 		 
-		<check if="{{ @page=='search' }}">
+		<?php if ($page=='search'): ?>
 		
 		<section id="busca-api">
 			<form action="/search/result" method="GET">
 			<table width="90%">
 			  <tr>
-				<th width="8">{{ @dict_search }}:</th>
+				<th width="8"><?php echo $dict_search; ?>:</th>
 			  </tr>
 			  <tr>
 				<th width="15">
@@ -671,9 +679,9 @@
 			<br>
 			</form> 
 		</section>
-		</check>
+		<?php endif; ?>
 		
-		<check if="{{ @page=='search-result' }}">
+		<?php if ($page=='search-result'): ?>
 		
 			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 			<!-- Middle post -->
@@ -687,27 +695,27 @@
 			</script>
 			<hr>
 			<br>
-			<h3>{{ @dict_searchresults }}:</b> "{{ @GET.q }}"</h3> 
+			<h3><?php echo $dict_searchresults; ?>:</b> "<?php echo $GET['q']; ?>"</h3> 
 			<table width="90%" border="1">
 			  <tr>
-				<th width="50"><center>{{ @dict_institution }}</center></th>
-				<th width="10"><center>{{ @dict_archivescountry }}</center></th>
+				<th width="50"><center><?php echo $dict_institution; ?></center></th>
+				<th width="10"><center><?php echo $dict_archivescountry; ?></center></th>
 				<th width="5"><center></center></th>
 				
 			  </tr>
-			<repeat group="{{ @lista }}" value="{{ @item }}">
+			<?php foreach (($lista?:[]) as $item): ?>
 			  <tr>
-				<td><center>{{ @item.nome }}</center></td>
-				<td><center>{{ @item.pais }}</center></td>
-				<td><center><a href="https://map.arquivista.net/info/{{ @item.id }}">info</center></td>
+				<td><center><?php echo $item['nome']; ?></center></td>
+				<td><center><?php echo $item['pais']; ?></center></td>
+				<td><center><a href="https://map.arquivista.net/info/<?php echo $item['id']; ?>">info</center></td>
 			  </tr>
-			</repeat>
+			<?php endforeach; ?>
 			</table>
-		</check>
+		<?php endif; ?>
 		<br><p>
 
 			<hr width="80">
-			<small>{{ @dict_awmwascreatedby | raw }}</small></p>
+			<small><?php echo $this->raw($dict_awmwascreatedby); ?></small></p>
 		
 	 </div><!-- /.home -->
 
@@ -723,7 +731,7 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="https://map.arquivista.net/etc/bootstrap-3.3.7-dist/js/ie10-viewport-bug-workaround.js"></script>
 	
-	<check if="{{ @page=='search' }}">
+	<?php if ($page=='search'): ?>
 		<script src="https://map.arquivista.net/etc/awesomplete/awesomplete.js" async></script>
 		<script>
 		var ajax = new XMLHttpRequest();
@@ -734,7 +742,7 @@
 		};
 		ajax.send();
 		</script>
-	</check>
+	<?php endif; ?>
 	
   </body>
 </html> 
