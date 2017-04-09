@@ -1,5 +1,5 @@
 <?php
-// Internacionalizacao PL
+// i18n PL
 return array(
 'dict_projectname' => 'Mapa Świata Archiwów',
 'dict_theopenandcollaborative' => 'Otwartość i współpraca',
