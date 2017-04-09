@@ -1,5 +1,5 @@
 <?php
-// Internacionalizacao cn
+// i18n cn
 return array(
 'dict_projectname' => '档案馆世界地图',
 'dict_theopenandcollaborative' => '开放与合作',
