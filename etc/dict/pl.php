@@ -40,7 +40,7 @@ return array(
 'dict_identifierform' => 'Jeśli to możliwe, to użyj identyfikatora w rozumieniu standardu ISDIAH - Międzynarodowy Standard Opisu Instytucji
 z Zasobem Archiwalnym <a href="httphttp://archiwa.org/as/as_img/uploaded/ISDIAHr.pdf" target="_blank">ISDIAH s. 12</a>.',
 'dict_location' => 'Localizacja',
-'dict_moreinformation' => 'Więcej informacji,
+'dict_moreinformation' => 'Więcej informacji',
 'dict_institution' => 'Instytucja',
 'dict_search' => 'Szukaj',
 'dict_searchresults' => 'Szukaj w rezultatach',
