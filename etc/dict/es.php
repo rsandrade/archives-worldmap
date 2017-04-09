@@ -1,5 +1,5 @@
 ﻿<?php
-// Internacionalizacao ES
+// i18n ES
 return array(
 'dict_projectname' => 'Archives World Map',
 'dict_theopenandcollaborative' => 'Colaborativo y abierto',
