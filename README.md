@@ -1,37 +1,50 @@
 # Archives World Map
-The open and collaborative Archives World Map (https://map.arquivista.net), a public archives geolocalization dataset.
 
-ISDIAH compliance with the mandatory fields.
+A collaborative geospatial platform for cataloging public archive institutions worldwide.
 
-**The Archives World Map runs on**
+**Live site:** https://www.archivesmap.org  
+**Maintainer:** [Ricardo Sodré Andrade](https://feudo.org)  
+**License:** [AGPL-3.0](LICENSE)
 
-    PHP 7.0 (will run with 5.4+)
-    Fat-Free Framework 3.6
-    SQLite 3.11.0
-    Bootstrap 3.3.7
-    Awesomplete
-    Google Recaptcha
-    Leaflet
-    Mobile-Detect 2.8
+## Features
 
-**Translations**
+- Interactive world map with archive institution pins
+- Community submissions reviewed by the administrator
+- Moderation via email links (one-click approve/reject) or admin panel
+- 6 languages: English, Portuguese, Spanish, Chinese, Romanian, Polish
+- Address geocoding on the submission form (OpenStreetMap/Nominatim)
+- Report button to flag incorrect or non-existent entries
 
-    Portuguese, by Ricardo Sodré Andrade (Universidade Federal da Bahia)
-    English, by Ricardo Sodré Andrade (Universidade Federal da Bahia)
-    Spanish, by Maria Pilar Gil Garcia (Universidad de Castilla-La Mancha)
-    Mandarin, by Sybil (中国人民大学 Renmin University of China)
-    Polish, by Anna Sobczak (Poland/France)
+## Stack
 
-**Roadmap**
+Python · Flask · SQLite · Leaflet.js · Bootstrap 3 · Docker
 
-I expect to develop that new features soon
+## Running
 
-    Private area for users edit their contributions and/or manage changes
-    More functions in API
-    Modify the add form to be easier
-    A new field to input a control ID (Wikidata, ISIL?)
+```bash
+cp .env.example .env
+# Edit .env with your credentials
 
-**Maintained by**
+docker compose up --build
+# App available at http://localhost:5000
+```
 
-    Ricardo Sodré Andrade (https://github.com/rsandrade)
-    Website: http://ricardo.arquivista.net/english
+Generate the admin password hash:
+```bash
+flask hash-password yourpassword
+```
+
+## Data migration
+
+To migrate from the legacy MySQL dump:
+```bash
+python migrate.py path/to/OldDump.sql ./data/archivesmap.db
+```
+
+---
+
+> The previous PHP version of this project is preserved in the [`archive/php`](../../tree/archive/php) branch.
+
+---
+
+🤖 Criado com auxílio do Claude Code

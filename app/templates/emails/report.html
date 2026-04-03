@@ -1,0 +1,13 @@
+<h3>Report: {{ institution['name'] }}</h3>
+
+<p>A user has reported that this institution may be incorrect or no longer exists.</p>
+
+<table>
+    <tr><td><strong>Institution:</strong></td><td>{{ institution['name'] }} (ID: {{ institution['id'] }})</td></tr>
+    <tr><td><strong>Country:</strong></td><td>{{ institution['country'] }}</td></tr>
+    <tr><td><strong>City:</strong></td><td>{{ institution['city'] }}</td></tr>
+    <tr><td><strong>Coordinates:</strong></td><td>{{ institution['latitude'] }}, {{ institution['longitude'] }}</td></tr>
+</table>
+
+{% if reason %}<p><strong>Reason:</strong> {{ reason }}</p>{% endif %}
+{% if reporter_email %}<p><strong>Reporter:</strong> {{ reporter_email }}</p>{% endif %}

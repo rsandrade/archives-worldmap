@@ -1,0 +1,6 @@
+flask==3.0.3
+flask-mail==0.10.0
+werkzeug==3.0.4
+requests==2.32.3
+gunicorn==22.0.0
+python-dotenv==1.0.1

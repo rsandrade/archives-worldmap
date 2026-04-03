@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Search - Archives World Map{% endblock %}
+{% block content %}
+<h2 data-i18n="search_title">Search results</h2>
+<p>{{ total }} <span data-i18n="search_found">institution(s) found for</span> "{{ search }}"</p>
+
+<table class="table table-striped">
+    <thead><tr>
+        <th data-i18n="search_col_name">Name</th>
+        <th data-i18n="search_col_country">Country</th>
+        <th></th>
+    </tr></thead>
+    <tbody>
+    {% for inst in institutions %}
+        <tr>
+            <td>{{ inst['name'] }}</td>
+            <td>{{ inst['country'] }}</td>
+            <td><a href="{{ url_for('public.info', inst_id=inst['id']) }}" data-i18n="info_link">info</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="3" data-i18n="search_no_results">No results.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% if offset > 0 %}
+    <a href="?search={{ search }}&qty={{ per_page }}&since={{ offset - per_page }}" class="btn btn-default" data-i18n="btn_previous">Previous</a>
+{% endif %}
+{% if offset + per_page < total %}
+    <a href="?search={{ search }}&qty={{ per_page }}&since={{ offset + per_page }}" class="btn btn-default" data-i18n="btn_next">Next</a>
+{% endif %}
+{% endblock %}

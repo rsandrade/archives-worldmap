@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Thank You - Archives World Map{% endblock %}
+{% block content %}
+<h2 data-i18n="donation_title">Thank you for your donation!</h2>
+<p data-i18n="donation_text">Your support helps keep Archives World Map running.</p>
+<a href="{{ url_for('public.home') }}" class="btn btn-primary" data-i18n="btn_back_to_map">Back to map</a>
+{% endblock %}

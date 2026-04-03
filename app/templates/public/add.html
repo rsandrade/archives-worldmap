@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}Add Institution - Archives World Map{% endblock %}
+
+{% block content %}
+<h2 data-i18n="add_title">Add a new institution</h2>
+<p data-i18n="add_instructions">Search for an address or click on the map to set the location, then fill in the form below.</p>
+
+<div class="form-group">
+    <div class="input-group">
+        <input type="text" id="geocode-input" class="form-control" data-i18n-placeholder="add_search_address" placeholder="Search address...">
+        <span class="input-group-btn">
+            <button type="button" id="geocode-btn" class="btn btn-default" data-i18n="btn_search">Search</button>
+        </span>
+    </div>
+</div>
+
+<div id="mapid" style="height:350px;margin-bottom:20px;"></div>
+
+<form method="post" action="{{ url_for('public.add_submit') }}">
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+
+    <div class="form-group">
+        <label data-i18n="add_inst_name">Institution name *</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label data-i18n="add_identifier">Identifier (ISIL, etc.)</label>
+        <input type="text" name="identifier" class="form-control">
+    </div>
+    <div class="row">
+        <div class="col-md-6"><div class="form-group">
+            <label data-i18n="add_address">Address</label>
+            <input type="text" name="address" id="field-address" class="form-control">
+        </div></div>
+        <div class="col-md-3"><div class="form-group">
+            <label data-i18n="add_city">City</label>
+            <input type="text" name="city" id="field-city" class="form-control">
+        </div></div>
+        <div class="col-md-3"><div class="form-group">
+            <label data-i18n="add_district">District / State</label>
+            <input type="text" name="district" id="field-district" class="form-control">
+        </div></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"><div class="form-group">
+            <label data-i18n="add_country">Country</label>
+            <input type="text" name="country" id="field-country" class="form-control" maxlength="2" placeholder="e.g. BR">
+        </div></div>
+        <div class="col-md-4"><div class="form-group">
+            <label data-i18n="add_website">Website</label>
+            <input type="url" name="url" class="form-control">
+        </div></div>
+        <div class="col-md-4"><div class="form-group">
+            <label data-i18n="add_inst_email">Institution email</label>
+            <input type="email" name="email" class="form-control">
+        </div></div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6"><div class="form-group">
+            <label data-i18n="add_your_name">Your name *</label>
+            <input type="text" name="contributor" class="form-control" required>
+        </div></div>
+        <div class="col-md-6"><div class="form-group">
+            <label data-i18n="add_your_email">Your email *</label>
+            <input type="email" name="contributoremail" class="form-control" required>
+        </div></div>
+    </div>
+
+    {% if recaptcha_enabled %}
+    <div class="form-group">
+        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn btn-success" data-i18n="btn_submit">Submit</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+{% if recaptcha_enabled %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endif %}
+<script>
+var mymap = L.map('mapid').setView([20, 0], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
+}).addTo(mymap);
+
+var marker;
+
+function placeMarker(lat, lng) {
+    if (marker) mymap.removeLayer(marker);
+    marker = L.marker([lat, lng], {draggable: true}).addTo(mymap);
+    document.getElementById('latitude').value = lat;
+    document.getElementById('longitude').value = lng;
+    marker.on('dragend', function(e) {
+        var pos = e.target.getLatLng();
+        document.getElementById('latitude').value = pos.lat;
+        document.getElementById('longitude').value = pos.lng;
+    });
+}
+
+mymap.on('click', function(e) {
+    placeMarker(e.latlng.lat, e.latlng.lng);
+});
+
+// Geocoding via Nominatim (OpenStreetMap)
+function geocodeAddress() {
+    var q = document.getElementById('geocode-input').value.trim();
+    if (!q) return;
+    fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=' + encodeURIComponent(q))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (!data.length) return;
+            var place = data[0];
+            var lat = parseFloat(place.lat);
+            var lng = parseFloat(place.lon);
+            placeMarker(lat, lng);
+            mymap.setView([lat, lng], 16);
+
+            // Auto-fill address fields from Nominatim response
+            var addr = place.address || {};
+            var road = [addr.road, addr.house_number].filter(Boolean).join(' ');
+            if (road) document.getElementById('field-address').value = road;
+            if (addr.city || addr.town || addr.village)
+                document.getElementById('field-city').value = addr.city || addr.town || addr.village;
+            if (addr.state)
+                document.getElementById('field-district').value = addr.state;
+            if (addr.country_code)
+                document.getElementById('field-country').value = addr.country_code.toUpperCase();
+        });
+}
+
+document.getElementById('geocode-btn').addEventListener('click', geocodeAddress);
+document.getElementById('geocode-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); geocodeAddress(); }
+});
+</script>
+{% endblock %}

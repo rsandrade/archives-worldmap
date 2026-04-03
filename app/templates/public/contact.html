@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Contact - Archives World Map{% endblock %}
+{% block content %}
+<h2 data-i18n="contact_title">Contact us</h2>
+<form method="post" action="{{ url_for('public.contact_submit') }}">
+    <div class="form-group">
+        <label data-i18n="contact_name">Your name</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label data-i18n="contact_email">Your email</label>
+        <input type="email" name="email" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label data-i18n="contact_institution">Institution</label>
+        <input type="text" name="institution" class="form-control">
+    </div>
+    <div class="form-group">
+        <label data-i18n="contact_subject">Subject</label>
+        <input type="text" name="subject" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label data-i18n="contact_message">Message</label>
+        <textarea name="body" class="form-control" rows="5" required></textarea>
+    </div>
+    {% if recaptcha_enabled %}
+    <div class="form-group">
+        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+    </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary" data-i18n="btn_send">Send</button>
+</form>
+{% endblock %}
+{% block scripts %}
+{% if recaptcha_enabled %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endif %}
+{% endblock %}

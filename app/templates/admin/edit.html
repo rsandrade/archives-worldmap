@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Edit Institution - Archives World Map{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <h2><span data-i18n="edit_title">Edit</span>: {{ institution['name'] }}</h2>
+        <form method="post" action="{{ url_for('admin.edit_submit', inst_id=institution['id']) }}">
+            <div class="form-group">
+                <label data-i18n="add_inst_name">Institution name</label>
+                <input type="text" name="name" class="form-control" value="{{ institution['name'] }}" required>
+            </div>
+            <div class="row">
+                <div class="col-md-6"><div class="form-group">
+                    <label data-i18n="edit_latitude">Latitude</label>
+                    <input type="text" name="latitude" id="latitude" class="form-control" value="{{ institution['latitude'] }}" required>
+                </div></div>
+                <div class="col-md-6"><div class="form-group">
+                    <label data-i18n="edit_longitude">Longitude</label>
+                    <input type="text" name="longitude" id="longitude" class="form-control" value="{{ institution['longitude'] }}" required>
+                </div></div>
+            </div>
+            <div id="mapid" style="height:250px;margin-bottom:15px;"></div>
+            <div class="form-group">
+                <label data-i18n="add_identifier">Identifier (ISIL, etc.)</label>
+                <input type="text" name="identifier" class="form-control" value="{{ institution['identifier'] or '' }}">
+            </div>
+            <div class="form-group">
+                <label data-i18n="add_address">Address</label>
+                <input type="text" name="address" class="form-control" value="{{ institution['address'] or '' }}">
+            </div>
+            <div class="row">
+                <div class="col-md-4"><div class="form-group">
+                    <label data-i18n="add_city">City</label>
+                    <input type="text" name="city" class="form-control" value="{{ institution['city'] or '' }}">
+                </div></div>
+                <div class="col-md-4"><div class="form-group">
+                    <label data-i18n="add_district">District / State</label>
+                    <input type="text" name="district" class="form-control" value="{{ institution['district'] or '' }}">
+                </div></div>
+                <div class="col-md-4"><div class="form-group">
+                    <label data-i18n="add_country">Country</label>
+                    <input type="text" name="country" class="form-control" maxlength="2" value="{{ institution['country'] or '' }}">
+                </div></div>
+            </div>
+            <div class="row">
+                <div class="col-md-6"><div class="form-group">
+                    <label data-i18n="add_website">Website</label>
+                    <input type="url" name="url" class="form-control" value="{{ institution['url'] or '' }}">
+                </div></div>
+                <div class="col-md-6"><div class="form-group">
+                    <label data-i18n="add_inst_email">Institution email</label>
+                    <input type="email" name="email" class="form-control" value="{{ institution['email'] or '' }}">
+                </div></div>
+            </div>
+            <div class="form-group">
+                <label data-i18n="edit_admin_notes">Admin notes</label>
+                <textarea name="admin_notes" class="form-control" rows="3">{{ institution['admin_notes'] or '' }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" data-i18n="btn_save">Save</button>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-default" data-i18n="btn_cancel">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+var lat = {{ institution['latitude'] }}, lng = {{ institution['longitude'] }};
+var mymap = L.map('mapid').setView([lat, lng], 14);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
+}).addTo(mymap);
+var marker = L.marker([lat, lng], {draggable: true}).addTo(mymap);
+marker.on('dragend', function(e) {
+    var pos = e.target.getLatLng();
+    document.getElementById('latitude').value = pos.lat;
+    document.getElementById('longitude').value = pos.lng;
+});
+</script>
+{% endblock %}

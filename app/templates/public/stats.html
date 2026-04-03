@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Stats - Archives World Map{% endblock %}
+{% block content %}
+<h2 data-i18n="stats_title">Statistics</h2>
+<p><span data-i18n="stats_total">Total verified institutions</span>: <strong>{{ qty_institutions }}</strong></p>
+
+<h3 data-i18n="stats_top_countries">Top 10 countries</h3>
+<table class="table table-striped">
+    <thead><tr>
+        <th data-i18n="stats_col_country">Country</th>
+        <th data-i18n="stats_col_institutions">Institutions</th>
+    </tr></thead>
+    <tbody>
+    {% for row in ranking_countries %}
+        <tr>
+            <td><a href="{{ url_for('public.by_country', country=row['country'], qty=10, since=0) }}">{{ country_display(row['country']) }}</a></td>
+            <td>{{ row['total'] }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

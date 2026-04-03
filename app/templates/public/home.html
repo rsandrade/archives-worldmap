@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Archives World Map{% endblock %}
+{% block container_class %}container-fluid{% endblock %}
+
+{% block content %}
+<div id="mapid"></div>
+<div class="container" style="margin-top:25px;">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 text-center">
+            <h4 data-i18n="home_search_title">Search institutions</h4>
+            <form action="{{ url_for('public.search') }}" method="get" class="form-inline">
+                <input type="text" name="search" class="form-control input-lg" placeholder="Search by name..." data-i18n-placeholder="home_search_placeholder" style="width:60%;">
+                <input type="hidden" name="qty" value="10">
+                <input type="hidden" name="since" value="0">
+                <button type="submit" class="btn btn-primary btn-lg" data-i18n="btn_search">Search</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+var mymap = L.map('mapid').setView([20, 0], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 18
+}).addTo(mymap);
+
+var pins = {{ pins|safe }};
+pins.forEach(function(p) {
+    L.marker([p.lat, p.lng]).addTo(mymap)
+     .bindPopup(
+        '<div style="font-size:14px;line-height:1.6;">' +
+        '<strong style="font-size:16px;">' + p.name + '</strong><br>' +
+        '<a href="/info/' + p.id + '">info</a>' +
+        ' &middot; <a href="/info/' + p.id + '#report-form" class="text-muted">report</a>' +
+        '</div>',
+        {maxWidth: 300, minWidth: 150}
+     );
+});
+</script>
+{% endblock %}

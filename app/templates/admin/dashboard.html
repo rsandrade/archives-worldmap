@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Admin - Archives World Map{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2><span data-i18n="admin_title">Admin Panel</span> <small><a href="{{ url_for('admin.logout') }}" data-i18n="admin_logout">Logout</a></small></h2>
+
+        <div class="btn-group" style="margin-bottom:15px;">
+            <a href="{{ url_for('admin.dashboard', status='waiting') }}"
+               class="btn btn-default {% if status_filter == 'waiting' %}active{% endif %}">
+                <span data-i18n="admin_waiting">Waiting</span> ({{ counts['waiting'] }})
+            </a>
+            <a href="{{ url_for('admin.dashboard', status='verified') }}"
+               class="btn btn-default {% if status_filter == 'verified' %}active{% endif %}">
+                <span data-i18n="admin_verified">Verified</span> ({{ counts['verified'] }})
+            </a>
+            <a href="{{ url_for('admin.dashboard', status='rejected') }}"
+               class="btn btn-default {% if status_filter == 'rejected' %}active{% endif %}">
+                <span data-i18n="admin_rejected">Rejected</span> ({{ counts['rejected'] }})
+            </a>
+            <a href="{{ url_for('admin.dashboard', status='all') }}"
+               class="btn btn-default {% if status_filter == 'all' %}active{% endif %}">
+                <span data-i18n="admin_all">All</span>
+            </a>
+        </div>
+
+        <table class="table table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th data-i18n="admin_col_id">ID</th>
+                    <th data-i18n="admin_col_name">Name</th>
+                    <th data-i18n="admin_col_country">Country</th>
+                    <th data-i18n="admin_col_city">City</th>
+                    <th data-i18n="admin_col_collaborator">Collaborator</th>
+                    <th data-i18n="admin_col_status">Status</th>
+                    <th data-i18n="admin_col_submitted">Submitted</th>
+                    <th data-i18n="admin_col_actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for inst in institutions %}
+                <tr>
+                    <td>{{ inst['id'] }}</td>
+                    <td>{{ inst['name'] }}</td>
+                    <td>{{ inst['country'] }}</td>
+                    <td>{{ inst['city'] }}</td>
+                    <td>{{ inst['collaborator_name'] }}<br><small>{{ inst['collaborator_email'] }}</small></td>
+                    <td>
+                        {% if inst['status'] == 'waiting' %}
+                            <span class="label label-warning">waiting</span>
+                        {% elif inst['status'] == 'verified' %}
+                            <span class="label label-success">verified</span>
+                        {% else %}
+                            <span class="label label-danger">rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ inst['submitted_at'] }}</td>
+                    <td>
+                        {% if inst['status'] == 'waiting' %}
+                            <a href="{{ url_for('admin.approve', inst_id=inst['id']) }}" class="btn btn-xs btn-success" data-i18n="btn_approve">Approve</a>
+                            <a href="{{ url_for('admin.reject', inst_id=inst['id']) }}" class="btn btn-xs btn-danger" data-i18n="btn_reject">Reject</a>
+                        {% endif %}
+                        <a href="{{ url_for('admin.edit', inst_id=inst['id']) }}" class="btn btn-xs btn-default" data-i18n="btn_edit">Edit</a>
+                        <a href="{{ url_for('admin.delete', inst_id=inst['id']) }}" class="btn btn-xs btn-danger"
+                           data-i18n="btn_delete"
+                           data-i18n-confirm="admin_delete_confirm"
+                           onclick="return confirm(this.getAttribute('data-confirm') || 'Delete this institution permanently?')">Del</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="8" data-i18n="admin_no_institutions">No institutions found.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% set total_pages = (total / per_page) | round(0, 'ceil') | int %}
+        {% if total_pages > 1 %}
+        <nav>
+            <ul class="pagination">
+                {% for p in range(1, total_pages + 1) %}
+                    <li {% if p == page %}class="active"{% endif %}>
+                        <a href="{{ url_for('admin.dashboard', status=status_filter, page=p) }}">{{ p }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

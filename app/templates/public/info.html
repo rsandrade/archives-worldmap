@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ institution['name'] }} - Archives World Map{% endblock %}
+{% block content %}
+<h2>{{ institution['name'] }}</h2>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            {% if institution['address'] %}<tr><td><strong data-i18n="info_address">Address</strong></td><td>{{ institution['address'] }}</td></tr>{% endif %}
+            {% if institution['city'] %}<tr><td><strong data-i18n="info_city">City</strong></td><td>{{ institution['city'] }}</td></tr>{% endif %}
+            {% if institution['district'] %}<tr><td><strong data-i18n="info_district">District</strong></td><td>{{ institution['district'] }}</td></tr>{% endif %}
+            {% if institution['country'] %}<tr><td><strong data-i18n="info_country">Country</strong></td><td>{{ institution['country'] }}</td></tr>{% endif %}
+            {% if institution['url'] %}<tr><td><strong data-i18n="info_website">Website</strong></td><td><a href="{{ institution['url'] }}" target="_blank">{{ institution['url'] }}</a></td></tr>{% endif %}
+            {% if institution['email'] %}<tr><td><strong data-i18n="info_email">Email</strong></td><td>{{ institution['email'] }}</td></tr>{% endif %}
+            {% if institution['identifier'] %}<tr><td><strong data-i18n="info_identifier">Identifier</strong></td><td>{{ institution['identifier'] }}</td></tr>{% endif %}
+            <tr><td><strong data-i18n="info_collaborator">Collaborator</strong></td><td>{{ institution['collaborator_name'] or '' }}</td></tr>
+        </table>
+
+        <p>
+            <a href="#report-form" class="text-muted small" id="report-toggle" data-i18n="report_link">Report incorrect or non-existent institution</a>
+        </p>
+        <div id="report-form" style="display:none;margin-top:10px;">
+            <form method="post" action="{{ url_for('public.report', inst_id=institution['id']) }}">
+                <div class="form-group">
+                    <label class="small" data-i18n="report_email">Your email (optional)</label>
+                    <input type="email" name="email" class="form-control input-sm">
+                </div>
+                <div class="form-group">
+                    <label class="small" data-i18n="report_reason">What is wrong?</label>
+                    <textarea name="reason" class="form-control input-sm" rows="2" required></textarea>
+                </div>
+                {% if recaptcha_enabled %}
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+                </div>
+                {% endif %}
+                <button type="submit" class="btn btn-xs btn-warning" data-i18n="report_submit">Send report</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="mapid" style="height:300px;"></div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% if recaptcha_enabled %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endif %}
+<script>
+var mymap = L.map('mapid').setView([{{ institution['latitude'] }}, {{ institution['longitude'] }}], 14);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
+}).addTo(mymap);
+L.marker([{{ institution['latitude'] }}, {{ institution['longitude'] }}]).addTo(mymap)
+ .bindPopup('<div style="font-size:15px;line-height:1.5;"><strong>{{ institution["name"]|e }}</strong></div>', {maxWidth: 300, minWidth: 150}).openPopup();
+
+document.getElementById('report-toggle').addEventListener('click', function(e) {
+    e.preventDefault();
+    var form = document.getElementById('report-form');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+});
+</script>
+{% endblock %}
