@@ -24,15 +24,25 @@
         <textarea name="body" class="form-control" rows="5" required></textarea>
     </div>
     {% if recaptcha_enabled %}
-    <div class="form-group">
-        <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
-    </div>
+    <input type="hidden" name="g-recaptcha-response" id="recaptcha-contact">
     {% endif %}
     <button type="submit" class="btn btn-primary" data-i18n="btn_send">Send</button>
 </form>
 {% endblock %}
 {% block scripts %}
 {% if recaptcha_enabled %}
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key }}"></script>
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    grecaptcha.ready(function() {
+        grecaptcha.execute('{{ recaptcha_site_key }}', {action: 'contact'}).then(function(token) {
+            document.getElementById('recaptcha-contact').value = token;
+            form.submit();
+        });
+    });
+});
+</script>
 {% endif %}
 {% endblock %}

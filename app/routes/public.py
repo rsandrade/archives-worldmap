@@ -25,15 +25,22 @@ def _parse_pagination():
     return page, per_page
 
 
-def _verify_recaptcha(response_token):
+def _verify_recaptcha(response_token, action=None):
     if not current_app.config['RECAPTCHA_ENABLED']:
         return True
+    if not response_token:
+        return False
     secret = current_app.config['RECAPTCHA_SECRET_KEY']
     r = requests.post(
         'https://www.google.com/recaptcha/api/siteverify',
         data={'secret': secret, 'response': response_token},
     )
-    return r.json().get('success', False)
+    result = r.json()
+    if not result.get('success', False):
+        return False
+    score = result.get('score', 0)
+    threshold = current_app.config.get('RECAPTCHA_THRESHOLD', 0.5)
+    return score >= threshold
 
 
 def _build_pins(rows):

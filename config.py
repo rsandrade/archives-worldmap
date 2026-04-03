@@ -22,10 +22,11 @@ class Config:
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'admin')
     ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH', '')
 
-    # reCAPTCHA v2
+    # reCAPTCHA v3
     RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY', '')
     RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY', '')
     RECAPTCHA_ENABLED = bool(os.environ.get('RECAPTCHA_SITE_KEY', ''))
+    RECAPTCHA_THRESHOLD = float(os.environ.get('RECAPTCHA_THRESHOLD', '0.5'))
 
     # Public base URL (used in email links)
     BASE_URL = os.environ.get('BASE_URL', 'http://localhost:5000')

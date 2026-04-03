@@ -29,9 +29,7 @@
                     <textarea name="reason" class="form-control input-sm" rows="2" required></textarea>
                 </div>
                 {% if recaptcha_enabled %}
-                <div class="form-group">
-                    <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
-                </div>
+                <input type="hidden" name="g-recaptcha-response" id="recaptcha-report">
                 {% endif %}
                 <button type="submit" class="btn btn-xs btn-warning" data-i18n="report_submit">Send report</button>
             </form>
@@ -44,7 +42,7 @@
 {% endblock %}
 {% block scripts %}
 {% if recaptcha_enabled %}
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key }}"></script>
 {% endif %}
 <script>
 var mymap = L.map('mapid').setView([{{ institution['latitude'] }}, {{ institution['longitude'] }}], 14);
@@ -59,5 +57,18 @@ document.getElementById('report-toggle').addEventListener('click', function(e) {
     var form = document.getElementById('report-form');
     form.style.display = form.style.display === 'none' ? 'block' : 'none';
 });
+
+{% if recaptcha_enabled %}
+document.querySelector('#report-form form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    grecaptcha.ready(function() {
+        grecaptcha.execute('{{ recaptcha_site_key }}', {action: 'report'}).then(function(token) {
+            document.getElementById('recaptcha-report').value = token;
+            form.submit();
+        });
+    });
+});
+{% endif %}
 </script>
 {% endblock %}
