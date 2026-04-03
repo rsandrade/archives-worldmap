@@ -28,5 +28,8 @@ class Config:
     RECAPTCHA_ENABLED = bool(os.environ.get('RECAPTCHA_SITE_KEY', ''))
     RECAPTCHA_THRESHOLD = float(os.environ.get('RECAPTCHA_THRESHOLD', '0.5'))
 
+    # Email connection timeout (seconds) — prevents gunicorn worker from hanging
+    MAIL_TIMEOUT = int(os.environ.get('MAIL_TIMEOUT', '15'))
+
     # Public base URL (used in email links)
     BASE_URL = os.environ.get('BASE_URL', 'http://localhost:5000')
