@@ -6,23 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Archives World Map is a geospatial collaborative platform for cataloging public archive institutions worldwide. The project prioritizes simplicity: visitors submit institutions, the admin moderates via email links or an admin panel, and approved institutions appear on the map.
 
-This repo contains three versions:
-
-- **`NovoArchivesmap/`** — **current version** (Python/Flask + SQLite, Docker-ready)
-- **`archives-world-map-platform/`** — legacy PHP/MySQL version (Fat-Free Framework)
-- **`archives-worldmap/`** — original PHP/SQLite version (Fat-Free Framework)
-
-The two PHP versions are kept for reference only. All new work happens in `NovoArchivesmap/`.
+The legacy PHP versions are archived in the `archive/php` branch. All current work is on `master`.
 
 **Maintainer:** Ricardo Sodré Andrade — https://feudo.org
 **License:** GNU Affero General Public License v3.0 (AGPL-3.0)
 **Repository:** https://github.com/rsandrade/archives-worldmap
 
-## Setup & Running (NovoArchivesmap)
+## Setup & Running
 
 ```bash
-cd NovoArchivesmap
-
 # Option 1: Docker
 docker compose up --build
 # App runs at http://localhost:5000
@@ -54,7 +46,7 @@ HTTP → run.py → Flask → Blueprint routes → Jinja2 templates
 
 **Directory structure:**
 ```
-NovoArchivesmap/
+.
 ├── run.py              # Entry point
 ├── config.py           # Config from environment
 ├── schema.sql          # SQLite schema (single table: institutions)
@@ -98,7 +90,7 @@ NovoArchivesmap/
 - No user registration or login — the old social features (forum, profiles, scores) were removed because nobody used them
 - Admin is a single account configured via `.env` (username + password hash)
 - Submissions are moderated via email links (approve/reject with one click) or through the admin panel
-- reCAPTCHA v2 on public forms (add institution, contact, report)
+- reCAPTCHA v3 on public forms (add institution, contact, report) — score-based, invisible
 - Client-side i18n using `data-i18n` attributes and async JSON fetch (6 languages, no page reload)
 - Language detection priority: `?lang=xx` URL param > localStorage > browser language > English
 - Geocoding via Nominatim (OpenStreetMap) on the add form — no API key needed
@@ -120,7 +112,7 @@ NovoArchivesmap/
 
 ## Environment Variables
 
-Configured via `.env` file in the `NovoArchivesmap/` directory:
+Configured via `.env` file in the repo root:
 
 ```
 SECRET_KEY=your-secret-key
@@ -133,15 +125,17 @@ MAIL_USE_TLS=true
 MAIL_USERNAME=user@example.com
 MAIL_PASSWORD=password
 MAIL_DEFAULT_SENDER=Archives World Map <noreply@archivesmap.org>
+MAIL_TIMEOUT=15
 
 # Admin (single account)
 ADMIN_EMAIL=admin@archivesmap.org
 ADMIN_USERNAME=admin
 ADMIN_PASSWORD_HASH=pbkdf2:sha256:...   # Generated with: flask hash-password
 
-# reCAPTCHA v2
+# reCAPTCHA v3
 RECAPTCHA_SITE_KEY=...
 RECAPTCHA_SECRET_KEY=...
+RECAPTCHA_THRESHOLD=0.5
 
 # Public URL (used in email links)
 BASE_URL=https://www.archivesmap.org
