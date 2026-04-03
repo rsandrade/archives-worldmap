@@ -2,7 +2,11 @@ import os
 import sqlite3
 
 from flask import Flask
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from .extensions import mail
+
+limiter = Limiter(key_func=get_remote_address, default_limits=["200 per hour"])
 
 
 def create_app():
@@ -10,6 +14,7 @@ def create_app():
     app.config.from_object('config.Config')
 
     mail.init_app(app)
+    limiter.init_app(app)
     _init_db(app)
 
     from .routes.public import public_bp

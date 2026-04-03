@@ -10,8 +10,19 @@ from flask import (
 from ..db import get_db
 from ..email_utils import send_new_submission_email
 from ..countries import country_display
+from .. import limiter
 
 public_bp = Blueprint('public', __name__)
+
+
+def _parse_pagination():
+    """Parse and clamp pagination parameters."""
+    try:
+        page = max(int(request.args.get('since', 0)), 0)
+        per_page = min(max(int(request.args.get('qty', 10)), 1), 50)
+    except (ValueError, TypeError):
+        page, per_page = 0, 10
+    return page, per_page
 
 
 def _verify_recaptcha(response_token):
@@ -38,13 +49,30 @@ def _build_pins(rows):
 
 
 @public_bp.route('/')
+@limiter.limit("10 per minute")
 def home():
+    return render_template('public/home.html')
+
+
+@public_bp.route('/api/pins')
+@limiter.limit("10 per minute")
+def api_pins():
     db = get_db()
     rows = db.execute(
         'SELECT id, latitude, longitude, name FROM institutions WHERE status = ?',
         ('verified',),
     ).fetchall()
-    return render_template('public/home.html', pins=_build_pins(rows))
+    resp = current_app.response_class(_build_pins(rows), mimetype='application/json')
+    resp.headers['Cache-Control'] = 'public, max-age=300'
+    return resp
+
+
+@public_bp.route('/robots.txt')
+def robots():
+    return current_app.response_class(
+        "User-agent: *\nAllow: /\nAllow: /info/\nDisallow: /q\nDisallow: /bycountry\nDisallow: /admin\nDisallow: /api/\n",
+        mimetype='text/plain',
+    )
 
 
 @public_bp.route('/add', methods=['GET'])
@@ -100,10 +128,13 @@ def add_done():
 
 
 @public_bp.route('/info/<int:inst_id>')
+@limiter.limit("60 per minute")
 def info(inst_id):
     db = get_db()
     inst = db.execute(
-        'SELECT * FROM institutions WHERE id = ? AND status = ?',
+        '''SELECT id, name, latitude, longitude, address, city, district,
+                  country, url, email, identifier, collaborator_name
+           FROM institutions WHERE id = ? AND status = ?''',
         (inst_id, 'verified'),
     ).fetchone()
     if not inst:
@@ -130,10 +161,10 @@ def stats():
 
 
 @public_bp.route('/q')
+@limiter.limit("30 per minute")
 def search():
     query = request.args.get('search', '')
-    page = int(request.args.get('since', 0))
-    per_page = int(request.args.get('qty', 10))
+    page, per_page = _parse_pagination()
 
     db = get_db()
     rows = db.execute(
@@ -155,10 +186,10 @@ def search():
 
 
 @public_bp.route('/bycountry')
+@limiter.limit("30 per minute")
 def by_country():
     country = request.args.get('country', '')
-    page = int(request.args.get('since', 0))
-    per_page = int(request.args.get('qty', 10))
+    page, per_page = _parse_pagination()
 
     db = get_db()
     rows = db.execute(
@@ -184,7 +215,10 @@ def report(inst_id):
         return redirect(url_for('public.info', inst_id=inst_id))
 
     db = get_db()
-    inst = db.execute('SELECT * FROM institutions WHERE id = ?', (inst_id,)).fetchone()
+    inst = db.execute(
+        'SELECT id, name, latitude, longitude, city, country FROM institutions WHERE id = ?',
+        (inst_id,),
+    ).fetchone()
     if not inst:
         flash('Institution not found.', 'warning')
         return redirect(url_for('public.home'))

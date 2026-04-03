@@ -27,17 +27,20 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 18
 }).addTo(mymap);
 
-var pins = {{ pins|safe }};
-pins.forEach(function(p) {
-    L.marker([p.lat, p.lng]).addTo(mymap)
-     .bindPopup(
-        '<div style="font-size:14px;line-height:1.6;">' +
-        '<strong style="font-size:16px;">' + p.name + '</strong><br>' +
-        '<a href="/info/' + p.id + '">info</a>' +
-        ' &middot; <a href="/info/' + p.id + '#report-form" class="text-muted">report</a>' +
-        '</div>',
-        {maxWidth: 300, minWidth: 150}
-     );
-});
+fetch('/api/pins')
+  .then(function(r) { return r.json(); })
+  .then(function(pins) {
+    pins.forEach(function(p) {
+      L.marker([p.lat, p.lng]).addTo(mymap)
+       .bindPopup(
+          '<div style="font-size:14px;line-height:1.6;">' +
+          '<strong style="font-size:16px;">' + p.name + '</strong><br>' +
+          '<a href="/info/' + p.id + '">info</a>' +
+          ' &middot; <a href="/info/' + p.id + '#report-form" class="text-muted">report</a>' +
+          '</div>',
+          {maxWidth: 300, minWidth: 150}
+       );
+    });
+  });
 </script>
 {% endblock %}
