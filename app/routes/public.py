@@ -90,7 +90,7 @@ def add():
 @public_bp.route('/add', methods=['POST'])
 def add_submit():
     if not _verify_recaptcha(request.form.get('g-recaptcha-response', '')):
-        flash('reCAPTCHA verification failed.', 'danger')
+        flash('flash_recaptcha_fail', 'danger')
         return redirect(url_for('public.add'))
 
     db = get_db()
@@ -125,7 +125,7 @@ def add_submit():
 
     send_new_submission_email(dict(institution))
 
-    flash('Thank you! Your submission is under review.', 'success')
+    flash('flash_add_success', 'success')
     return redirect(url_for('public.add_done'))
 
 
@@ -145,7 +145,7 @@ def info(inst_id):
         (inst_id, 'verified'),
     ).fetchone()
     if not inst:
-        flash('Institution not found.', 'warning')
+        flash('flash_not_found', 'warning')
         return redirect(url_for('public.home'))
     return render_template('public/info.html', institution=inst)
 
@@ -218,7 +218,7 @@ def by_country():
 @public_bp.route('/report/<int:inst_id>', methods=['POST'])
 def report(inst_id):
     if not _verify_recaptcha(request.form.get('g-recaptcha-response', '')):
-        flash('reCAPTCHA verification failed.', 'danger')
+        flash('flash_recaptcha_fail', 'danger')
         return redirect(url_for('public.info', inst_id=inst_id))
 
     db = get_db()
@@ -227,7 +227,7 @@ def report(inst_id):
         (inst_id,),
     ).fetchone()
     if not inst:
-        flash('Institution not found.', 'warning')
+        flash('flash_not_found', 'warning')
         return redirect(url_for('public.home'))
 
     from ..email_utils import send_report_email
@@ -236,7 +236,7 @@ def report(inst_id):
         reporter_email=request.form.get('email', ''),
         reason=request.form.get('reason', ''),
     )
-    flash('Thank you for your report. We will review it.', 'success')
+    flash('flash_report_success', 'success')
     return redirect(url_for('public.info', inst_id=inst_id))
 
 
@@ -253,7 +253,7 @@ def contact():
 @public_bp.route('/contact', methods=['POST'])
 def contact_submit():
     if not _verify_recaptcha(request.form.get('g-recaptcha-response', '')):
-        flash('reCAPTCHA verification failed.', 'danger')
+        flash('flash_recaptcha_fail', 'danger')
         return redirect(url_for('public.contact'))
 
     from ..email_utils import send_contact_email
@@ -264,5 +264,5 @@ def contact_submit():
         subject=request.form.get('subject', ''),
         body=request.form.get('body', ''),
     )
-    flash('Thank you for your message!', 'success')
+    flash('flash_contact_success', 'success')
     return redirect(url_for('public.contact'))

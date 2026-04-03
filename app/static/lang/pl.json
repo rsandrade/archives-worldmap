@@ -97,5 +97,10 @@
   "report_reason": "Co jest nie tak?",
   "report_submit": "Wyślij zgłoszenie",
   "btn_cluster": "Grupowanie",
-  "about_cridi": "Po kilku latach tworzenia i utrzymywania w ramach grupy badawczej <a href=\"https://www.cridi.ici.ufba.br\" target=\"_blank\">CRIDI</a>, Archives World Map jest teraz aktualizowany i utrzymywany w ramach <a href=\"https://labhd.ufba.br\" target=\"_blank\">Laboratorium Humanistyki Cyfrowej UFBA (LABHDUFBA)</a>."
+  "about_cridi": "Po kilku latach tworzenia i utrzymywania w ramach grupy badawczej <a href=\"https://www.cridi.ici.ufba.br\" target=\"_blank\">CRIDI</a>, Archives World Map jest teraz aktualizowany i utrzymywany w ramach <a href=\"https://labhd.ufba.br\" target=\"_blank\">Laboratorium Humanistyki Cyfrowej UFBA (LABHDUFBA)</a>.",
+  "flash_recaptcha_fail": "Weryfikacja reCAPTCHA nie powiodła się.",
+  "flash_add_success": "Dziękujemy! Twoje zgłoszenie jest w trakcie weryfikacji.",
+  "flash_not_found": "Instytucja nie została znaleziona.",
+  "flash_report_success": "Dziękujemy za zgłoszenie. Sprawdzimy je.",
+  "flash_contact_success": "Dziękujemy za wiadomość!"
 }

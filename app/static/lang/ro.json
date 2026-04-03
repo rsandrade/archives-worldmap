@@ -97,5 +97,10 @@
   "report_reason": "Ce este greșit?",
   "report_submit": "Trimite raport",
   "btn_cluster": "Grupare",
-  "about_cridi": "După ce a fost creat și întreținut timp de câțiva ani în cadrul grupului de cercetare <a href=\"https://www.cridi.ici.ufba.br\" target=\"_blank\">CRIDI</a>, Archives World Map este acum actualizat și întreținut în cadrul <a href=\"https://labhd.ufba.br\" target=\"_blank\">Laboratorului de Științe Umaniste Digitale al UFBA (LABHDUFBA)</a>."
+  "about_cridi": "După ce a fost creat și întreținut timp de câțiva ani în cadrul grupului de cercetare <a href=\"https://www.cridi.ici.ufba.br\" target=\"_blank\">CRIDI</a>, Archives World Map este acum actualizat și întreținut în cadrul <a href=\"https://labhd.ufba.br\" target=\"_blank\">Laboratorului de Științe Umaniste Digitale al UFBA (LABHDUFBA)</a>.",
+  "flash_recaptcha_fail": "Verificarea reCAPTCHA a eșuat.",
+  "flash_add_success": "Mulțumim! Trimiterea dvs. este în curs de revizuire.",
+  "flash_not_found": "Instituția nu a fost găsită.",
+  "flash_report_success": "Mulțumim pentru raportul dvs. Îl vom analiza.",
+  "flash_contact_success": "Mulțumim pentru mesajul dvs.!"
 }
