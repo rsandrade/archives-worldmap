@@ -11,7 +11,7 @@
     <div id="mapid"></div>
     <div id="cluster-toggle-wrap">
         <label class="cluster-toggle-label">
-            <input type="checkbox" id="cluster-toggle" checked>
+            <input type="checkbox" id="cluster-toggle">
             <span data-i18n="btn_cluster">Cluster</span>
         </label>
     </div>
@@ -44,7 +44,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 var allPins = [];
 var clusterGroup = L.markerClusterGroup();
 var plainGroup = L.layerGroup();
-var useClusters = true;
+var useClusters = false;
 
 function buildPopup(p) {
     return '<div style="font-size:14px;line-height:1.6;">' +
@@ -63,7 +63,7 @@ fetch('/api/pins')
       clusterGroup.addLayer(marker);
       plainGroup.addLayer(L.marker([p.lat, p.lng]).bindPopup(buildPopup(p), {maxWidth: 300, minWidth: 150}));
     });
-    mymap.addLayer(clusterGroup);
+    mymap.addLayer(plainGroup);
   });
 
 document.getElementById('cluster-toggle').addEventListener('change', function() {
