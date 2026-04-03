@@ -57,3 +57,24 @@
     opacity: 1;
     font-weight: bold;
 }
+
+/* Mobile: lang selector as a compact horizontal row */
+@media (max-width: 767px) {
+    .lang-selector {
+        display: flex !important;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 8px 15px;
+        border-top: 1px solid #e7e7e7;
+    }
+    .lang-selector > li {
+        float: none;
+    }
+    .lang-selector a {
+        padding: 4px 8px !important;
+    }
+    .navbar-nav > li > a {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+}
