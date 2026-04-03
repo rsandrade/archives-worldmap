@@ -5,11 +5,9 @@
   "nav_stats": "Stats",
   "nav_about": "About",
   "nav_contact": "Contact",
-
   "home_search_title": "Search institutions",
   "home_search_placeholder": "Search by name...",
   "btn_search": "Search",
-
   "add_title": "Add a new institution",
   "add_instructions": "Search for an address or click on the map to set the location, then fill in the form below.",
   "add_search_address": "Search address...",
@@ -24,11 +22,9 @@
   "add_your_name": "Your name",
   "add_your_email": "Your email",
   "btn_submit": "Submit",
-
   "add_done_title": "Thank you!",
   "add_done_text": "Your submission has been received and is under review. You will receive an email when it is approved.",
   "btn_back_to_map": "Back to map",
-
   "info_address": "Address",
   "info_city": "City",
   "info_district": "District",
@@ -37,18 +33,15 @@
   "info_email": "Email",
   "info_identifier": "Identifier",
   "info_collaborator": "Collaborator",
-
   "stats_title": "Statistics",
   "stats_total": "Total verified institutions",
   "stats_top_countries": "Top 10 countries",
   "stats_col_country": "Country",
   "stats_col_institutions": "Institutions",
-
   "about_title": "About Archives World Map",
   "about_text_1": "Archives World Map is a geospatial collaborative platform for cataloging public archive institutions worldwide.",
   "about_text_2": "Anyone can contribute by adding institutions to the map. Submissions are reviewed before being published.",
   "about_maintainer": "Created and maintained by <a href=\"https://feudo.org\" target=\"_blank\">Ricardo Sodré Andrade</a>.",
-
   "contact_title": "Contact us",
   "contact_name": "Your name",
   "contact_email": "Your email",
@@ -56,7 +49,6 @@
   "contact_subject": "Subject",
   "contact_message": "Message",
   "btn_send": "Send",
-
   "search_title": "Search results",
   "search_found": "institution(s) found for",
   "search_col_name": "Name",
@@ -64,19 +56,15 @@
   "search_no_results": "No results.",
   "btn_previous": "Previous",
   "btn_next": "Next",
-
   "info_link": "info",
   "footer_copy": "Archives World Map",
   "institution_not_found": "Institution not found.",
-
   "donation_title": "Thank you for your donation!",
   "donation_text": "Your support helps keep Archives World Map running.",
-
   "admin_login_title": "Admin Login",
   "admin_username": "Username",
   "admin_password": "Password",
   "btn_login": "Login",
-
   "admin_title": "Admin Panel",
   "admin_logout": "Logout",
   "admin_waiting": "Waiting",
@@ -97,16 +85,15 @@
   "btn_delete": "Del",
   "admin_delete_confirm": "Delete this institution permanently?",
   "admin_no_institutions": "No institutions found.",
-
   "edit_title": "Edit",
   "edit_latitude": "Latitude",
   "edit_longitude": "Longitude",
   "edit_admin_notes": "Admin notes",
   "btn_save": "Save",
   "btn_cancel": "Cancel",
-
   "report_link": "Report incorrect or non-existent institution",
   "report_email": "Your email (optional)",
   "report_reason": "What is wrong?",
-  "report_submit": "Send report"
+  "report_submit": "Send report",
+  "about_source": "Free software under the <a href=\"https://www.gnu.org/licenses/agpl-3.0.html\" target=\"_blank\">AGPL-3.0</a> license. Source code on <a href=\"https://github.com/rsandrade/archives-worldmap\" target=\"_blank\">GitHub</a>."
 }
