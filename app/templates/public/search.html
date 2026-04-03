@@ -23,10 +23,11 @@
     </tbody>
 </table>
 
+{% set sparam = search_param if search_param is defined else 'search' %}
 {% if offset > 0 %}
-    <a href="?search={{ search }}&qty={{ per_page }}&since={{ offset - per_page }}" class="btn btn-default" data-i18n="btn_previous">Previous</a>
+    <a href="?{{ sparam }}={{ search }}&qty={{ per_page }}&since={{ offset - per_page }}" class="btn btn-default" data-i18n="btn_previous">Previous</a>
 {% endif %}
 {% if offset + per_page < total %}
-    <a href="?search={{ search }}&qty={{ per_page }}&since={{ offset + per_page }}" class="btn btn-default" data-i18n="btn_next">Next</a>
+    <a href="?{{ sparam }}={{ search }}&qty={{ per_page }}&since={{ offset + per_page }}" class="btn btn-default" data-i18n="btn_next">Next</a>
 {% endif %}
 {% endblock %}

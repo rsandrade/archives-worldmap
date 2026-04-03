@@ -212,6 +212,7 @@ def by_country():
     return render_template(
         'public/search.html', institutions=rows, total=total,
         search=country, per_page=per_page, offset=page,
+        search_param='country',
     )
 
 

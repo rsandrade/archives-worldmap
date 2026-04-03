@@ -19,11 +19,15 @@
 <div class="row" style="margin-top:25px;">
     <div class="col-md-6 col-md-offset-3 text-center">
         <h4 data-i18n="home_search_title">Search institutions</h4>
-        <form action="{{ url_for('public.search') }}" method="get" class="form-inline">
-            <input type="text" name="search" class="form-control input-lg" placeholder="Search by name..." data-i18n-placeholder="home_search_placeholder" style="width:60%;">
-            <input type="hidden" name="qty" value="10">
-            <input type="hidden" name="since" value="0">
-            <button type="submit" class="btn btn-primary btn-lg" data-i18n="btn_search">Search</button>
+        <form action="{{ url_for('public.search') }}" method="get">
+            <div class="input-group input-group-lg">
+                <input type="text" name="search" class="form-control" placeholder="Search by name..." data-i18n-placeholder="home_search_placeholder">
+                <input type="hidden" name="qty" value="10">
+                <input type="hidden" name="since" value="0">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary" data-i18n="btn_search">Search</button>
+                </span>
+            </div>
         </form>
     </div>
 </div>
