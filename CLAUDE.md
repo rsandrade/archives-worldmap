@@ -29,8 +29,16 @@ flask run
 
 Generate the admin password hash:
 ```bash
+# Using Docker (recommended):
+docker compose exec web flask hash-password yourpassword
+# Local:
 flask hash-password yourpassword
 # Copy the output to ADMIN_PASSWORD_HASH in .env
+```
+
+After pulling updates on the server:
+```bash
+git pull && docker compose restart
 ```
 
 There are no automated tests.
@@ -84,18 +92,20 @@ HTTP → run.py → Flask → Blueprint routes → Jinja2 templates
 - `moderation` — `/approve/<token>` and `/reject/<token>` (stateless, from email)
 - `admin` — `/admin/*` (session-based login, credentials from `.env`)
 
-**Frontend:** Bootstrap 3.3.7 + Leaflet.js. Map pins are loaded via AJAX (`/api/pins`) and rendered client-side.
+**Frontend:** Bootstrap 3.3.7 + Leaflet.js + Leaflet.markercluster. Map pins loaded via AJAX (`/api/pins`), rendered client-side with optional cluster toggle.
 
 **Key design decisions:**
 - No user registration or login — the old social features (forum, profiles, scores) were removed because nobody used them
 - Admin is a single account configured via `.env` (username + password hash)
 - Submissions are moderated via email links (approve/reject with one click) or through the admin panel
 - reCAPTCHA v3 on public forms (add institution, contact, report) — score-based, invisible
-- Client-side i18n using `data-i18n` attributes and async JSON fetch (6 languages, no page reload)
+- Client-side i18n using `data-i18n` (text) and `data-i18n-html` (HTML with links) attributes; async JSON fetch; 6 languages; no page reload
 - Language detection priority: `?lang=xx` URL param > localStorage > browser language > English
+- Flash messages use i18n keys (e.g. `flash_contact_success`) — JS translates them via `data-i18n` on the `<span>` in `base.html`
 - Geocoding via Nominatim (OpenStreetMap) on the add form — no API key needed
 - Report button on institution info page for flagging incorrect/non-existent entries
 - Docker uses bind mount (`./data:/data`) for the SQLite database
+- SMTP: port 587 + STARTTLS (port 465 is blocked on the server); sender must match authenticated SMTP user (Migadu enforces this)
 
 **Anti-scraping measures:**
 - Rate limiting via `flask-limiter` (home/pins 10/min, info 60/min, search 30/min, global 200/hour)
@@ -110,6 +120,25 @@ HTTP → run.py → Flask → Blueprint routes → Jinja2 templates
 - Handles type casting (VARCHAR lat/lng → REAL), UUID token generation, NULL cleanup
 - 777 institutions migrated from the legacy platform
 
+## i18n
+
+Translations live in `app/static/lang/{lang}.json`. To update text across all 6 languages at once, use a Python snippet:
+
+```python
+import json
+base = "app/static/lang"
+updates = {"key": "value"}  # repeat per language as needed
+for lang in ["en", "pt-br", "es", "zh", "ro", "pl"]:
+    path = f"{base}/{lang}.json"
+    with open(path) as f: data = json.load(f)
+    data.update(updates)
+    with open(path, "w") as f: json.dump(data, f, ensure_ascii=False, indent=2)
+```
+
+Keys used with HTML content (links, etc.) must use `data-i18n-html` in the template, not `data-i18n`.
+
+Flash message keys: `flash_recaptcha_fail`, `flash_add_success`, `flash_not_found`, `flash_report_success`, `flash_contact_success`.
+
 ## Environment Variables
 
 Configured via `.env` file in the repo root:
@@ -118,13 +147,14 @@ Configured via `.env` file in the repo root:
 SECRET_KEY=your-secret-key
 DATABASE_PATH=/data/archivesmap.db
 
-# SMTP
-MAIL_SERVER=smtp.example.com
+# SMTP — port 587 + STARTTLS; MAIL_DEFAULT_SENDER must match MAIL_USERNAME (Migadu requirement)
+MAIL_SERVER=smtp.migadu.com
 MAIL_PORT=587
 MAIL_USE_TLS=true
-MAIL_USERNAME=user@example.com
+MAIL_USE_SSL=false
+MAIL_USERNAME=contact@archivesmap.org
 MAIL_PASSWORD=password
-MAIL_DEFAULT_SENDER=Archives World Map <noreply@archivesmap.org>
+MAIL_DEFAULT_SENDER=Archives World Map <contact@archivesmap.org>
 MAIL_TIMEOUT=15
 
 # Admin (single account)
