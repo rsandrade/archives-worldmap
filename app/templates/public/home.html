@@ -1,46 +1,80 @@
 {% extends "base.html" %}
 {% block title %}Archives World Map{% endblock %}
-{% block container_class %}container-fluid{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+{% endblock %}
 
 {% block content %}
-<div id="mapid"></div>
-<div class="container" style="margin-top:25px;">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3 text-center">
-            <h4 data-i18n="home_search_title">Search institutions</h4>
-            <form action="{{ url_for('public.search') }}" method="get" class="form-inline">
-                <input type="text" name="search" class="form-control input-lg" placeholder="Search by name..." data-i18n-placeholder="home_search_placeholder" style="width:60%;">
-                <input type="hidden" name="qty" value="10">
-                <input type="hidden" name="since" value="0">
-                <button type="submit" class="btn btn-primary btn-lg" data-i18n="btn_search">Search</button>
-            </form>
-        </div>
+<div id="map-wrapper">
+    <div id="mapid"></div>
+    <div id="cluster-toggle-wrap">
+        <label class="cluster-toggle-label">
+            <input type="checkbox" id="cluster-toggle" checked>
+            <span data-i18n="btn_cluster">Cluster</span>
+        </label>
+    </div>
+</div>
+<div class="row" style="margin-top:25px;">
+    <div class="col-md-6 col-md-offset-3 text-center">
+        <h4 data-i18n="home_search_title">Search institutions</h4>
+        <form action="{{ url_for('public.search') }}" method="get" class="form-inline">
+            <input type="text" name="search" class="form-control input-lg" placeholder="Search by name..." data-i18n-placeholder="home_search_placeholder" style="width:60%;">
+            <input type="hidden" name="qty" value="10">
+            <input type="hidden" name="since" value="0">
+            <button type="submit" class="btn btn-primary btn-lg" data-i18n="btn_search">Search</button>
+        </form>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
-var mymap = L.map('mapid').setView([20, 0], 2);
+var isMobile = window.innerWidth < 768;
+var defaultView = isMobile ? [-5, -15] : [20, 0];
+var mymap = L.map('mapid').setView(defaultView, 2);
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors',
     maxZoom: 18
 }).addTo(mymap);
 
+var allPins = [];
+var clusterGroup = L.markerClusterGroup();
+var plainGroup = L.layerGroup();
+var useClusters = true;
+
+function buildPopup(p) {
+    return '<div style="font-size:14px;line-height:1.6;">' +
+        '<strong style="font-size:16px;">' + p.name + '</strong><br>' +
+        '<a href="/info/' + p.id + '">info</a>' +
+        ' &middot; <a href="/info/' + p.id + '#report-form" class="text-muted">report</a>' +
+        '</div>';
+}
+
 fetch('/api/pins')
   .then(function(r) { return r.json(); })
   .then(function(pins) {
+    allPins = pins;
     pins.forEach(function(p) {
-      L.marker([p.lat, p.lng]).addTo(mymap)
-       .bindPopup(
-          '<div style="font-size:14px;line-height:1.6;">' +
-          '<strong style="font-size:16px;">' + p.name + '</strong><br>' +
-          '<a href="/info/' + p.id + '">info</a>' +
-          ' &middot; <a href="/info/' + p.id + '#report-form" class="text-muted">report</a>' +
-          '</div>',
-          {maxWidth: 300, minWidth: 150}
-       );
+      var marker = L.marker([p.lat, p.lng]).bindPopup(buildPopup(p), {maxWidth: 300, minWidth: 150});
+      clusterGroup.addLayer(marker);
+      plainGroup.addLayer(L.marker([p.lat, p.lng]).bindPopup(buildPopup(p), {maxWidth: 300, minWidth: 150}));
     });
+    mymap.addLayer(clusterGroup);
   });
+
+document.getElementById('cluster-toggle').addEventListener('change', function() {
+    useClusters = this.checked;
+    if (useClusters) {
+        mymap.removeLayer(plainGroup);
+        mymap.addLayer(clusterGroup);
+    } else {
+        mymap.removeLayer(clusterGroup);
+        mymap.addLayer(plainGroup);
+    }
+});
 </script>
 {% endblock %}

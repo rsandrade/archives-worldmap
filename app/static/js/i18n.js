@@ -38,6 +38,14 @@
         els[i].textContent = dict[key];
       }
     }
+    // HTML translations (for strings containing links)
+    var htmlEls = document.querySelectorAll('[data-i18n-html]');
+    for (var h = 0; h < htmlEls.length; h++) {
+      var hkey = htmlEls[h].getAttribute('data-i18n-html');
+      if (dict[hkey] !== undefined) {
+        htmlEls[h].innerHTML = dict[hkey];
+      }
+    }
     // Placeholders
     var placeholders = document.querySelectorAll('[data-i18n-placeholder]');
     for (var j = 0; j < placeholders.length; j++) {

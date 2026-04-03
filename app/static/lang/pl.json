@@ -5,11 +5,9 @@
   "nav_stats": "Statystyki",
   "nav_about": "O nas",
   "nav_contact": "Kontakt",
-
   "home_search_title": "Szukaj instytucji",
   "home_search_placeholder": "Szukaj po nazwie...",
   "btn_search": "Szukaj",
-
   "add_title": "Dodaj nową instytucję",
   "add_instructions": "Wyszukaj adres lub kliknij na mapę, aby ustawić lokalizację, a następnie wypełnij poniższy formularz.",
   "add_search_address": "Szukaj adresu...",
@@ -24,11 +22,9 @@
   "add_your_name": "Twoje imię",
   "add_your_email": "Twój e-mail",
   "btn_submit": "Wyślij",
-
   "add_done_title": "Dziękujemy!",
   "add_done_text": "Twoje zgłoszenie zostało odebrane i jest w trakcie weryfikacji. Otrzymasz e-mail, gdy zostanie zatwierdzone.",
   "btn_back_to_map": "Powrót do mapy",
-
   "info_address": "Adres",
   "info_city": "Miasto",
   "info_district": "Województwo",
@@ -37,19 +33,16 @@
   "info_email": "E-mail",
   "info_identifier": "Identyfikator",
   "info_collaborator": "Współpracownik",
-
   "stats_title": "Statystyki",
   "stats_total": "Łączna liczba zweryfikowanych instytucji",
   "stats_top_countries": "Top 10 krajów",
   "stats_col_country": "Kraj",
   "stats_col_institutions": "Instytucje",
-
   "about_title": "O Archives World Map",
   "about_text_1": "Archives World Map to współpracująca platforma geoprzestrzenna do katalogowania publicznych instytucji archiwalnych na całym świecie.",
   "about_text_2": "Każdy może wnieść swój wkład, dodając instytucje na mapę. Zgłoszenia są weryfikowane przed publikacją.",
   "about_maintainer": "Stworzony i utrzymywany przez <a href=\"https://feudo.org\" target=\"_blank\">Ricardo Sodré Andrade</a>.",
   "about_source": "Wolne oprogramowanie na licencji <a href=\"https://www.gnu.org/licenses/agpl-3.0.html\" target=\"_blank\">AGPL-3.0</a>. Kod źródłowy na <a href=\"https://github.com/rsandrade/archives-worldmap\" target=\"_blank\">GitHub</a>.",
-
   "contact_title": "Skontaktuj się z nami",
   "contact_name": "Twoje imię",
   "contact_email": "Twój e-mail",
@@ -57,7 +50,6 @@
   "contact_subject": "Temat",
   "contact_message": "Wiadomość",
   "btn_send": "Wyślij",
-
   "search_title": "Wyniki wyszukiwania",
   "search_found": "instytucji znalezionych dla",
   "search_col_name": "Nazwa",
@@ -65,19 +57,15 @@
   "search_no_results": "Brak wyników.",
   "btn_previous": "Poprzedni",
   "btn_next": "Następny",
-
   "info_link": "info",
   "footer_copy": "Archives World Map",
   "institution_not_found": "Nie znaleziono instytucji.",
-
   "donation_title": "Dziękujemy za darowiznę!",
   "donation_text": "Twoje wsparcie pomaga utrzymać Archives World Map.",
-
   "admin_login_title": "Logowanie administratora",
   "admin_username": "Użytkownik",
   "admin_password": "Hasło",
   "btn_login": "Zaloguj",
-
   "admin_title": "Panel administracyjny",
   "admin_logout": "Wyloguj",
   "admin_waiting": "Oczekujące",
@@ -98,16 +86,16 @@
   "btn_delete": "Usuń",
   "admin_delete_confirm": "Czy na pewno chcesz trwale usunąć tę instytucję?",
   "admin_no_institutions": "Nie znaleziono instytucji.",
-
   "edit_title": "Edytuj",
   "edit_latitude": "Szerokość geogr.",
   "edit_longitude": "Długość geogr.",
   "edit_admin_notes": "Notatki administratora",
   "btn_save": "Zapisz",
   "btn_cancel": "Anuluj",
-
   "report_link": "Zgłoś nieprawidłową lub nieistniejącą instytucję",
   "report_email": "Twój e-mail (opcjonalnie)",
   "report_reason": "Co jest nie tak?",
-  "report_submit": "Wyślij zgłoszenie"
+  "report_submit": "Wyślij zgłoszenie",
+  "btn_cluster": "Grupowanie",
+  "about_cridi": "Po kilku latach tworzenia i utrzymywania w ramach grupy badawczej <a href=\"https://www.cridi.ici.ufba.br\" target=\"_blank\">CRIDI</a>, Archives World Map jest teraz aktualizowany i utrzymywany w ramach <a href=\"https://labhd.ufba.br\" target=\"_blank\">Laboratorium Humanistyki Cyfrowej UFBA (LABHDUFBA)</a>."
 }

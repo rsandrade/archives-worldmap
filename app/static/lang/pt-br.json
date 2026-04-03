@@ -5,11 +5,9 @@
   "nav_stats": "Estatísticas",
   "nav_about": "Sobre",
   "nav_contact": "Contato",
-
   "home_search_title": "Buscar instituições",
   "home_search_placeholder": "Buscar por nome...",
   "btn_search": "Buscar",
-
   "add_title": "Adicionar uma nova instituição",
   "add_instructions": "Busque um endereço ou clique no mapa para definir a localização e preencha o formulário abaixo.",
   "add_search_address": "Buscar endereço...",
@@ -24,11 +22,9 @@
   "add_your_name": "Seu nome",
   "add_your_email": "Seu e-mail",
   "btn_submit": "Enviar",
-
   "add_done_title": "Obrigado!",
   "add_done_text": "Sua contribuição foi recebida e está em análise. Você receberá um e-mail quando for aprovada.",
   "btn_back_to_map": "Voltar ao mapa",
-
   "info_address": "Endereço",
   "info_city": "Cidade",
   "info_district": "Estado",
@@ -37,19 +33,16 @@
   "info_email": "E-mail",
   "info_identifier": "Identificador",
   "info_collaborator": "Colaborador",
-
   "stats_title": "Estatísticas",
   "stats_total": "Total de instituições verificadas",
   "stats_top_countries": "Top 10 países",
   "stats_col_country": "País",
   "stats_col_institutions": "Instituições",
-
   "about_title": "Sobre o Archives World Map",
   "about_text_1": "O Archives World Map é uma plataforma colaborativa geoespacial para catalogar instituições arquivísticas públicas em todo o mundo.",
   "about_text_2": "Qualquer pessoa pode contribuir adicionando instituições ao mapa. As contribuições são revisadas antes de serem publicadas.",
   "about_maintainer": "Criado e mantido por <a href=\"https://feudo.org\" target=\"_blank\">Ricardo Sodré Andrade</a>.",
   "about_source": "Software livre sob a licença <a href=\"https://www.gnu.org/licenses/agpl-3.0.html\" target=\"_blank\">AGPL-3.0</a>. Código-fonte no <a href=\"https://github.com/rsandrade/archives-worldmap\" target=\"_blank\">GitHub</a>.",
-
   "contact_title": "Fale conosco",
   "contact_name": "Seu nome",
   "contact_email": "Seu e-mail",
@@ -57,7 +50,6 @@
   "contact_subject": "Assunto",
   "contact_message": "Mensagem",
   "btn_send": "Enviar",
-
   "search_title": "Resultados da busca",
   "search_found": "instituição(ões) encontrada(s) para",
   "search_col_name": "Nome",
@@ -65,19 +57,15 @@
   "search_no_results": "Nenhum resultado.",
   "btn_previous": "Anterior",
   "btn_next": "Próximo",
-
   "info_link": "info",
   "footer_copy": "Archives World Map",
   "institution_not_found": "Instituição não encontrada.",
-
   "donation_title": "Obrigado pela sua doação!",
   "donation_text": "Seu apoio ajuda a manter o Archives World Map funcionando.",
-
   "admin_login_title": "Login do Administrador",
   "admin_username": "Usuário",
   "admin_password": "Senha",
   "btn_login": "Entrar",
-
   "admin_title": "Painel Administrativo",
   "admin_logout": "Sair",
   "admin_waiting": "Aguardando",
@@ -98,16 +86,16 @@
   "btn_delete": "Excl",
   "admin_delete_confirm": "Excluir esta instituição permanentemente?",
   "admin_no_institutions": "Nenhuma instituição encontrada.",
-
   "edit_title": "Editar",
   "edit_latitude": "Latitude",
   "edit_longitude": "Longitude",
   "edit_admin_notes": "Notas do administrador",
   "btn_save": "Salvar",
   "btn_cancel": "Cancelar",
-
   "report_link": "Reportar instituição incorreta ou inexistente",
   "report_email": "Seu e-mail (opcional)",
   "report_reason": "O que está errado?",
-  "report_submit": "Enviar relatório"
+  "report_submit": "Enviar relatório",
+  "btn_cluster": "Agrupar",
+  "about_cridi": "Após ser criado e mantido por alguns anos no âmbito do <a href=\"https://www.cridi.ici.ufba.br\" target=\"_blank\">Grupo de Estudos sobre Cultura, Representação e Informação Digitais - CRIDI</a>, o Archives World Map está sendo atualizado e mantido no âmbito do <a href=\"https://labhd.ufba.br\" target=\"_blank\">Laboratório de Humanidades Digitais da UFBA (LABHDUFBA)</a>."
 }
