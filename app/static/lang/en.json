@@ -97,7 +97,7 @@
   "report_submit": "Send report",
   "about_source": "Free software under the <a href=\"https://www.gnu.org/licenses/agpl-3.0.html\" target=\"_blank\">AGPL-3.0</a> license. Source code on <a href=\"https://github.com/rsandrade/archives-worldmap\" target=\"_blank\">GitHub</a>.",
   "btn_cluster": "Cluster",
-  "about_cridi": "After being created and maintained for nine (9) years within the <a href=\"https://www.cridi.ici.ufba.br\" target=\"_blank\">CRIDI</a> research group, Archives World Map will now be updated and maintained within the <a href=\"https://labhd.ufba.br\" target=\"_blank\">Laboratory of Digital Humanities of UFBA (LABHDUFBA)</a>.",
+  "about_cridi": "After being created in 2016 and maintained for approximately nine (9) years within the <a href=\"https://www.cridi.ici.ufba.br\" target=\"_blank\">CRIDI</a> research group, Archives World Map will now be updated and maintained within the <a href=\"https://labhd.ufba.br\" target=\"_blank\">Laboratory of Digital Humanities of UFBA (LABHDUFBA)</a>.",
   "flash_recaptcha_fail": "reCAPTCHA verification failed.",
   "flash_add_success": "Thank you! Your submission is under review.",
   "flash_not_found": "Institution not found.",
