@@ -30,22 +30,30 @@ def login():
     return render_template('admin/login.html')
 
 
+def _get_active_hash(db):
+    """Return current password hash: DB settings override takes precedence over .env."""
+    row = db.execute("SELECT value FROM settings WHERE key = 'admin_password_hash'").fetchone()
+    if row:
+        return row['value']
+    return current_app.config['ADMIN_PASSWORD_HASH']
+
+
 @admin_bp.route('/login', methods=['POST'])
 def login_submit():
     username = request.form.get('username', '')
     password = request.form.get('password', '')
 
     expected_user = current_app.config['ADMIN_USERNAME']
-    expected_hash = current_app.config['ADMIN_PASSWORD_HASH']
+    db = get_db()
 
-    # Check permanent password from .env
-    if username == expected_user and expected_hash and check_password_hash(expected_hash, password):
+    # Check permanent password (DB override or .env)
+    active_hash = _get_active_hash(db)
+    if username == expected_user and active_hash and check_password_hash(active_hash, password):
         session['admin_logged'] = True
         return redirect(url_for('admin.dashboard'))
 
     # Check temporary reset password from DB
     if username == expected_user:
-        db = get_db()
         reset = db.execute(
             "SELECT id, hash FROM password_resets WHERE expires_at > datetime('now') ORDER BY id DESC LIMIT 1"
         ).fetchone()
@@ -53,8 +61,8 @@ def login_submit():
             db.execute('DELETE FROM password_resets WHERE id = ?', (reset['id'],))
             db.commit()
             session['admin_logged'] = True
-            flash('Logged in with temporary password. Please update your ADMIN_PASSWORD_HASH.', 'warning')
-            return redirect(url_for('admin.dashboard'))
+            flash('Logged in with temporary password. Please set a permanent password.', 'warning')
+            return redirect(url_for('admin.change_password'))
 
     flash('Invalid credentials.', 'danger')
     return redirect(url_for('admin.login'))
@@ -89,6 +97,46 @@ def forgot_password_submit():
 
     flash('A temporary password has been sent to the admin email.', 'success')
     return redirect(url_for('admin.login'))
+
+
+@admin_bp.route('/change-password', methods=['GET'])
+@admin_required
+def change_password():
+    return render_template('admin/change_password.html')
+
+
+@admin_bp.route('/change-password', methods=['POST'])
+@admin_required
+def change_password_submit():
+    current_password = request.form.get('current_password', '')
+    new_password = request.form.get('new_password', '')
+    confirm = request.form.get('confirm_password', '')
+
+    db = get_db()
+    active_hash = _get_active_hash(db)
+
+    if not active_hash or not check_password_hash(active_hash, current_password):
+        flash('Current password is incorrect.', 'danger')
+        return redirect(url_for('admin.change_password'))
+
+    if len(new_password) < 8:
+        flash('New password must be at least 8 characters.', 'danger')
+        return redirect(url_for('admin.change_password'))
+
+    if new_password != confirm:
+        flash('Passwords do not match.', 'danger')
+        return redirect(url_for('admin.change_password'))
+
+    new_hash = generate_password_hash(new_password)
+    db.execute(
+        "INSERT INTO settings (key, value) VALUES ('admin_password_hash', ?) "
+        "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        (new_hash,),
+    )
+    db.commit()
+
+    flash('Password updated successfully.', 'success')
+    return redirect(url_for('admin.dashboard'))
 
 
 @admin_bp.route('/logout')

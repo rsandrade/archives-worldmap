@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <h2><span data-i18n="admin_title">Admin Panel</span> <small><a href="{{ url_for('admin.logout') }}" data-i18n="admin_logout">Logout</a></small></h2>
+        <h2><span data-i18n="admin_title">Admin Panel</span> <small><a href="{{ url_for('admin.logout') }}" data-i18n="admin_logout">Logout</a> &middot; <a href="{{ url_for('admin.change_password') }}">Change password</a></small></h2>
 
         <div class="btn-group" style="margin-bottom:15px;">
             <a href="{{ url_for('admin.dashboard', status='waiting') }}"
