@@ -5,23 +5,39 @@
     <div class="col-md-12">
         <h2><span data-i18n="admin_title">Admin Panel</span> <small><a href="{{ url_for('admin.logout') }}" data-i18n="admin_logout">Logout</a> &middot; <a href="{{ url_for('admin.change_password') }}">Change password</a></small></h2>
 
-        <div class="btn-group" style="margin-bottom:15px;">
-            <a href="{{ url_for('admin.dashboard', status='waiting') }}"
-               class="btn btn-default {% if status_filter == 'waiting' %}active{% endif %}">
-                <span data-i18n="admin_waiting">Waiting</span> ({{ counts['waiting'] }})
-            </a>
-            <a href="{{ url_for('admin.dashboard', status='verified') }}"
-               class="btn btn-default {% if status_filter == 'verified' %}active{% endif %}">
-                <span data-i18n="admin_verified">Verified</span> ({{ counts['verified'] }})
-            </a>
-            <a href="{{ url_for('admin.dashboard', status='rejected') }}"
-               class="btn btn-default {% if status_filter == 'rejected' %}active{% endif %}">
-                <span data-i18n="admin_rejected">Rejected</span> ({{ counts['rejected'] }})
-            </a>
-            <a href="{{ url_for('admin.dashboard', status='all') }}"
-               class="btn btn-default {% if status_filter == 'all' %}active{% endif %}">
-                <span data-i18n="admin_all">All</span>
-            </a>
+        <div class="row" style="margin-bottom:15px;">
+            <div class="col-sm-5">
+                <div class="btn-group">
+                    <a href="{{ url_for('admin.dashboard', status='waiting', q=q) }}"
+                       class="btn btn-default {% if status_filter == 'waiting' %}active{% endif %}">
+                        <span data-i18n="admin_waiting">Waiting</span> ({{ counts['waiting'] }})
+                    </a>
+                    <a href="{{ url_for('admin.dashboard', status='verified', q=q) }}"
+                       class="btn btn-default {% if status_filter == 'verified' %}active{% endif %}">
+                        <span data-i18n="admin_verified">Verified</span> ({{ counts['verified'] }})
+                    </a>
+                    <a href="{{ url_for('admin.dashboard', status='rejected', q=q) }}"
+                       class="btn btn-default {% if status_filter == 'rejected' %}active{% endif %}">
+                        <span data-i18n="admin_rejected">Rejected</span> ({{ counts['rejected'] }})
+                    </a>
+                    <a href="{{ url_for('admin.dashboard', status='all', q=q) }}"
+                       class="btn btn-default {% if status_filter == 'all' %}active{% endif %}">
+                        <span data-i18n="admin_all">All</span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-4 col-sm-offset-3">
+                <form method="get" action="{{ url_for('admin.dashboard') }}" class="form-inline">
+                    <input type="hidden" name="status" value="{{ status_filter }}">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control input-sm" placeholder="Name, city, collaborator..." value="{{ q }}">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-default btn-sm">Search</button>
+                            {% if q %}<a href="{{ url_for('admin.dashboard', status=status_filter) }}" class="btn btn-default btn-sm">&times;</a>{% endif %}
+                        </span>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <table class="table table-striped table-condensed">
@@ -79,7 +95,7 @@
             <ul class="pagination">
                 {% for p in range(1, total_pages + 1) %}
                     <li {% if p == page %}class="active"{% endif %}>
-                        <a href="{{ url_for('admin.dashboard', status=status_filter, page=p) }}">{{ p }}</a>
+                        <a href="{{ url_for('admin.dashboard', status=status_filter, page=p, q=q) }}">{{ p }}</a>
                     </li>
                 {% endfor %}
             </ul>

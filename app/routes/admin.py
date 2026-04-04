@@ -153,23 +153,35 @@ def logout():
 def dashboard():
     db = get_db()
     status_filter = request.args.get('status', 'waiting')
+    q = request.args.get('q', '').strip()
     page = int(request.args.get('page', 1))
     per_page = 20
     offset = (page - 1) * per_page
 
+    like = f'%{q}%'
+    search_clause = (
+        " AND (name LIKE ? OR city LIKE ? OR collaborator_name LIKE ? OR collaborator_email LIKE ?)"
+        if q else ""
+    )
+    search_params = (like, like, like, like) if q else ()
+
     if status_filter == 'all':
         rows = db.execute(
-            'SELECT * FROM institutions ORDER BY submitted_at DESC LIMIT ? OFFSET ?',
-            (per_page, offset),
-        ).fetchall()
-        total = db.execute('SELECT COUNT(*) AS c FROM institutions').fetchone()['c']
-    else:
-        rows = db.execute(
-            'SELECT * FROM institutions WHERE status = ? ORDER BY submitted_at DESC LIMIT ? OFFSET ?',
-            (status_filter, per_page, offset),
+            f'SELECT * FROM institutions WHERE 1=1{search_clause} ORDER BY submitted_at DESC LIMIT ? OFFSET ?',
+            (*search_params, per_page, offset),
         ).fetchall()
         total = db.execute(
-            'SELECT COUNT(*) AS c FROM institutions WHERE status = ?', (status_filter,)
+            f'SELECT COUNT(*) AS c FROM institutions WHERE 1=1{search_clause}',
+            search_params,
+        ).fetchone()['c']
+    else:
+        rows = db.execute(
+            f'SELECT * FROM institutions WHERE status = ?{search_clause} ORDER BY submitted_at DESC LIMIT ? OFFSET ?',
+            (status_filter, *search_params, per_page, offset),
+        ).fetchall()
+        total = db.execute(
+            f'SELECT COUNT(*) AS c FROM institutions WHERE status = ?{search_clause}',
+            (status_filter, *search_params),
         ).fetchone()['c']
 
     counts = {
@@ -181,7 +193,7 @@ def dashboard():
     return render_template(
         'admin/dashboard.html',
         institutions=rows, total=total, counts=counts,
-        status_filter=status_filter, page=page, per_page=per_page,
+        status_filter=status_filter, page=page, per_page=per_page, q=q,
     )
 
 
