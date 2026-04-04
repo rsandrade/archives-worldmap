@@ -24,3 +24,9 @@ CREATE TABLE IF NOT EXISTS institutions (
 CREATE INDEX IF NOT EXISTS idx_status  ON institutions(status);
 CREATE INDEX IF NOT EXISTS idx_token   ON institutions(token);
 CREATE INDEX IF NOT EXISTS idx_country ON institutions(country);
+
+CREATE TABLE IF NOT EXISTS password_resets (
+    id         INTEGER PRIMARY KEY,
+    hash       TEXT NOT NULL,
+    expires_at TEXT NOT NULL
+);

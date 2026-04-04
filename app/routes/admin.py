@@ -1,10 +1,12 @@
 import functools
+import secrets
+import string
 
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
     session, current_app, flash,
 )
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from ..db import get_db
 from ..email_utils import send_approved_email, send_rejected_email
@@ -36,11 +38,56 @@ def login_submit():
     expected_user = current_app.config['ADMIN_USERNAME']
     expected_hash = current_app.config['ADMIN_PASSWORD_HASH']
 
+    # Check permanent password from .env
     if username == expected_user and expected_hash and check_password_hash(expected_hash, password):
         session['admin_logged'] = True
         return redirect(url_for('admin.dashboard'))
 
+    # Check temporary reset password from DB
+    if username == expected_user:
+        db = get_db()
+        reset = db.execute(
+            "SELECT id, hash FROM password_resets WHERE expires_at > datetime('now') ORDER BY id DESC LIMIT 1"
+        ).fetchone()
+        if reset and check_password_hash(reset['hash'], password):
+            db.execute('DELETE FROM password_resets WHERE id = ?', (reset['id'],))
+            db.commit()
+            session['admin_logged'] = True
+            flash('Logged in with temporary password. Please update your ADMIN_PASSWORD_HASH.', 'warning')
+            return redirect(url_for('admin.dashboard'))
+
     flash('Invalid credentials.', 'danger')
+    return redirect(url_for('admin.login'))
+
+
+@admin_bp.route('/forgot-password', methods=['GET'])
+def forgot_password():
+    return render_template('admin/forgot_password.html')
+
+
+@admin_bp.route('/forgot-password', methods=['POST'])
+def forgot_password_submit():
+    admin_email = current_app.config.get('ADMIN_EMAIL', '')
+    if not admin_email:
+        flash('ADMIN_EMAIL is not configured.', 'danger')
+        return redirect(url_for('admin.forgot_password'))
+
+    alphabet = string.ascii_letters + string.digits + '!@#$%^&*'
+    new_password = ''.join(secrets.choice(alphabet) for _ in range(20))
+    hashed = generate_password_hash(new_password)
+
+    db = get_db()
+    db.execute('DELETE FROM password_resets')  # only one reset at a time
+    db.execute(
+        "INSERT INTO password_resets (hash, expires_at) VALUES (?, datetime('now', '+1 hour'))",
+        (hashed,),
+    )
+    db.commit()
+
+    from ..email_utils import send_password_reset_email
+    send_password_reset_email(new_password)
+
+    flash('A temporary password has been sent to the admin email.', 'success')
     return redirect(url_for('admin.login'))
 
 

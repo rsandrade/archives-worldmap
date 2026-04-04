@@ -69,6 +69,26 @@ def send_report_email(institution: dict, reporter_email: str, reason: str):
     mail.send(msg)
 
 
+def send_password_reset_email(new_password: str):
+    """Send temporary admin password to ADMIN_EMAIL."""
+    admin_email = current_app.config['ADMIN_EMAIL']
+    if not admin_email:
+        return
+    msg = Message(
+        subject='[Archives World Map] Admin password reset',
+        recipients=[admin_email],
+        body=(
+            f'Your temporary admin password (valid for 1 hour):\n\n'
+            f'    {new_password}\n\n'
+            f'Log in at: {current_app.config["BASE_URL"]}/admin/login\n\n'
+            f'After logging in, generate a permanent hash with:\n'
+            f'  docker compose exec web flask hash-password <new-password>\n'
+            f'and update ADMIN_PASSWORD_HASH in your .env file.'
+        ),
+    )
+    mail.send(msg)
+
+
 def send_contact_email(name: str, email: str, institution: str, subject: str, body: str):
     """Forward contact form to admin."""
     admin_email = current_app.config['ADMIN_EMAIL']
