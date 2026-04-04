@@ -61,6 +61,7 @@ def login_submit():
             db.execute('DELETE FROM password_resets WHERE id = ?', (reset['id'],))
             db.commit()
             session['admin_logged'] = True
+            session['must_change_password'] = True
             flash('Logged in with temporary password. Please set a permanent password.', 'warning')
             return redirect(url_for('admin.change_password'))
 
@@ -112,12 +113,14 @@ def change_password_submit():
     new_password = request.form.get('new_password', '')
     confirm = request.form.get('confirm_password', '')
 
+    # Skip current password check when coming from a temporary reset login
+    if not session.pop('must_change_password', False):
+        db = get_db()
+        active_hash = _get_active_hash(db)
+        if not active_hash or not check_password_hash(active_hash, current_password):
+            flash('Current password is incorrect.', 'danger')
+            return redirect(url_for('admin.change_password'))
     db = get_db()
-    active_hash = _get_active_hash(db)
-
-    if not active_hash or not check_password_hash(active_hash, current_password):
-        flash('Current password is incorrect.', 'danger')
-        return redirect(url_for('admin.change_password'))
 
     if len(new_password) < 8:
         flash('New password must be at least 8 characters.', 'danger')
