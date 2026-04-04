@@ -37,7 +37,7 @@
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
 var isMobile = window.innerWidth < 768;
-var defaultView = isMobile ? [-5, -15] : [20, 0];
+var defaultView = isMobile ? [-20, -15] : [20, 0];
 var mymap = L.map('mapid').setView(defaultView, 2);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
