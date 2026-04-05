@@ -103,5 +103,6 @@
   "flash_not_found": "Instituția nu a fost găsită.",
   "flash_report_success": "Mulțumim pentru raportul dvs. Îl vom analiza.",
   "flash_contact_success": "Mulțumim pentru mesajul dvs.!",
-  "add_country_search": "Caută țară..."
+  "add_country_search": "Caută țară...",
+  "add_inst_name_hint": "Utilizați Forma Autorizată a Numelui conform standardului ISDIAH (elementul 5.1.2)."
 }

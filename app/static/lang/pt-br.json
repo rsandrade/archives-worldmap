@@ -103,5 +103,6 @@
   "flash_not_found": "Instituição não encontrada.",
   "flash_report_success": "Obrigado pelo seu relatório. Vamos analisá-lo.",
   "flash_contact_success": "Obrigado pela sua mensagem!",
-  "add_country_search": "Buscar país..."
+  "add_country_search": "Buscar país...",
+  "add_inst_name_hint": "Utilize a Forma Autorizada do Nome conforme definido pela ISDIAH (elemento 5.1.2)."
 }
