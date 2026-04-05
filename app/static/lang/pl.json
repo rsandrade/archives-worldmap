@@ -102,5 +102,6 @@
   "flash_add_success": "Dziękujemy! Twoje zgłoszenie jest w trakcie weryfikacji.",
   "flash_not_found": "Instytucja nie została znaleziona.",
   "flash_report_success": "Dziękujemy za zgłoszenie. Sprawdzimy je.",
-  "flash_contact_success": "Dziękujemy za wiadomość!"
+  "flash_contact_success": "Dziękujemy za wiadomość!",
+  "add_country_search": "Szukaj kraju..."
 }

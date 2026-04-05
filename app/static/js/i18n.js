@@ -117,7 +117,10 @@
     var url = LANG_BASE_URL + lang + '.json';
     fetch(url)
       .then(function (r) { return r.json(); })
-      .then(function (dict) { applyTranslations(dict); })
+      .then(function (dict) {
+        applyTranslations(dict);
+        document.dispatchEvent(new CustomEvent('awm:langchange', { detail: { lang: lang } }));
+      })
       .catch(function () {
         if (lang !== DEFAULT_LANG) loadAndApply(DEFAULT_LANG);
       });

@@ -102,5 +102,6 @@
   "flash_add_success": "Obrigado! Sua submissão está em análise.",
   "flash_not_found": "Instituição não encontrada.",
   "flash_report_success": "Obrigado pelo seu relatório. Vamos analisá-lo.",
-  "flash_contact_success": "Obrigado pela sua mensagem!"
+  "flash_contact_success": "Obrigado pela sua mensagem!",
+  "add_country_search": "Buscar país..."
 }

@@ -102,5 +102,6 @@
   "flash_add_success": "Mulțumim! Trimiterea dvs. este în curs de revizuire.",
   "flash_not_found": "Instituția nu a fost găsită.",
   "flash_report_success": "Mulțumim pentru raportul dvs. Îl vom analiza.",
-  "flash_contact_success": "Mulțumim pentru mesajul dvs.!"
+  "flash_contact_success": "Mulțumim pentru mesajul dvs.!",
+  "add_country_search": "Caută țară..."
 }

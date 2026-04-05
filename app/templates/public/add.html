@@ -45,7 +45,10 @@
     <div class="row">
         <div class="col-md-4"><div class="form-group">
             <label data-i18n="add_country">Country</label>
-            <input type="text" name="country" id="field-country" class="form-control" maxlength="2" placeholder="e.g. BR">
+            <input type="text" id="country-filter" class="form-control" data-i18n-placeholder="add_country_search" placeholder="Search country..." autocomplete="off" style="margin-bottom:4px;">
+            <select name="country" id="field-country" class="form-control">
+                <option value=""></option>
+            </select>
         </div></div>
         <div class="col-md-4"><div class="form-group">
             <label data-i18n="add_website">Website</label>
@@ -127,9 +130,87 @@ function geocodeAddress() {
             if (addr.state)
                 document.getElementById('field-district').value = addr.state;
             if (addr.country_code)
-                document.getElementById('field-country').value = addr.country_code.toUpperCase();
+                setCountry(addr.country_code.toUpperCase());
         });
 }
+
+// Country combobox
+var ALL_CODES = [
+  'AD','AE','AF','AG','AI','AL','AM','AO','AQ','AR','AS','AT','AU','AW','AX','AZ',
+  'BA','BB','BD','BE','BF','BG','BH','BI','BJ','BL','BM','BN','BO','BQ','BR','BS',
+  'BT','BV','BW','BY','BZ','CA','CC','CD','CF','CG','CH','CI','CK','CL','CM','CN',
+  'CO','CR','CU','CV','CW','CX','CY','CZ','DE','DJ','DK','DM','DO','DZ','EC','EE',
+  'EG','EH','ER','ES','ET','FI','FJ','FK','FM','FO','FR','GA','GB','GD','GE','GF',
+  'GG','GH','GI','GL','GM','GN','GP','GQ','GR','GS','GT','GU','GW','GY','HK','HM',
+  'HN','HR','HT','HU','ID','IE','IL','IM','IN','IO','IQ','IR','IS','IT','JE','JM',
+  'JO','JP','KE','KG','KH','KI','KM','KN','KP','KR','KW','KY','KZ','LA','LB','LC',
+  'LI','LK','LR','LS','LT','LU','LV','LY','MA','MC','MD','ME','MF','MG','MH','MK',
+  'ML','MM','MN','MO','MP','MQ','MR','MS','MT','MU','MV','MW','MX','MY','MZ','NA',
+  'NC','NE','NF','NG','NI','NL','NO','NP','NR','NU','NZ','OM','PA','PE','PF','PG',
+  'PH','PK','PL','PM','PN','PR','PS','PT','PW','PY','QA','RE','RO','RS','RU','RW',
+  'SA','SB','SC','SD','SE','SG','SH','SI','SJ','SK','SL','SM','SN','SO','SR','SS',
+  'ST','SV','SX','SY','SZ','TC','TD','TF','TG','TH','TJ','TK','TL','TM','TN','TO',
+  'TR','TT','TV','TZ','UA','UG','UM','US','UY','UZ','VA','VC','VE','VG','VI','VN',
+  'VU','WF','WS','YE','YT','ZA','ZM','ZW'
+];
+
+var allCountryOptions = [];
+
+function langToLocale(lang) {
+  return lang === 'pt-br' ? 'pt-BR' : lang;
+}
+
+function buildCountryOptions(lang) {
+  var locale = langToLocale(lang);
+  var dn;
+  try { dn = new Intl.DisplayNames([locale], {type: 'region'}); } catch(e) { dn = null; }
+  allCountryOptions = ALL_CODES.map(function(code) {
+    var name = code;
+    try { if (dn) name = dn.of(code) || code; } catch(e) {}
+    return {code: code, name: name};
+  }).filter(function(o) { return o.name && o.name !== o.code; });
+  allCountryOptions.sort(function(a, b) { return a.name.localeCompare(b.name, locale); });
+}
+
+function renderCountryOptions(filter, selectedCode) {
+  var sel = document.getElementById('field-country');
+  var q = (filter || '').toLowerCase();
+  sel.innerHTML = '<option value=""></option>';
+  allCountryOptions.forEach(function(o) {
+    if (q && o.name.toLowerCase().indexOf(q) === -1 && o.code.toLowerCase().indexOf(q) === -1) return;
+    var opt = document.createElement('option');
+    opt.value = o.code;
+    opt.textContent = o.name + ' (' + o.code + ')';
+    if (o.code === selectedCode) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+function setCountry(code) {
+  document.getElementById('country-filter').value = '';
+  renderCountryOptions('', code);
+}
+
+function initCountrySelect() {
+  var lang = localStorage.getItem('awm_lang') || 'en';
+  buildCountryOptions(lang);
+  renderCountryOptions('', '');
+
+  document.getElementById('country-filter').addEventListener('input', function() {
+    var sel = document.getElementById('field-country');
+    var cur = sel.value;
+    renderCountryOptions(this.value, cur);
+  });
+
+  document.addEventListener('awm:langchange', function(e) {
+    var sel = document.getElementById('field-country');
+    var cur = sel.value;
+    buildCountryOptions(e.detail.lang);
+    renderCountryOptions(document.getElementById('country-filter').value, cur);
+  });
+}
+
+initCountrySelect();
 
 document.getElementById('geocode-btn').addEventListener('click', geocodeAddress);
 document.getElementById('geocode-input').addEventListener('keydown', function(e) {
