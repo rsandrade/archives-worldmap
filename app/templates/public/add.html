@@ -5,13 +5,14 @@
 <h2 data-i18n="add_title">Add a new institution</h2>
 <p data-i18n="add_instructions">Search for an address or click on the map to set the location, then fill in the form below.</p>
 
-<div class="form-group">
+<div class="form-group" style="position:relative;">
     <div class="input-group">
-        <input type="text" id="geocode-input" class="form-control" data-i18n-placeholder="add_search_address" placeholder="Search address...">
+        <input type="text" id="geocode-input" class="form-control" data-i18n-placeholder="add_search_address" placeholder="Search address..." autocomplete="off">
         <span class="input-group-btn">
             <button type="button" id="geocode-btn" class="btn btn-default" data-i18n="btn_search">Search</button>
         </span>
     </div>
+    <ul id="geocode-results" style="display:none;position:absolute;z-index:2000;width:100%;background:#fff;border:1px solid #ccc;border-top:none;list-style:none;margin:0;padding:0;max-height:220px;overflow-y:auto;box-shadow:0 4px 8px rgba(0,0,0,0.1);"></ul>
 </div>
 
 <div id="mapid" style="height:350px;margin-bottom:20px;"></div>
@@ -107,31 +108,72 @@ mymap.on('click', function(e) {
     placeMarker(e.latlng.lat, e.latlng.lng);
 });
 
-// Geocoding via Nominatim (OpenStreetMap)
+// Geocoding via Nominatim — multi-result dropdown with fallback
+function simplifyQuery(q) {
+    var s = q.replace(/\b\d{4,8}(-\d{3,4})?\b/g, '');
+    s = s.replace(/,\s*,/g, ',').replace(/^[\s,]+|[\s,]+$/g, '').trim();
+    return s !== q ? s : null;
+}
+
+function nominatimSearch(q, callback) {
+    fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&q=' + encodeURIComponent(q))
+        .then(function(r) { return r.json(); }).then(callback).catch(function() { callback([]); });
+}
+
+function fillFromPlace(place) {
+    var lat = parseFloat(place.lat), lng = parseFloat(place.lon);
+    placeMarker(lat, lng);
+    mymap.setView([lat, lng], 16);
+    var addr = place.address || {};
+    var road = [addr.road, addr.house_number].filter(Boolean).join(' ');
+    if (road) document.getElementById('field-address').value = road;
+    if (addr.city || addr.town || addr.village)
+        document.getElementById('field-city').value = addr.city || addr.town || addr.village;
+    if (addr.state)
+        document.getElementById('field-district').value = addr.state;
+    if (addr.country_code)
+        setCountry(addr.country_code.toUpperCase());
+    hideResults();
+}
+
+function showResults(places) {
+    var list = document.getElementById('geocode-results');
+    list.innerHTML = '';
+    if (!places.length) {
+        var li = document.createElement('li');
+        li.textContent = 'No results found.';
+        li.style.cssText = 'padding:8px 12px;color:#999;font-size:13px;';
+        list.appendChild(li);
+    } else {
+        places.forEach(function(place) {
+            var li = document.createElement('li');
+            li.textContent = place.display_name;
+            li.style.cssText = 'padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid #eee;';
+            li.addEventListener('mouseenter', function() { this.style.background = '#f5f5f5'; });
+            li.addEventListener('mouseleave', function() { this.style.background = ''; });
+            li.addEventListener('click', function() { fillFromPlace(place); });
+            list.appendChild(li);
+        });
+    }
+    list.style.display = 'block';
+}
+
+function hideResults() {
+    document.getElementById('geocode-results').style.display = 'none';
+}
+
 function geocodeAddress() {
     var q = document.getElementById('geocode-input').value.trim();
     if (!q) return;
-    fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=1&q=' + encodeURIComponent(q))
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-            if (!data.length) return;
-            var place = data[0];
-            var lat = parseFloat(place.lat);
-            var lng = parseFloat(place.lon);
-            placeMarker(lat, lng);
-            mymap.setView([lat, lng], 16);
-
-            // Auto-fill address fields from Nominatim response
-            var addr = place.address || {};
-            var road = [addr.road, addr.house_number].filter(Boolean).join(' ');
-            if (road) document.getElementById('field-address').value = road;
-            if (addr.city || addr.town || addr.village)
-                document.getElementById('field-city').value = addr.city || addr.town || addr.village;
-            if (addr.state)
-                document.getElementById('field-district').value = addr.state;
-            if (addr.country_code)
-                setCountry(addr.country_code.toUpperCase());
-        });
+    nominatimSearch(q, function(data) {
+        if (data.length) { showResults(data); return; }
+        var simplified = simplifyQuery(q);
+        if (simplified) {
+            nominatimSearch(simplified, function(data2) { showResults(data2); });
+        } else {
+            showResults([]);
+        }
+    });
 }
 
 // Country combobox
@@ -215,6 +257,11 @@ initCountrySelect();
 document.getElementById('geocode-btn').addEventListener('click', geocodeAddress);
 document.getElementById('geocode-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') { e.preventDefault(); geocodeAddress(); }
+});
+document.addEventListener('click', function(e) {
+    var results = document.getElementById('geocode-results');
+    if (!results.contains(e.target) && e.target.id !== 'geocode-input' && e.target.id !== 'geocode-btn')
+        hideResults();
 });
 
 {% if recaptcha_enabled %}
