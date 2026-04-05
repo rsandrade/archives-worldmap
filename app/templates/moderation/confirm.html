@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Confirm moderation - Archives World Map{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        {% if action == 'approve' %}
+        <h2>Approve institution</h2>
+        <p>Are you sure you want to <strong>approve</strong> the following submission?</p>
+        {% else %}
+        <h2>Reject institution</h2>
+        <p>Are you sure you want to <strong>reject</strong> the following submission?</p>
+        {% endif %}
+
+        <table class="table table-condensed">
+            <tr><td><strong>Name</strong></td><td>{{ institution['name'] }}</td></tr>
+            <tr><td><strong>City</strong></td><td>{{ institution['city'] }}</td></tr>
+            <tr><td><strong>Country</strong></td><td>{{ institution['country'] }}</td></tr>
+            <tr><td><strong>Submitted by</strong></td><td>{{ institution['collaborator_name'] }} ({{ institution['collaborator_email'] }})</td></tr>
+        </table>
+
+        <form method="post">
+            {% if action == 'approve' %}
+            <button type="submit" class="btn btn-success btn-lg">Confirm approval</button>
+            {% else %}
+            <button type="submit" class="btn btn-danger btn-lg">Confirm rejection</button>
+            {% endif %}
+            <a href="{{ url_for('public.home') }}" class="btn btn-default btn-lg">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
