@@ -1,6 +1,27 @@
+import logging
+import threading
+
 from flask import render_template, current_app
 from flask_mail import Message
 from .extensions import mail
+
+logger = logging.getLogger(__name__)
+
+
+def _send_async(app, msg):
+    """Send a Flask-Mail message in a background thread."""
+    with app.app_context():
+        try:
+            mail.send(msg)
+        except Exception as e:
+            logger.error("Failed to send email to %s: %s", msg.recipients, e)
+
+
+def _send(msg):
+    """Dispatch email asynchronously so the HTTP request is never blocked."""
+    app = current_app._get_current_object()
+    t = threading.Thread(target=_send_async, args=(app, msg), daemon=True)
+    t.start()
 
 
 def send_new_submission_email(institution: dict):
@@ -23,7 +44,7 @@ def send_new_submission_email(institution: dict):
             reject_url=reject_url,
         ),
     )
-    mail.send(msg)
+    _send(msg)
 
 
 def send_approved_email(institution: dict):
@@ -35,7 +56,7 @@ def send_approved_email(institution: dict):
         recipients=[institution['collaborator_email']],
         html=render_template('emails/approved.html', institution=institution),
     )
-    mail.send(msg)
+    _send(msg)
 
 
 def send_rejected_email(institution: dict):
@@ -47,7 +68,7 @@ def send_rejected_email(institution: dict):
         recipients=[institution['collaborator_email']],
         html=render_template('emails/rejected.html', institution=institution),
     )
-    mail.send(msg)
+    _send(msg)
 
 
 def send_report_email(institution: dict, reporter_email: str, reason: str):
@@ -66,7 +87,7 @@ def send_report_email(institution: dict, reporter_email: str, reason: str):
             reason=reason,
         ),
     )
-    mail.send(msg)
+    _send(msg)
 
 
 def send_password_reset_email(new_password: str):
@@ -81,12 +102,10 @@ def send_password_reset_email(new_password: str):
             f'Your temporary admin password (valid for 1 hour):\n\n'
             f'    {new_password}\n\n'
             f'Log in at: {current_app.config["BASE_URL"]}/admin/login\n\n'
-            f'After logging in, generate a permanent hash with:\n'
-            f'  docker compose exec web flask hash-password <new-password>\n'
-            f'and update ADMIN_PASSWORD_HASH in your .env file.'
+            f'After logging in, go to Change Password to set a permanent password.'
         ),
     )
-    mail.send(msg)
+    _send(msg)
 
 
 def send_contact_email(name: str, email: str, institution: str, subject: str, body: str):
@@ -103,4 +122,4 @@ def send_contact_email(name: str, email: str, institution: str, subject: str, bo
             name=name, email=email, institution=institution, body=body,
         ),
     )
-    mail.send(msg)
+    _send(msg)
