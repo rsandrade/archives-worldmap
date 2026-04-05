@@ -254,6 +254,13 @@ function initCountrySelect() {
 
 initCountrySelect();
 
+var geocodeTimer;
+document.getElementById('geocode-input').addEventListener('input', function() {
+    clearTimeout(geocodeTimer);
+    var q = this.value.trim();
+    if (q.length < 4) { hideResults(); return; }
+    geocodeTimer = setTimeout(geocodeAddress, 500);
+});
 document.getElementById('geocode-btn').addEventListener('click', geocodeAddress);
 document.getElementById('geocode-input').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') { e.preventDefault(); geocodeAddress(); }
