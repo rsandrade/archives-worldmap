@@ -36,9 +36,9 @@ flask hash-password yourpassword
 # Copy the output to ADMIN_PASSWORD_HASH in .env
 ```
 
-After pulling updates on the server:
+After pulling updates on the server (use `--build` if dependencies changed):
 ```bash
-git pull && docker compose restart
+git pull && docker compose up --build -d
 ```
 
 There are no automated tests.
@@ -62,7 +62,7 @@ HTTP → run.py → Flask → Blueprint routes → Jinja2 templates
 ├── data/               # SQLite database (bind-mounted by Docker)
 │   └── archivesmap.db
 ├── app/
-│   ├── __init__.py     # App factory, DB init
+│   ├── __init__.py     # App factory, DB init, CSRF, security headers
 │   ├── db.py           # get_db() / close_db()
 │   ├── extensions.py   # Flask-Mail instance
 │   ├── email_utils.py  # All email sending functions
@@ -78,6 +78,7 @@ HTTP → run.py → Flask → Blueprint routes → Jinja2 templates
 │   │   └── emails/           # HTML email templates
 │   └── static/
 │       ├── css/style.css
+│       ├── img/              # Logo and images
 │       ├── js/i18n.js        # Client-side async i18n (JSON-based, no reload)
 │       └── lang/             # Translation files (en, pt-br, es, zh, ro, pl)
 ├── Dockerfile
@@ -107,11 +108,30 @@ HTTP → run.py → Flask → Blueprint routes → Jinja2 templates
 - Docker uses bind mount (`./data:/data`) for the SQLite database
 - SMTP: port 587 + STARTTLS (port 465 is blocked on the server); sender must match authenticated SMTP user (Migadu enforces this)
 
+**Security hardening:**
+- CSRF protection via Flask-WTF (`CSRFProtect`) — all POST forms include `csrf_token()`
+- XSS prevention: `|tojson` for values in JavaScript contexts, `|e` for HTML output in all templates (including emails)
+- Secure session cookies: `HttpOnly`, `SameSite=Lax`, `Secure` (auto-enabled when `BASE_URL` starts with `https`), 4-hour lifetime
+- Session fixation prevention: `session.clear()` before setting login state
+- Input validation in `public.py`: lat/lng as float within range, URL must start with `http(s)://`, email sanitization (newlines stripped), field length limits
+- Email header injection prevention: `_clean_header()` strips newlines/control chars from subjects and reply-to addresses
+- Security headers via `after_request`: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Strict-Transport-Security` (non-debug only)
+- `SECRET_KEY` generates a random value if not set (no weak fallback); `debug=True` removed from `run.py` (requires `FLASK_DEBUG=1` env var)
+- reCAPTCHA verification uses `timeout=5` to prevent worker hangs
+
+**Rate limiting (flask-limiter, in-memory storage):**
+- Global default: 200/hour
+- Home/pins: 10/min
+- Info: 60/min
+- Search: 30/min
+- Admin login: 5/min
+- Forgot password: 3/hour
+- Moderation endpoints (approve/reject): 10/min
+
 **Anti-scraping measures:**
-- Rate limiting via `flask-limiter` (home/pins 10/min, info 60/min, search 30/min, global 200/hour)
 - Map pins served via `/api/pins` AJAX endpoint (not inline JSON) with 5-min cache header
 - `robots.txt` disallows `/q`, `/bycountry`, `/admin`, `/api/`
-- Pagination capped at 50 results per page (`qty` parameter clamped)
+- Pagination capped at 50 results per page (`qty` parameter clamped); search query capped at 200 chars
 - Database queries use explicit column lists (no `SELECT *`) to avoid leaking internal fields (token, admin_notes, collaborator_email)
 
 **Data migration:**
