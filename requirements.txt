@@ -1,5 +1,6 @@
 flask==3.0.3
 flask-mail==0.10.0
+flask-wtf==1.2.1
 werkzeug==3.0.4
 requests==2.32.3
 flask-limiter==3.8.0

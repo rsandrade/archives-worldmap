@@ -1,4 +1,5 @@
 import logging
+import re
 import threading
 
 from flask import render_template, current_app
@@ -6,6 +7,11 @@ from flask_mail import Message
 from .extensions import mail
 
 logger = logging.getLogger(__name__)
+
+
+def _clean_header(value):
+    """Remove newlines and control characters from email header values."""
+    return re.sub(r'[\r\n\x00]', '', str(value)).strip()[:255]
 
 
 def _send_async(app, msg):
@@ -35,7 +41,7 @@ def send_new_submission_email(institution: dict):
     reject_url = f"{base_url}/reject/{institution['token']}"
 
     msg = Message(
-        subject=f"[Archives World Map] New submission: {institution['name']}",
+        subject=f"[Archives World Map] New submission: {_clean_header(institution['name'])}",
         recipients=[admin_email],
         html=render_template(
             'emails/new_submission.html',
@@ -77,9 +83,9 @@ def send_report_email(institution: dict, reporter_email: str, reason: str):
     if not admin_email:
         return
     msg = Message(
-        subject=f"[Archives World Map] Report: {institution['name']}",
+        subject=f"[Archives World Map] Report: {_clean_header(institution['name'])}",
         recipients=[admin_email],
-        reply_to=reporter_email or None,
+        reply_to=_clean_header(reporter_email) or None,
         html=render_template(
             'emails/report.html',
             institution=institution,
@@ -114,9 +120,9 @@ def send_contact_email(name: str, email: str, institution: str, subject: str, bo
     if not admin_email:
         return
     msg = Message(
-        subject=f'[Archives World Map] {subject}',
+        subject=f'[Archives World Map] {_clean_header(subject)}',
         recipients=[admin_email],
-        reply_to=email,
+        reply_to=_clean_header(email),
         html=render_template(
             'emails/contact.html',
             name=name, email=email, institution=institution, body=body,

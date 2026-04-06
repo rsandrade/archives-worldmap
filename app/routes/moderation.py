@@ -2,11 +2,13 @@ from flask import Blueprint, redirect, url_for, flash, render_template, request
 
 from ..db import get_db
 from ..email_utils import send_approved_email, send_rejected_email
+from .. import limiter
 
 moderation_bp = Blueprint('moderation', __name__)
 
 
 @moderation_bp.route('/approve/<token>', methods=['GET'])
+@limiter.limit("10 per minute")
 def approve_confirm(token):
     db = get_db()
     inst = db.execute('SELECT * FROM institutions WHERE token = ?', (token,)).fetchone()
@@ -20,6 +22,7 @@ def approve_confirm(token):
 
 
 @moderation_bp.route('/approve/<token>', methods=['POST'])
+@limiter.limit("10 per minute")
 def approve(token):
     db = get_db()
     inst = db.execute('SELECT * FROM institutions WHERE token = ?', (token,)).fetchone()
@@ -37,6 +40,7 @@ def approve(token):
 
 
 @moderation_bp.route('/reject/<token>', methods=['GET'])
+@limiter.limit("10 per minute")
 def reject_confirm(token):
     db = get_db()
     inst = db.execute('SELECT * FROM institutions WHERE token = ?', (token,)).fetchone()
@@ -50,6 +54,7 @@ def reject_confirm(token):
 
 
 @moderation_bp.route('/reject/<token>', methods=['POST'])
+@limiter.limit("10 per minute")
 def reject(token):
     db = get_db()
     inst = db.execute('SELECT * FROM institutions WHERE token = ?', (token,)).fetchone()

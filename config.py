@@ -1,9 +1,15 @@
 import os
+from datetime import timedelta
 
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(32).hex()
     DATABASE_PATH = os.environ.get('DATABASE_PATH', '/data/archivesmap.db')
+
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = os.environ.get('BASE_URL', '').startswith('https')
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=4)
 
     # Email (SMTP)
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'localhost')

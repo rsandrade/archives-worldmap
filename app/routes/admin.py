@@ -10,6 +10,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from ..db import get_db
 from ..email_utils import send_approved_email, send_rejected_email
+from .. import limiter
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -39,6 +40,7 @@ def _get_active_hash(db):
 
 
 @admin_bp.route('/login', methods=['POST'])
+@limiter.limit("5 per minute")
 def login_submit():
     username = request.form.get('username', '')
     password = request.form.get('password', '')
@@ -49,7 +51,9 @@ def login_submit():
     # Check permanent password (DB override or .env)
     active_hash = _get_active_hash(db)
     if username == expected_user and active_hash and check_password_hash(active_hash, password):
+        session.clear()
         session['admin_logged'] = True
+        session.permanent = True
         return redirect(url_for('admin.dashboard'))
 
     # Check temporary reset password from DB
@@ -60,8 +64,10 @@ def login_submit():
         if reset and check_password_hash(reset['hash'], password):
             db.execute('DELETE FROM password_resets WHERE id = ?', (reset['id'],))
             db.commit()
+            session.clear()
             session['admin_logged'] = True
             session['must_change_password'] = True
+            session.permanent = True
             flash('Logged in with temporary password. Please set a permanent password.', 'warning')
             return redirect(url_for('admin.change_password'))
 
@@ -75,6 +81,7 @@ def forgot_password():
 
 
 @admin_bp.route('/forgot-password', methods=['POST'])
+@limiter.limit("3 per hour")
 def forgot_password_submit():
     admin_email = current_app.config.get('ADMIN_EMAIL', '')
     if not admin_email:
@@ -153,8 +160,11 @@ def logout():
 def dashboard():
     db = get_db()
     status_filter = request.args.get('status', 'waiting')
-    q = request.args.get('q', '').strip()
-    page = int(request.args.get('page', 1))
+    q = request.args.get('q', '').strip()[:200]
+    try:
+        page = max(int(request.args.get('page', 1)), 1)
+    except (ValueError, TypeError):
+        page = 1
     per_page = 20
     offset = (page - 1) * per_page
 

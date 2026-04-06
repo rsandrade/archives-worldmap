@@ -4,9 +4,11 @@ import sqlite3
 from flask import Flask
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_wtf.csrf import CSRFProtect
 from .extensions import mail
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["200 per hour"])
+csrf = CSRFProtect()
 
 
 def create_app():
@@ -15,6 +17,7 @@ def create_app():
 
     mail.init_app(app)
     limiter.init_app(app)
+    csrf.init_app(app)
     _init_db(app)
 
     from .routes.public import public_bp
@@ -34,6 +37,15 @@ def create_app():
             'recaptcha_site_key': app.config['RECAPTCHA_SITE_KEY'],
             'recaptcha_enabled': app.config['RECAPTCHA_ENABLED'],
         }
+
+    @app.after_request
+    def set_security_headers(response):
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        if not app.debug:
+            response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        return response
 
     return app
 

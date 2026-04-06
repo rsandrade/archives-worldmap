@@ -1,17 +1,17 @@
-<h3>New submission: {{ institution['name'] }}</h3>
+<h3>New submission: {{ institution['name']|e }}</h3>
 
 <table>
-    <tr><td><strong>Name:</strong></td><td>{{ institution['name'] }}</td></tr>
-    <tr><td><strong>Country:</strong></td><td>{{ institution['country'] }}</td></tr>
-    <tr><td><strong>City:</strong></td><td>{{ institution['city'] }}</td></tr>
-    <tr><td><strong>Address:</strong></td><td>{{ institution['address'] }}</td></tr>
+    <tr><td><strong>Name:</strong></td><td>{{ institution['name']|e }}</td></tr>
+    <tr><td><strong>Country:</strong></td><td>{{ institution['country']|e }}</td></tr>
+    <tr><td><strong>City:</strong></td><td>{{ institution['city']|e }}</td></tr>
+    <tr><td><strong>Address:</strong></td><td>{{ institution['address']|e }}</td></tr>
     <tr><td><strong>Coordinates:</strong></td><td>{{ institution['latitude'] }}, {{ institution['longitude'] }}</td></tr>
-    <tr><td><strong>Website:</strong></td><td>{{ institution['url'] }}</td></tr>
-    <tr><td><strong>Email:</strong></td><td>{{ institution['email'] }}</td></tr>
-    <tr><td><strong>Identifier:</strong></td><td>{{ institution['identifier'] }}</td></tr>
+    <tr><td><strong>Website:</strong></td><td>{{ institution['url']|e }}</td></tr>
+    <tr><td><strong>Email:</strong></td><td>{{ institution['email']|e }}</td></tr>
+    <tr><td><strong>Identifier:</strong></td><td>{{ institution['identifier']|e }}</td></tr>
 </table>
 
-<p>Submitted by: {{ institution['collaborator_name'] }} ({{ institution['collaborator_email'] }})</p>
+<p>Submitted by: {{ institution['collaborator_name']|e }} ({{ institution['collaborator_email']|e }})</p>
 
 <p>
     <a href="{{ approve_url }}" style="background:#5cb85c;color:#fff;padding:10px 20px;text-decoration:none;border-radius:4px;margin-right:10px;">Approve</a>

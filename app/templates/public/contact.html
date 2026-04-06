@@ -3,6 +3,7 @@
 {% block content %}
 <h2 data-i18n="contact_title">Contact us</h2>
 <form method="post" action="{{ url_for('public.contact_submit') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="form-group">
         <label data-i18n="contact_name">Your name</label>
         <input type="text" name="name" class="form-control" required>

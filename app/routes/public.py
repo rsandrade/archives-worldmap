@@ -1,7 +1,9 @@
 import json
+import logging
+import re
 import uuid
 
-import requests
+import requests as http_requests
 from flask import (
     Blueprint, render_template, request, redirect, url_for,
     current_app, flash,
@@ -13,6 +15,45 @@ from ..countries import country_display
 from .. import limiter
 
 public_bp = Blueprint('public', __name__)
+logger = logging.getLogger(__name__)
+
+_EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
+
+
+def _sanitize_email(value):
+    """Strip newlines/control chars from email to prevent header injection."""
+    if not value:
+        return ''
+    return re.sub(r'[\r\n\x00]', '', value).strip()
+
+
+def _sanitize_text(value, max_length=500):
+    """Strip control chars and enforce length limit."""
+    if not value:
+        return ''
+    value = re.sub(r'[\x00]', '', value).strip()
+    return value[:max_length]
+
+
+def _validate_coordinate(value, min_val, max_val):
+    """Parse and validate a coordinate value. Returns float or None."""
+    try:
+        f = float(value)
+        if min_val <= f <= max_val:
+            return f
+    except (ValueError, TypeError):
+        pass
+    return None
+
+
+def _validate_url(value):
+    """Validate URL starts with http(s)://. Returns cleaned URL or empty string."""
+    if not value:
+        return ''
+    value = value.strip()
+    if value and not re.match(r'^https?://', value, re.IGNORECASE):
+        return ''
+    return value[:2000]
 
 
 def _parse_pagination():
@@ -31,11 +72,16 @@ def _verify_recaptcha(response_token, action=None):
     if not response_token:
         return False
     secret = current_app.config['RECAPTCHA_SECRET_KEY']
-    r = requests.post(
-        'https://www.google.com/recaptcha/api/siteverify',
-        data={'secret': secret, 'response': response_token},
-    )
-    result = r.json()
+    try:
+        r = http_requests.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            data={'secret': secret, 'response': response_token},
+            timeout=5,
+        )
+        result = r.json()
+    except (http_requests.RequestException, ValueError):
+        logger.warning("reCAPTCHA verification request failed")
+        return False
     if not result.get('success', False):
         return False
     score = result.get('score', 0)
@@ -93,6 +139,21 @@ def add_submit():
         flash('flash_recaptcha_fail', 'danger')
         return redirect(url_for('public.add'))
 
+    name = _sanitize_text(request.form.get('name', ''), max_length=255)
+    if not name:
+        flash('flash_recaptcha_fail', 'danger')
+        return redirect(url_for('public.add'))
+
+    latitude = _validate_coordinate(request.form.get('latitude'), -90, 90)
+    longitude = _validate_coordinate(request.form.get('longitude'), -180, 180)
+    if latitude is None or longitude is None:
+        flash('flash_recaptcha_fail', 'danger')
+        return redirect(url_for('public.add'))
+
+    contributor_email = _sanitize_email(request.form.get('contributoremail', ''))
+    inst_email = _sanitize_email(request.form.get('email', ''))
+    url = _validate_url(request.form.get('url', ''))
+
     db = get_db()
     token = uuid.uuid4().hex
 
@@ -102,18 +163,18 @@ def add_submit():
             country, url, email, collaborator_name, collaborator_email, token)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
         (
-            request.form['name'],
-            request.form['latitude'],
-            request.form['longitude'],
-            request.form.get('identifier', ''),
-            request.form.get('address', ''),
-            request.form.get('city', ''),
-            request.form.get('district', ''),
-            request.form.get('country', ''),
-            request.form.get('url', ''),
-            request.form.get('email', ''),
-            request.form['contributor'],
-            request.form['contributoremail'],
+            name,
+            latitude,
+            longitude,
+            _sanitize_text(request.form.get('identifier', ''), max_length=100),
+            _sanitize_text(request.form.get('address', '')),
+            _sanitize_text(request.form.get('city', ''), max_length=255),
+            _sanitize_text(request.form.get('district', ''), max_length=255),
+            _sanitize_text(request.form.get('country', ''), max_length=2),
+            url,
+            inst_email,
+            _sanitize_text(request.form.get('contributor', ''), max_length=255),
+            contributor_email,
             token,
         ),
     )
@@ -170,7 +231,7 @@ def stats():
 @public_bp.route('/q')
 @limiter.limit("30 per minute")
 def search():
-    query = request.args.get('search', '')
+    query = request.args.get('search', '')[:200]
     page, per_page = _parse_pagination()
 
     db = get_db()
@@ -234,8 +295,8 @@ def report(inst_id):
     from ..email_utils import send_report_email
     send_report_email(
         institution=dict(inst),
-        reporter_email=request.form.get('email', ''),
-        reason=request.form.get('reason', ''),
+        reporter_email=_sanitize_email(request.form.get('email', '')),
+        reason=_sanitize_text(request.form.get('reason', ''), max_length=1000),
     )
     flash('flash_report_success', 'success')
     return redirect(url_for('public.info', inst_id=inst_id))
@@ -259,11 +320,11 @@ def contact_submit():
 
     from ..email_utils import send_contact_email
     send_contact_email(
-        name=request.form.get('name', ''),
-        email=request.form.get('email', ''),
-        institution=request.form.get('institution', ''),
-        subject=request.form.get('subject', ''),
-        body=request.form.get('body', ''),
+        name=_sanitize_text(request.form.get('name', ''), max_length=255),
+        email=_sanitize_email(request.form.get('email', '')),
+        institution=_sanitize_text(request.form.get('institution', ''), max_length=255),
+        subject=_sanitize_text(request.form.get('subject', ''), max_length=255),
+        body=_sanitize_text(request.form.get('body', ''), max_length=5000),
     )
     flash('flash_contact_success', 'success')
     return redirect(url_for('public.contact'))

@@ -5,14 +5,14 @@
 <div class="row">
     <div class="col-md-6">
         <table class="table">
-            {% if institution['address'] %}<tr><td><strong data-i18n="info_address">Address</strong></td><td>{{ institution['address'] }}</td></tr>{% endif %}
-            {% if institution['city'] %}<tr><td><strong data-i18n="info_city">City</strong></td><td>{{ institution['city'] }}</td></tr>{% endif %}
-            {% if institution['district'] %}<tr><td><strong data-i18n="info_district">District</strong></td><td>{{ institution['district'] }}</td></tr>{% endif %}
-            {% if institution['country'] %}<tr><td><strong data-i18n="info_country">Country</strong></td><td>{{ institution['country'] }}</td></tr>{% endif %}
-            {% if institution['url'] %}<tr><td><strong data-i18n="info_website">Website</strong></td><td><a href="{{ institution['url'] }}" target="_blank">{{ institution['url'] }}</a></td></tr>{% endif %}
-            {% if institution['email'] %}<tr><td><strong data-i18n="info_email">Email</strong></td><td>{{ institution['email'] }}</td></tr>{% endif %}
-            {% if institution['identifier'] %}<tr><td><strong data-i18n="info_identifier">Identifier</strong></td><td>{{ institution['identifier'] }}</td></tr>{% endif %}
-            <tr><td><strong data-i18n="info_collaborator">Collaborator</strong></td><td>{{ institution['collaborator_name'] or '' }}</td></tr>
+            {% if institution['address'] %}<tr><td><strong data-i18n="info_address">Address</strong></td><td>{{ institution['address']|e }}</td></tr>{% endif %}
+            {% if institution['city'] %}<tr><td><strong data-i18n="info_city">City</strong></td><td>{{ institution['city']|e }}</td></tr>{% endif %}
+            {% if institution['district'] %}<tr><td><strong data-i18n="info_district">District</strong></td><td>{{ institution['district']|e }}</td></tr>{% endif %}
+            {% if institution['country'] %}<tr><td><strong data-i18n="info_country">Country</strong></td><td>{{ institution['country']|e }}</td></tr>{% endif %}
+            {% if institution['url'] %}<tr><td><strong data-i18n="info_website">Website</strong></td><td><a href="{{ institution['url']|e }}" target="_blank" rel="noopener noreferrer">{{ institution['url']|e }}</a></td></tr>{% endif %}
+            {% if institution['email'] %}<tr><td><strong data-i18n="info_email">Email</strong></td><td>{{ institution['email']|e }}</td></tr>{% endif %}
+            {% if institution['identifier'] %}<tr><td><strong data-i18n="info_identifier">Identifier</strong></td><td>{{ institution['identifier']|e }}</td></tr>{% endif %}
+            <tr><td><strong data-i18n="info_collaborator">Collaborator</strong></td><td>{{ (institution['collaborator_name'] or '')|e }}</td></tr>
         </table>
 
         <p>
@@ -20,6 +20,7 @@
         </p>
         <div id="report-form" style="display:none;margin-top:10px;">
             <form method="post" action="{{ url_for('public.report', inst_id=institution['id']) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label class="small" data-i18n="report_email">Your email (optional)</label>
                     <input type="email" name="email" class="form-control input-sm">
@@ -45,12 +46,13 @@
 <script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key }}"></script>
 {% endif %}
 <script>
-var mymap = L.map('mapid').setView([{{ institution['latitude'] }}, {{ institution['longitude'] }}], 14);
+var lat = {{ institution['latitude']|tojson }}, lng = {{ institution['longitude']|tojson }};
+var mymap = L.map('mapid').setView([lat, lng], 14);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
 }).addTo(mymap);
-L.marker([{{ institution['latitude'] }}, {{ institution['longitude'] }}]).addTo(mymap)
- .bindPopup('<div style="font-size:15px;line-height:1.5;"><strong>{{ institution["name"]|e }}</strong></div>', {maxWidth: 300, minWidth: 150}).openPopup();
+L.marker([lat, lng]).addTo(mymap)
+ .bindPopup('<div style="font-size:15px;line-height:1.5;"><strong>' + $('<span>').text({{ institution["name"]|tojson }}).html() + '</strong></div>', {maxWidth: 300, minWidth: 150}).openPopup();
 
 document.getElementById('report-toggle').addEventListener('click', function(e) {
     e.preventDefault();

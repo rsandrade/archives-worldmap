@@ -9,5 +9,5 @@
     <tr><td><strong>Coordinates:</strong></td><td>{{ institution['latitude'] }}, {{ institution['longitude'] }}</td></tr>
 </table>
 
-{% if reason %}<p><strong>Reason:</strong> {{ reason }}</p>{% endif %}
-{% if reporter_email %}<p><strong>Reporter:</strong> {{ reporter_email }}</p>{% endif %}
+{% if reason %}<p><strong>Reason:</strong> {{ reason|e }}</p>{% endif %}
+{% if reporter_email %}<p><strong>Reporter:</strong> {{ reporter_email|e }}</p>{% endif %}

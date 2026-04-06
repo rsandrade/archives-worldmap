@@ -12,13 +12,14 @@
         {% endif %}
 
         <table class="table table-condensed">
-            <tr><td><strong>Name</strong></td><td>{{ institution['name'] }}</td></tr>
-            <tr><td><strong>City</strong></td><td>{{ institution['city'] }}</td></tr>
-            <tr><td><strong>Country</strong></td><td>{{ institution['country'] }}</td></tr>
-            <tr><td><strong>Submitted by</strong></td><td>{{ institution['collaborator_name'] }} ({{ institution['collaborator_email'] }})</td></tr>
+            <tr><td><strong>Name</strong></td><td>{{ institution['name']|e }}</td></tr>
+            <tr><td><strong>City</strong></td><td>{{ institution['city']|e }}</td></tr>
+            <tr><td><strong>Country</strong></td><td>{{ institution['country']|e }}</td></tr>
+            <tr><td><strong>Submitted by</strong></td><td>{{ institution['collaborator_name']|e }} ({{ institution['collaborator_email']|e }})</td></tr>
         </table>
 
         <form method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             {% if action == 'approve' %}
             <button type="submit" class="btn btn-success btn-lg">Confirm approval</button>
             {% else %}

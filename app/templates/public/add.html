@@ -18,6 +18,7 @@
 <div id="mapid" style="height:350px;margin-bottom:20px;"></div>
 
 <form method="post" action="{{ url_for('public.add_submit') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="latitude" id="latitude">
     <input type="hidden" name="longitude" id="longitude">
 
