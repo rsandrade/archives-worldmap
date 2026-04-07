@@ -102,6 +102,7 @@
         el.addEventListener('click', function (e) {
           e.preventDefault();
           localStorage.setItem('awm_lang', lang);
+          window.awmLang = lang;
           // Update URL without full reload
           var newUrl = buildLangUrl(lang);
           window.history.replaceState(null, '', newUrl);
