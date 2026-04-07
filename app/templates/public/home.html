@@ -69,9 +69,19 @@ function countryName(code) {
     }
 }
 
+var MORE_INFO = {
+    'en': 'More information',
+    'pt-br': 'Mais informações',
+    'es': 'Más información',
+    'zh': '更多信息',
+    'ro': 'Mai multe informații',
+    'pl': 'Więcej informacji'
+};
+
 function buildPopup(p) {
     var dict = window.i18nDict || {};
-    var moreInfo = dict['popup_more_info'] || 'More information';
+    var lang = window.awmLang || 'en';
+    var moreInfo = dict['popup_more_info'] || MORE_INFO[lang] || 'More information';
     var location = [];
     if (p.city) location.push(p.city);
     if (p.district) location.push(p.district);
