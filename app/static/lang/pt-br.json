@@ -107,5 +107,6 @@
   "add_inst_name_hint": "Utilize a Forma Autorizada do Nome conforme definido pela ISDIAH (elemento 5.1.2).",
   "popup_more_info": "Mais informações",
   "add_map_hint": "Clique ou busque um endereço para posicionar o alfinete",
-  "add_no_pin": "Por favor, posicione o alfinete no mapa antes de enviar."
+  "add_no_pin": "Por favor, posicione o alfinete no mapa antes de enviar.",
+  "info_show_email": "Mostrar e-mail"
 }

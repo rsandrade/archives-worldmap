@@ -107,5 +107,6 @@
   "add_inst_name_hint": "请使用 ISDIAH 标准（要素 5.1.2）规定的授权名称形式。",
   "popup_more_info": "更多信息",
   "add_map_hint": "点击地图或搜索地址以放置图钉",
-  "add_no_pin": "请在提交前在地图上定位图钉。"
+  "add_no_pin": "请在提交前在地图上定位图钉。",
+  "info_show_email": "显示邮箱"
 }

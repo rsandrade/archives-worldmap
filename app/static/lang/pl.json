@@ -107,5 +107,6 @@
   "add_inst_name_hint": "Użyj Autoryzowanej Formy Nazwy zgodnie ze standardem ISDIAH (element 5.1.2).",
   "popup_more_info": "Więcej informacji",
   "add_map_hint": "Kliknij lub wyszukaj adres, aby umieścić pinezkę",
-  "add_no_pin": "Proszę umieścić pinezkę na mapie przed wysłaniem."
+  "add_no_pin": "Proszę umieścić pinezkę na mapie przed wysłaniem.",
+  "info_show_email": "Pokaż e-mail"
 }

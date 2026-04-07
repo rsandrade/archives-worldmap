@@ -126,7 +126,7 @@ def api_pins():
 @public_bp.route('/robots.txt')
 def robots():
     return current_app.response_class(
-        "User-agent: *\nAllow: /\nAllow: /info/\nDisallow: /q\nDisallow: /bycountry\nDisallow: /admin\nDisallow: /api/\n",
+        "User-agent: *\nAllow: /\nAllow: /info/\nDisallow: /info/*/email\nDisallow: /q\nDisallow: /bycountry\nDisallow: /admin\nDisallow: /api/\n",
         mimetype='text/plain',
     )
 
@@ -211,7 +211,27 @@ def info(inst_id):
     if not inst:
         flash('flash_not_found', 'warning')
         return redirect(url_for('public.home'))
-    return render_template('public/info.html', institution=inst)
+    has_email = bool(inst['email'])
+    return render_template('public/info.html', institution=inst, has_email=has_email)
+
+
+@public_bp.route('/info/<int:inst_id>/email')
+@limiter.limit("10 per minute")
+def info_email(inst_id):
+    import base64
+    db = get_db()
+    inst = db.execute(
+        'SELECT email FROM institutions WHERE id = ? AND status = ?',
+        (inst_id, 'verified'),
+    ).fetchone()
+    if not inst or not inst['email']:
+        return current_app.response_class('', status=404)
+    encoded = base64.b64encode(inst['email'].encode()).decode()
+    resp = current_app.response_class(
+        json.dumps({'e': encoded}), mimetype='application/json'
+    )
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
 
 
 @public_bp.route('/stats')

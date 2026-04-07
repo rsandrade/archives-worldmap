@@ -107,5 +107,6 @@
   "add_inst_name_hint": "Utilice la Forma Autorizada del Nombre según lo definido por ISDIAH (elemento 5.1.2).",
   "popup_more_info": "Más información",
   "add_map_hint": "Haga clic o busque una dirección para colocar el marcador",
-  "add_no_pin": "Por favor, posicione el marcador en el mapa antes de enviar."
+  "add_no_pin": "Por favor, posicione el marcador en el mapa antes de enviar.",
+  "info_show_email": "Mostrar correo"
 }

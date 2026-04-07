@@ -107,5 +107,6 @@
   "add_inst_name_hint": "Utilizați Forma Autorizată a Numelui conform standardului ISDIAH (elementul 5.1.2).",
   "popup_more_info": "Mai multe informații",
   "add_map_hint": "Faceți clic sau căutați o adresă pentru a plasa marcatorul",
-  "add_no_pin": "Vă rugăm să poziționați marcatorul pe hartă înainte de a trimite."
+  "add_no_pin": "Vă rugăm să poziționați marcatorul pe hartă înainte de a trimite.",
+  "info_show_email": "Arată emailul"
 }

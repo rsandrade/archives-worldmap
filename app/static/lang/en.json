@@ -107,5 +107,6 @@
   "add_inst_name_hint": "Use the Authorised Form of Name as defined in ISDIAH (element 5.1.2).",
   "popup_more_info": "More information",
   "add_map_hint": "Click or search an address to place the pin",
-  "add_no_pin": "Please position the pin on the map before submitting."
+  "add_no_pin": "Please position the pin on the map before submitting.",
+  "info_show_email": "Show email"
 }
