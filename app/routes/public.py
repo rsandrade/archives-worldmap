@@ -97,6 +97,9 @@ def _build_pins(rows):
             'lat': row['latitude'],
             'lng': row['longitude'],
             'name': row['name'],
+            'city': row['city'] or '',
+            'district': row['district'] or '',
+            'country': row['country'] or '',
         })
     return json.dumps(pins)
 
@@ -112,7 +115,7 @@ def home():
 def api_pins():
     db = get_db()
     rows = db.execute(
-        'SELECT id, latitude, longitude, name FROM institutions WHERE status = ?',
+        'SELECT id, latitude, longitude, name, city, district, country FROM institutions WHERE status = ?',
         ('verified',),
     ).fetchall()
     resp = current_app.response_class(_build_pins(rows), mimetype='application/json')

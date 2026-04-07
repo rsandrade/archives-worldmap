@@ -50,11 +50,41 @@ var clusterGroup = L.markerClusterGroup();
 var plainGroup = L.layerGroup();
 var useClusters = false;
 
+function countryFlag(code) {
+    if (!code || code.length !== 2) return '';
+    return Array.from(code.toUpperCase()).map(function(c) {
+        return String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65);
+    }).join('');
+}
+
+function countryName(code) {
+    if (!code) return '';
+    try {
+        var lang = window.awmLang || 'en';
+        var bcp = lang === 'pt-br' ? 'pt-BR' : lang;
+        var dn = new Intl.DisplayNames([bcp], {type: 'region'});
+        return dn.of(code.toUpperCase()) || code;
+    } catch(e) {
+        return code;
+    }
+}
+
 function buildPopup(p) {
+    var dict = window.i18nDict || {};
+    var moreInfo = dict['popup_more_info'] || 'More information';
+    var location = [];
+    if (p.city) location.push(p.city);
+    if (p.district) location.push(p.district);
+    var countryPart = '';
+    if (p.country) {
+        countryPart = '<br>' + countryFlag(p.country) + ' ' + countryName(p.country);
+    }
+    var locationLine = location.length ? '<br><span style="color:#555;">' + location.join(', ') + '</span>' : '';
     return '<div style="font-size:14px;line-height:1.6;">' +
-        '<strong style="font-size:16px;">' + p.name + '</strong><br>' +
-        '<a href="/info/' + p.id + '">info</a>' +
-        ' &middot; <a href="/info/' + p.id + '#report-form" class="text-muted">report</a>' +
+        '<strong style="font-size:16px;">' + p.name + '</strong>' +
+        locationLine +
+        countryPart +
+        '<br><a href="/info/' + p.id + '">' + moreInfo + '</a>' +
         '</div>';
 }
 
@@ -63,9 +93,9 @@ fetch('/api/pins')
   .then(function(pins) {
     allPins = pins;
     pins.forEach(function(p) {
-      var marker = L.marker([p.lat, p.lng]).bindPopup(buildPopup(p), {maxWidth: 300, minWidth: 150});
+      var marker = L.marker([p.lat, p.lng]).bindPopup(function() { return buildPopup(p); }, {maxWidth: 300, minWidth: 150});
       clusterGroup.addLayer(marker);
-      plainGroup.addLayer(L.marker([p.lat, p.lng]).bindPopup(buildPopup(p), {maxWidth: 300, minWidth: 150}));
+      plainGroup.addLayer(L.marker([p.lat, p.lng]).bindPopup(function() { return buildPopup(p); }, {maxWidth: 300, minWidth: 150}));
     });
     mymap.addLayer(plainGroup);
   });

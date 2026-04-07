@@ -104,5 +104,6 @@
   "flash_report_success": "Dziękujemy za zgłoszenie. Sprawdzimy je.",
   "flash_contact_success": "Dziękujemy za wiadomość!",
   "add_country_search": "Szukaj kraju...",
-  "add_inst_name_hint": "Użyj Autoryzowanej Formy Nazwy zgodnie ze standardem ISDIAH (element 5.1.2)."
+  "add_inst_name_hint": "Użyj Autoryzowanej Formy Nazwy zgodnie ze standardem ISDIAH (element 5.1.2).",
+  "popup_more_info": "Więcej informacji"
 }

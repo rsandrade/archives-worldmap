@@ -118,6 +118,7 @@
     fetch(url)
       .then(function (r) { return r.json(); })
       .then(function (dict) {
+        window.i18nDict = dict;
         applyTranslations(dict);
         document.dispatchEvent(new CustomEvent('awm:langchange', { detail: { lang: lang } }));
       })
@@ -131,6 +132,7 @@
   // ---------------------------------------------------------------------------
   function init() {
     var lang = detectLang();
+    window.awmLang = lang;
     initLangLinks();
     highlightActive(lang);
     if (lang !== DEFAULT_LANG) {

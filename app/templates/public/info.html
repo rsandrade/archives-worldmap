@@ -8,7 +8,7 @@
             {% if institution['address'] %}<tr><td><strong data-i18n="info_address">Address</strong></td><td>{{ institution['address']|e }}</td></tr>{% endif %}
             {% if institution['city'] %}<tr><td><strong data-i18n="info_city">City</strong></td><td>{{ institution['city']|e }}</td></tr>{% endif %}
             {% if institution['district'] %}<tr><td><strong data-i18n="info_district">District</strong></td><td>{{ institution['district']|e }}</td></tr>{% endif %}
-            {% if institution['country'] %}<tr><td><strong data-i18n="info_country">Country</strong></td><td>{{ institution['country']|e }}</td></tr>{% endif %}
+            {% if institution['country'] %}<tr><td><strong data-i18n="info_country">Country</strong></td><td id="country-display">{{ institution['country']|e }}</td></tr>{% endif %}
             {% if institution['url'] %}<tr><td><strong data-i18n="info_website">Website</strong></td><td><a href="{{ institution['url']|e }}" target="_blank" rel="noopener noreferrer">{{ institution['url']|e }}</a></td></tr>{% endif %}
             {% if institution['email'] %}<tr><td><strong data-i18n="info_email">Email</strong></td><td>{{ institution['email']|e }}</td></tr>{% endif %}
             {% if institution['identifier'] %}<tr><td><strong data-i18n="info_identifier">Identifier</strong></td><td>{{ institution['identifier']|e }}</td></tr>{% endif %}
@@ -53,6 +53,33 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(mymap);
 L.marker([lat, lng]).addTo(mymap)
  .bindPopup('<div style="font-size:15px;line-height:1.5;"><strong>' + $('<span>').text({{ institution["name"]|tojson }}).html() + '</strong></div>', {maxWidth: 300, minWidth: 150}).openPopup();
+
+// Render country as flag + name in current language
+(function() {
+    var el = document.getElementById('country-display');
+    if (!el) return;
+    var code = el.textContent.trim();
+    if (!code || code.length !== 2) return;
+    function renderCountry() {
+        var lang = window.awmLang || 'en';
+        var bcp = lang === 'pt-br' ? 'pt-BR' : lang;
+        var flag = Array.from(code.toUpperCase()).map(function(c) {
+            return String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65);
+        }).join('');
+        var name = code;
+        try {
+            var dn = new Intl.DisplayNames([bcp], {type: 'region'});
+            name = dn.of(code.toUpperCase()) || code;
+        } catch(e) {}
+        el.textContent = flag + ' ' + name;
+    }
+    if (window.awmLang) {
+        renderCountry();
+    } else {
+        setTimeout(renderCountry, 50);
+    }
+    document.addEventListener('awm:langchange', renderCountry);
+})();
 
 document.getElementById('report-toggle').addEventListener('click', function(e) {
     e.preventDefault();

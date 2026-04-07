@@ -104,5 +104,6 @@
   "flash_report_success": "感谢您的举报，我们将进行审核。",
   "flash_contact_success": "感谢您的留言！",
   "add_country_search": "搜索国家...",
-  "add_inst_name_hint": "请使用 ISDIAH 标准（要素 5.1.2）规定的授权名称形式。"
+  "add_inst_name_hint": "请使用 ISDIAH 标准（要素 5.1.2）规定的授权名称形式。",
+  "popup_more_info": "更多信息"
 }

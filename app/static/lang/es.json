@@ -104,5 +104,6 @@
   "flash_report_success": "Gracias por su reporte. Lo revisaremos.",
   "flash_contact_success": "¡Gracias por su mensaje!",
   "add_country_search": "Buscar país...",
-  "add_inst_name_hint": "Utilice la Forma Autorizada del Nombre según lo definido por ISDIAH (elemento 5.1.2)."
+  "add_inst_name_hint": "Utilice la Forma Autorizada del Nombre según lo definido por ISDIAH (elemento 5.1.2).",
+  "popup_more_info": "Más información"
 }
