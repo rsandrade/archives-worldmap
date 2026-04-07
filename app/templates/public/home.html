@@ -103,12 +103,25 @@ fetch('/api/pins')
   .then(function(pins) {
     allPins = pins;
     pins.forEach(function(p) {
-      var marker = L.marker([p.lat, p.lng]).bindPopup(function() { return buildPopup(p); }, {maxWidth: 300, minWidth: 150});
+      var marker = L.marker([p.lat, p.lng]);
+      marker._awmPin = p;
+      marker.bindPopup(buildPopup(p), {maxWidth: 300, minWidth: 150});
       clusterGroup.addLayer(marker);
-      plainGroup.addLayer(L.marker([p.lat, p.lng]).bindPopup(function() { return buildPopup(p); }, {maxWidth: 300, minWidth: 150}));
+      var plain = L.marker([p.lat, p.lng]);
+      plain._awmPin = p;
+      plain.bindPopup(buildPopup(p), {maxWidth: 300, minWidth: 150});
+      plainGroup.addLayer(plain);
     });
     mymap.addLayer(plainGroup);
   });
+
+// Rebuild popup content on open so it always reflects the current language
+mymap.on('popupopen', function(e) {
+    var src = e.popup._source;
+    if (src && src._awmPin) {
+        e.popup.setContent(buildPopup(src._awmPin));
+    }
+});
 
 document.getElementById('cluster-toggle').addEventListener('change', function() {
     useClusters = this.checked;
