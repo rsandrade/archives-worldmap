@@ -19,16 +19,14 @@ def admin_required(f):
     @functools.wraps(f)
     def wrapped(*args, **kwargs):
         if not session.get('admin_logged'):
-            return redirect(url_for('admin.login'))
+            return redirect(url_for('admin.dashboard'))
         return f(*args, **kwargs)
     return wrapped
 
 
 @admin_bp.route('/login', methods=['GET'])
 def login():
-    if session.get('admin_logged'):
-        return redirect(url_for('admin.dashboard'))
-    return render_template('admin/login.html')
+    return redirect(url_for('admin.dashboard'))
 
 
 def _get_active_hash(db):
@@ -72,7 +70,7 @@ def login_submit():
             return redirect(url_for('admin.change_password'))
 
     flash('Invalid credentials.', 'danger')
-    return redirect(url_for('admin.login'))
+    return redirect(url_for('admin.dashboard'))
 
 
 @admin_bp.route('/forgot-password', methods=['GET'])
@@ -104,7 +102,7 @@ def forgot_password_submit():
     send_password_reset_email(new_password)
 
     flash('A temporary password has been sent to the admin email.', 'success')
-    return redirect(url_for('admin.login'))
+    return redirect(url_for('admin.dashboard'))
 
 
 @admin_bp.route('/change-password', methods=['GET'])
@@ -119,15 +117,15 @@ def change_password_submit():
     current_password = request.form.get('current_password', '')
     new_password = request.form.get('new_password', '')
     confirm = request.form.get('confirm_password', '')
+    from_reset = session.get('must_change_password', False)
 
     # Skip current password check when coming from a temporary reset login
-    if not session.pop('must_change_password', False):
+    if not from_reset:
         db = get_db()
         active_hash = _get_active_hash(db)
         if not active_hash or not check_password_hash(active_hash, current_password):
             flash('Current password is incorrect.', 'danger')
             return redirect(url_for('admin.change_password'))
-    db = get_db()
 
     if len(new_password) < 8:
         flash('New password must be at least 8 characters.', 'danger')
@@ -137,6 +135,7 @@ def change_password_submit():
         flash('Passwords do not match.', 'danger')
         return redirect(url_for('admin.change_password'))
 
+    db = get_db()
     new_hash = generate_password_hash(new_password)
     db.execute(
         "INSERT INTO settings (key, value) VALUES ('admin_password_hash', ?) "
@@ -144,6 +143,7 @@ def change_password_submit():
         (new_hash,),
     )
     db.commit()
+    session.pop('must_change_password', None)
 
     flash('Password updated successfully.', 'success')
     return redirect(url_for('admin.dashboard'))
@@ -156,8 +156,9 @@ def logout():
 
 
 @admin_bp.route('/')
-@admin_required
 def dashboard():
+    if not session.get('admin_logged'):
+        return render_template('admin/login.html')
     db = get_db()
     status_filter = request.args.get('status', 'waiting')
     q = request.args.get('q', '').strip()[:200]
