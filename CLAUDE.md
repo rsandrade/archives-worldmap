@@ -159,6 +159,15 @@ Keys used with HTML content (links, etc.) must use `data-i18n-html` in the templ
 
 Flash message keys: `flash_recaptcha_fail`, `flash_add_success`, `flash_not_found`, `flash_report_success`, `flash_contact_success`.
 
+**i18n globals exposed by `i18n.js`:**
+- `window.awmLang` — current language code (e.g. `'pt-br'`); set at boot and updated on every language switch
+- `window.i18nDict` — current translation dict (only populated for non-English; undefined for `en`)
+- `awm:langchange` custom DOM event — dispatched after each language switch and dict load
+
+**Country name translation in JS:** use `Intl.DisplayNames` with `window.awmLang` (map `'pt-br'` → `'pt-BR'` for BCP 47). Flag emoji: convert each letter of the 2-letter ISO code to its regional indicator (`0x1F1E6 + charCode - 65`).
+
+**Leaflet popup content and language:** Leaflet may cache popup content. For popups that must reflect the current language, listen to the map's `popupopen` event and call `popup.setContent(buildPopup(src._awmPin))` — do not rely solely on a function passed to `bindPopup`. Store pin data on the marker as `marker._awmPin = p`.
+
 ## Environment Variables
 
 Configured via `.env` file in the repo root:
