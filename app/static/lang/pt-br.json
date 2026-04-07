@@ -9,7 +9,7 @@
   "home_search_placeholder": "Buscar por nome...",
   "btn_search": "Buscar",
   "add_title": "Adicionar uma nova instituição",
-  "add_instructions": "Busque um endereço ou clique no mapa para definir a localização e preencha o formulário abaixo.",
+  "add_instructions": "Use a barra de busca abaixo para localizar o endereço — o alfinete será posicionado automaticamente. Você também pode clicar no mapa ou arrastá-lo para ajustar a posição.",
   "add_search_address": "Buscar endereço...",
   "add_inst_name": "Nome da instituição",
   "add_identifier": "Identificador (ISIL, etc.)",
@@ -105,5 +105,7 @@
   "flash_contact_success": "Obrigado pela sua mensagem!",
   "add_country_search": "Buscar país...",
   "add_inst_name_hint": "Utilize a Forma Autorizada do Nome conforme definido pela ISDIAH (elemento 5.1.2).",
-  "popup_more_info": "Mais informações"
+  "popup_more_info": "Mais informações",
+  "add_map_hint": "Clique ou busque um endereço para posicionar o alfinete",
+  "add_no_pin": "Por favor, posicione o alfinete no mapa antes de enviar."
 }

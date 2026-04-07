@@ -3,7 +3,9 @@
 
 {% block content %}
 <h2 data-i18n="add_title">Add a new institution</h2>
-<p data-i18n="add_instructions">Search for an address or click on the map to set the location, then fill in the form below.</p>
+<p data-i18n="add_instructions">Use the search bar below to find the address — the pin will be placed automatically. You can also click on the map or drag the pin to adjust the position.</p>
+
+<div id="pin-alert" class="alert alert-danger" style="display:none;" data-i18n="add_no_pin">Please position the pin on the map before submitting.</div>
 
 <div class="form-group" style="position:relative;">
     <div class="input-group">
@@ -15,7 +17,10 @@
     <ul id="geocode-results" style="display:none;position:absolute;z-index:2000;width:100%;background:#fff;border:1px solid #ccc;border-top:none;list-style:none;margin:0;padding:0;max-height:220px;overflow-y:auto;box-shadow:0 4px 8px rgba(0,0,0,0.1);"></ul>
 </div>
 
-<div id="mapid" style="height:350px;margin-bottom:20px;"></div>
+<div style="position:relative;">
+    <div id="mapid" style="height:350px;margin-bottom:20px;"></div>
+    <div id="map-hint" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.55);color:#fff;padding:10px 18px;border-radius:6px;font-size:13px;pointer-events:none;z-index:500;text-align:center;" data-i18n="add_map_hint">Click or search an address to place the pin</div>
+</div>
 
 <form method="post" action="{{ url_for('public.add_submit') }}">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -99,6 +104,8 @@ function placeMarker(lat, lng) {
     marker = L.marker([lat, lng], {draggable: true}).addTo(mymap);
     document.getElementById('latitude').value = lat;
     document.getElementById('longitude').value = lng;
+    document.getElementById('map-hint').style.display = 'none';
+    document.getElementById('pin-alert').style.display = 'none';
     marker.on('dragend', function(e) {
         var pos = e.target.getLatLng();
         document.getElementById('latitude').value = pos.lat;
@@ -273,9 +280,20 @@ document.addEventListener('click', function(e) {
         hideResults();
 });
 
+function validatePin() {
+    if (!document.getElementById('latitude').value) {
+        var alert = document.getElementById('pin-alert');
+        alert.style.display = 'block';
+        alert.scrollIntoView({behavior: 'smooth', block: 'center'});
+        return false;
+    }
+    return true;
+}
+
 {% if recaptcha_enabled %}
 document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault();
+    if (!validatePin()) return;
     var form = this;
     grecaptcha.ready(function() {
         grecaptcha.execute('{{ recaptcha_site_key }}', {action: 'add'}).then(function(token) {
@@ -283,6 +301,10 @@ document.querySelector('form').addEventListener('submit', function(e) {
             form.submit();
         });
     });
+});
+{% else %}
+document.querySelector('form').addEventListener('submit', function(e) {
+    if (!validatePin()) e.preventDefault();
 });
 {% endif %}
 </script>

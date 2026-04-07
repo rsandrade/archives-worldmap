@@ -9,7 +9,7 @@
   "home_search_placeholder": "Szukaj po nazwie...",
   "btn_search": "Szukaj",
   "add_title": "Dodaj nową instytucję",
-  "add_instructions": "Wyszukaj adres lub kliknij na mapę, aby ustawić lokalizację, a następnie wypełnij poniższy formularz.",
+  "add_instructions": "Użyj paska wyszukiwania, aby znaleźć adres — pinezka zostanie umieszczona automatycznie. Możesz też kliknąć na mapę lub przeciągnąć pinezkę, aby dostosować pozycję.",
   "add_search_address": "Szukaj adresu...",
   "add_inst_name": "Nazwa instytucji",
   "add_identifier": "Identyfikator (ISIL, itp.)",
@@ -105,5 +105,7 @@
   "flash_contact_success": "Dziękujemy za wiadomość!",
   "add_country_search": "Szukaj kraju...",
   "add_inst_name_hint": "Użyj Autoryzowanej Formy Nazwy zgodnie ze standardem ISDIAH (element 5.1.2).",
-  "popup_more_info": "Więcej informacji"
+  "popup_more_info": "Więcej informacji",
+  "add_map_hint": "Kliknij lub wyszukaj adres, aby umieścić pinezkę",
+  "add_no_pin": "Proszę umieścić pinezkę na mapie przed wysłaniem."
 }

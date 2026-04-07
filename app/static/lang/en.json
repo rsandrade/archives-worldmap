@@ -9,7 +9,7 @@
   "home_search_placeholder": "Search by name...",
   "btn_search": "Search",
   "add_title": "Add a new institution",
-  "add_instructions": "Search for an address or click on the map to set the location, then fill in the form below.",
+  "add_instructions": "Use the search bar below to find the address — the pin will be placed automatically. You can also click on the map or drag the pin to adjust the position.",
   "add_search_address": "Search address...",
   "add_inst_name": "Institution name",
   "add_identifier": "Identifier (ISIL, etc.)",
@@ -105,5 +105,7 @@
   "flash_contact_success": "Thank you for your message!",
   "add_country_search": "Search country...",
   "add_inst_name_hint": "Use the Authorised Form of Name as defined in ISDIAH (element 5.1.2).",
-  "popup_more_info": "More information"
+  "popup_more_info": "More information",
+  "add_map_hint": "Click or search an address to place the pin",
+  "add_no_pin": "Please position the pin on the map before submitting."
 }

@@ -9,7 +9,7 @@
   "home_search_placeholder": "Caută după nume...",
   "btn_search": "Caută",
   "add_title": "Adaugă o instituție nouă",
-  "add_instructions": "Căutați o adresă sau faceți clic pe hartă pentru a seta locația, apoi completați formularul de mai jos.",
+  "add_instructions": "Folosiți bara de căutare pentru a găsi adresa — marcatorul va fi plasat automat. Puteți, de asemenea, să faceți clic pe hartă sau să trageți marcatorul pentru a ajusta poziția.",
   "add_search_address": "Caută adresă...",
   "add_inst_name": "Numele instituției",
   "add_identifier": "Identificator (ISIL, etc.)",
@@ -105,5 +105,7 @@
   "flash_contact_success": "Mulțumim pentru mesajul dvs.!",
   "add_country_search": "Caută țară...",
   "add_inst_name_hint": "Utilizați Forma Autorizată a Numelui conform standardului ISDIAH (elementul 5.1.2).",
-  "popup_more_info": "Mai multe informații"
+  "popup_more_info": "Mai multe informații",
+  "add_map_hint": "Faceți clic sau căutați o adresă pentru a plasa marcatorul",
+  "add_no_pin": "Vă rugăm să poziționați marcatorul pe hartă înainte de a trimite."
 }

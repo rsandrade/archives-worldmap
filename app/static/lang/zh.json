@@ -9,7 +9,7 @@
   "home_search_placeholder": "按名称搜索...",
   "btn_search": "搜索",
   "add_title": "添加新机构",
-  "add_instructions": "搜索地址或点击地图设置位置，然后填写下方的表单。",
+  "add_instructions": "使用下方搜索栏查找地址——图钉将自动定位。您也可以点击地图或拖动图钉来调整位置。",
   "add_search_address": "搜索地址...",
   "add_inst_name": "机构名称",
   "add_identifier": "标识符（ISIL等）",
@@ -105,5 +105,7 @@
   "flash_contact_success": "感谢您的留言！",
   "add_country_search": "搜索国家...",
   "add_inst_name_hint": "请使用 ISDIAH 标准（要素 5.1.2）规定的授权名称形式。",
-  "popup_more_info": "更多信息"
+  "popup_more_info": "更多信息",
+  "add_map_hint": "点击地图或搜索地址以放置图钉",
+  "add_no_pin": "请在提交前在地图上定位图钉。"
 }
