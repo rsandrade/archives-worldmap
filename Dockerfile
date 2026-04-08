@@ -7,6 +7,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+ENV FLASK_APP=run.py
+
 RUN mkdir -p /data
 
 EXPOSE 5000
