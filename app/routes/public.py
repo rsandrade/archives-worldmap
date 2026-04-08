@@ -257,6 +257,12 @@ def search():
     query = request.args.get('search', '')[:200]
     page, per_page = _parse_pagination()
 
+    if len(query) < 3:
+        return render_template(
+            'public/search.html', institutions=[], total=0,
+            search=query, per_page=per_page, offset=page, min_length=3,
+        )
+
     db = get_db()
     rows = db.execute(
         '''SELECT id, name, country FROM institutions

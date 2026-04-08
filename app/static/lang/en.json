@@ -108,5 +108,6 @@
   "popup_more_info": "More information",
   "add_map_hint": "Click or search an address to place the pin",
   "add_no_pin": "Please position the pin on the map before submitting.",
-  "info_show_email": "Show email"
+  "info_show_email": "Show email",
+  "search_min_length": "Please enter at least 3 characters to search."
 }

@@ -2,7 +2,11 @@
 {% block title %}Search - Archives World Map{% endblock %}
 {% block content %}
 <h2 data-i18n="search_title">Search results</h2>
+{% if min_length is defined and search|length < min_length %}
+<p class="text-warning" data-i18n="search_min_length">Please enter at least 3 characters to search.</p>
+{% else %}
 <p>{{ total }} <span data-i18n="search_found">institution(s) found for</span> "{{ search }}"</p>
+{% endif %}
 
 <table class="table table-striped">
     <thead><tr>

@@ -108,5 +108,6 @@
   "popup_more_info": "Więcej informacji",
   "add_map_hint": "Kliknij lub wyszukaj adres, aby umieścić pinezkę",
   "add_no_pin": "Proszę umieścić pinezkę na mapie przed wysłaniem.",
-  "info_show_email": "Pokaż e-mail"
+  "info_show_email": "Pokaż e-mail",
+  "search_min_length": "Wpisz co najmniej 3 znaki, aby wyszukać."
 }

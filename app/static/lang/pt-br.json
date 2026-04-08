@@ -108,5 +108,6 @@
   "popup_more_info": "Mais informações",
   "add_map_hint": "Clique ou busque um endereço para posicionar o alfinete",
   "add_no_pin": "Por favor, posicione o alfinete no mapa antes de enviar.",
-  "info_show_email": "Mostrar e-mail"
+  "info_show_email": "Mostrar e-mail",
+  "search_min_length": "Digite pelo menos 3 caracteres para buscar."
 }

@@ -108,5 +108,6 @@
   "popup_more_info": "Mai multe informații",
   "add_map_hint": "Faceți clic sau căutați o adresă pentru a plasa marcatorul",
   "add_no_pin": "Vă rugăm să poziționați marcatorul pe hartă înainte de a trimite.",
-  "info_show_email": "Arată emailul"
+  "info_show_email": "Arată emailul",
+  "search_min_length": "Introduceți cel puțin 3 caractere pentru a căuta."
 }
