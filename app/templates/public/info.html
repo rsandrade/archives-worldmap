@@ -9,7 +9,7 @@
             {% if institution['city'] %}<tr><td><strong data-i18n="info_city">City</strong></td><td>{{ institution['city']|e }}</td></tr>{% endif %}
             {% if institution['district'] %}<tr><td><strong data-i18n="info_district">District</strong></td><td>{{ institution['district']|e }}</td></tr>{% endif %}
             {% if institution['country'] %}<tr><td><strong data-i18n="info_country">Country</strong></td><td id="country-display">{{ institution['country']|e }}</td></tr>{% endif %}
-            {% if institution['url'] %}<tr><td><strong data-i18n="info_website">Website</strong></td><td><a href="{{ institution['url']|e }}" target="_blank" rel="noopener noreferrer">{{ institution['url']|e }}</a></td></tr>{% endif %}
+            {% if institution['url'] %}{% set safe_url = institution['url'].replace('http://', 'https://', 1) if institution['url'].startswith('http://') else institution['url'] %}<tr><td><strong data-i18n="info_website">Website</strong></td><td><a href="{{ safe_url|e }}" target="_blank" rel="noopener noreferrer">{{ institution['url']|e }}</a></td></tr>{% endif %}
             {% if has_email %}<tr><td><strong data-i18n="info_email">Email</strong></td><td><button type="button" id="show-email-btn" class="btn btn-xs btn-default" data-i18n="info_show_email">Show email</button><span id="email-display" style="display:none;"></span></td></tr>{% endif %}
             {% if institution['identifier'] %}<tr><td><strong data-i18n="info_identifier">Identifier</strong></td><td>{{ institution['identifier']|e }}</td></tr>{% endif %}
             <tr><td><strong data-i18n="info_collaborator">Collaborator</strong></td><td>{{ (institution['collaborator_name'] or '')|e }}</td></tr>

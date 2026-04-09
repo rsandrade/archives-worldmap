@@ -109,4 +109,4 @@ def country_display(code):
     """Return 'Flag Name (XX)' for a country code."""
     name = COUNTRIES.get(code, code)
     flag = country_flag(code)
-    return f"{flag} {name} ({code})"
+    return f"{flag} {name}"

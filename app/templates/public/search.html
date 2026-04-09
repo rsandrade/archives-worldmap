@@ -18,7 +18,7 @@
     {% for inst in institutions %}
         <tr>
             <td>{{ inst['name'] }}</td>
-            <td>{{ inst['country'] }}</td>
+            <td class="country-cell" data-code="{{ inst['country'] }}">{{ inst['country'] }}</td>
             <td><a href="{{ url_for('public.info', inst_id=inst['id']) }}" data-i18n="info_link">info</a></td>
         </tr>
     {% else %}
@@ -34,4 +34,31 @@
 {% if offset + per_page < total %}
     <a href="?{{ sparam }}={{ search }}&qty={{ per_page }}&since={{ offset + per_page }}" class="btn btn-default" data-i18n="btn_next">Next</a>
 {% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+(function() {
+    function renderCountries() {
+        var lang = window.awmLang || 'en';
+        var bcp = lang === 'pt-br' ? 'pt-BR' : lang;
+        var dn;
+        try { dn = new Intl.DisplayNames([bcp], {type: 'region'}); } catch(e) {}
+        document.querySelectorAll('.country-cell').forEach(function(el) {
+            var code = el.getAttribute('data-code');
+            if (!code || code.length !== 2) return;
+            var flag = Array.from(code.toUpperCase()).map(function(c) {
+                return String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65);
+            }).join('');
+            var name = (dn && dn.of(code.toUpperCase())) || code;
+            el.textContent = flag + ' ' + name;
+        });
+    }
+    if (window.awmLang) {
+        renderCountries();
+    } else {
+        setTimeout(renderCountries, 50);
+    }
+    document.addEventListener('awm:langchange', renderCountries);
+})();
+</script>
 {% endblock %}
