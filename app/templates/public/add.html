@@ -208,7 +208,8 @@ var ALL_CODES = [
 var allCountryOptions = [];
 
 function langToLocale(lang) {
-  return lang === 'pt-br' ? 'pt-BR' : lang;
+  var map = {'pt-br': 'pt-BR', 'zh': 'zh-Hans'};
+  return map[lang] || lang;
 }
 
 function buildCountryOptions(lang) {
@@ -243,7 +244,7 @@ function setCountry(code) {
 }
 
 function initCountrySelect() {
-  var lang = localStorage.getItem('awm_lang') || 'en';
+  var lang = window.awmLang || localStorage.getItem('awm_lang') || 'en';
   buildCountryOptions(lang);
   renderCountryOptions('', '');
 
@@ -261,7 +262,11 @@ function initCountrySelect() {
   });
 }
 
-initCountrySelect();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCountrySelect);
+} else {
+  initCountrySelect();
+}
 
 var geocodeTimer;
 document.getElementById('geocode-input').addEventListener('input', function() {
