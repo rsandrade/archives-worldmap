@@ -114,6 +114,24 @@ def send_password_reset_email(new_password: str):
     _send(msg)
 
 
+def send_staff_account_email(username: str, email: str, temp_password: str, is_new: bool = True):
+    """Send temporary password to a new or existing staff user."""
+    action = 'created' if is_new else 'reset'
+    msg = Message(
+        subject=f'[Archives World Map] Your account password has been {action}',
+        recipients=[email],
+        body=(
+            f'Hello {username},\n\n'
+            f'{"Your account has been created." if is_new else "Your password has been reset."}\n\n'
+            f'Temporary password (valid until you change it):\n\n'
+            f'    {temp_password}\n\n'
+            f'Log in at: {current_app.config["BASE_URL"]}/admin/login\n\n'
+            f'You will be required to set a new password after logging in.'
+        ),
+    )
+    _send(msg)
+
+
 def send_contact_email(name: str, email: str, institution: str, subject: str, body: str):
     """Forward contact form to admin."""
     admin_email = current_app.config['ADMIN_EMAIL']
