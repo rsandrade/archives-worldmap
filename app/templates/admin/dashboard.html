@@ -26,13 +26,10 @@
                     <a href="{{ url_for('admin.dashboard', status='all', q=q) }}"
                        class="btn btn-default {% if status_filter == 'all' %}active{% endif %}">
                         <span data-i18n="admin_all">All</span>
-                    </a>
-                    {% if session.get('admin_logged') %}
-                    <a href="{{ url_for('admin.dashboard', status='deleted', q=q) }}"
+                    </a>{% if session.get('admin_logged') %}<a href="{{ url_for('admin.dashboard', status='deleted', q=q) }}"
                        class="btn btn-default {% if status_filter == 'deleted' %}active{% endif %}">
                         <span data-i18n="admin_trash">Trash</span> ({{ counts['deleted'] }})
-                    </a>
-                    {% endif %}
+                    </a>{% endif %}
                 </div>
             </div>
             <div class="col-sm-4 col-sm-offset-3">
