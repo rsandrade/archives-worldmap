@@ -3,12 +3,12 @@
 {% block content %}
 <div class="row">
     <div class="col-md-6 col-md-offset-3">
-        <h2>Edit user: {{ user['username'] }} <small><a href="{{ url_for('admin.users') }}">Back to users</a></small></h2>
+        <h2><span data-i18n="admin_edit_user_title">Edit user:</span> {{ user['username'] }} <small><a href="{{ url_for('admin.users') }}" data-i18n="admin_back_users">Back to users</a></small></h2>
 
         <form method="post" action="{{ url_for('admin.user_edit_submit', user_id=user['id']) }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="form-group">
-                <label>Username</label>
+                <label data-i18n="admin_username">Username</label>
                 <input type="text" class="form-control" value="{{ user['username'] | e }}" disabled>
             </div>
             <div class="form-group">
@@ -16,34 +16,34 @@
                 <input type="email" name="email" class="form-control" value="{{ user['email'] | e }}" required>
             </div>
             <div class="form-group">
-                <label>Permissions</label>
+                <label data-i18n="admin_permissions">Permissions</label>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="can_approve" {% if user['can_approve'] %}checked{% endif %}>
-                        Approve / reject submissions
+                        <span data-i18n="admin_perm_approve">Approve / reject submissions</span>
                     </label>
                 </div>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="can_edit_waiting" {% if user['can_edit_waiting'] %}checked{% endif %}>
-                        Edit pending submissions
+                        <span data-i18n="admin_perm_edit_waiting">Edit pending submissions</span>
                     </label>
                 </div>
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" name="can_edit_verified" {% if user['can_edit_verified'] %}checked{% endif %}>
-                        Edit approved submissions
+                        <span data-i18n="admin_perm_edit_verified">Edit approved submissions</span>
                     </label>
                 </div>
             </div>
-            <div class="checkbox">
+            <div class="checkbox" style="margin-bottom:15px;">
                 <label>
                     <input type="checkbox" name="is_active" {% if user['is_active'] %}checked{% endif %}>
-                    Active (uncheck to disable login)
+                    <span data-i18n="admin_user_active">Active (uncheck to disable login)</span>
                 </label>
             </div>
-            <button type="submit" class="btn btn-primary">Save changes</button>
-            <a href="{{ url_for('admin.users') }}" class="btn btn-default">Cancel</a>
+            <button type="submit" class="btn btn-primary" data-i18n="btn_save_changes">Save changes</button>
+            <a href="{{ url_for('admin.users') }}" class="btn btn-default" data-i18n="btn_cancel">Cancel</a>
         </form>
     </div>
 </div>

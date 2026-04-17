@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <h2><span data-i18n="admin_title">Admin Panel</span> <small>{{ session.get('user_username', '') }} &middot; <a href="{{ url_for('admin.logout') }}" data-i18n="admin_logout">Logout</a> &middot; <a href="{{ url_for('admin.change_password') }}">Change password</a></small></h2>
         {% if session.get('admin_logged') %}
-        <p><a href="{{ url_for('admin.users') }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-user"></span> Manage users</a></p>
+        <p><a href="{{ url_for('admin.users') }}" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-user"></span> <span data-i18n="admin_manage_users">Manage users</span></a></p>
         {% endif %}
 
         <div class="row" style="margin-bottom:15px;">
