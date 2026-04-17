@@ -134,5 +134,11 @@
   "forgot_pwd_description": "Enter your username or email address. A temporary 20-character password will be sent to your email. It expires in 1 hour.",
   "forgot_pwd_identifier_label": "Username or email",
   "forgot_pwd_send": "Send temporary password",
-  "admin_back_to_login": "Back to login"
+  "admin_back_to_login": "Back to login",
+  "admin_trash": "Trash",
+  "admin_restore": "Restore",
+  "admin_perm_delete": "Delete forever",
+  "admin_move_trash": "Trash",
+  "admin_move_trash_confirm": "Move this institution to the trash?",
+  "admin_trash_confirm": "Permanently delete this institution? This action cannot be undone."
 }

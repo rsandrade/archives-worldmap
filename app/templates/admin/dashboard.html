@@ -27,6 +27,12 @@
                        class="btn btn-default {% if status_filter == 'all' %}active{% endif %}">
                         <span data-i18n="admin_all">All</span>
                     </a>
+                    {% if session.get('admin_logged') %}
+                    <a href="{{ url_for('admin.dashboard', status='deleted', q=q) }}"
+                       class="btn btn-default {% if status_filter == 'deleted' %}active{% endif %}">
+                        <span data-i18n="admin_trash">Trash</span> ({{ counts['deleted'] }})
+                    </a>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-sm-4 col-sm-offset-3">
@@ -69,26 +75,40 @@
                             <span class="label label-warning">waiting</span>
                         {% elif inst['status'] == 'verified' %}
                             <span class="label label-success">verified</span>
+                        {% elif inst['status'] == 'deleted' %}
+                            <span class="label label-default">deleted</span>
                         {% else %}
                             <span class="label label-danger">rejected</span>
                         {% endif %}
                     </td>
                     <td>{{ inst['submitted_at'] }}</td>
                     <td>
-                        {% if inst['status'] == 'waiting' and (session.get('admin_logged') or session.get('can_approve')) %}
-                            <a href="{{ url_for('admin.approve', inst_id=inst['id']) }}" class="btn btn-xs btn-success" data-i18n="btn_approve">Approve</a>
-                            <a href="{{ url_for('admin.reject', inst_id=inst['id']) }}" class="btn btn-xs btn-danger" data-i18n="btn_reject">Reject</a>
-                        {% endif %}
-                        {% if session.get('admin_logged')
-                              or (inst['status'] == 'waiting' and session.get('can_edit_waiting'))
-                              or (inst['status'] == 'verified' and session.get('can_edit_verified')) %}
-                            <a href="{{ url_for('admin.edit', inst_id=inst['id']) }}" class="btn btn-xs btn-default" data-i18n="btn_edit">Edit</a>
-                        {% endif %}
-                        {% if session.get('admin_logged') %}
-                            <a href="{{ url_for('admin.delete', inst_id=inst['id']) }}" class="btn btn-xs btn-danger"
-                               data-i18n="btn_delete"
-                               data-i18n-confirm="admin_delete_confirm"
-                               onclick="return confirm(this.getAttribute('data-confirm') || 'Delete this institution permanently?')">Del</a>
+                        {% if inst['status'] == 'deleted' and session.get('admin_logged') %}
+                            <a href="{{ url_for('admin.restore', inst_id=inst['id']) }}" class="btn btn-xs btn-success" data-i18n="admin_restore">Restore</a>
+                            <form method="post" action="{{ url_for('admin.permanent_delete', inst_id=inst['id']) }}" style="display:inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-xs btn-danger" data-i18n="admin_perm_delete"
+                                        onclick="return confirm(this.getAttribute('data-confirm') || 'Delete this institution permanently?')"
+                                        data-i18n-confirm="admin_trash_confirm">Delete forever</button>
+                            </form>
+                        {% else %}
+                            {% if inst['status'] == 'waiting' and (session.get('admin_logged') or session.get('can_approve')) %}
+                                <a href="{{ url_for('admin.approve', inst_id=inst['id']) }}" class="btn btn-xs btn-success" data-i18n="btn_approve">Approve</a>
+                                <a href="{{ url_for('admin.reject', inst_id=inst['id']) }}" class="btn btn-xs btn-danger" data-i18n="btn_reject">Reject</a>
+                            {% endif %}
+                            {% if session.get('admin_logged')
+                                  or (inst['status'] == 'waiting' and session.get('can_edit_waiting'))
+                                  or (inst['status'] == 'verified' and session.get('can_edit_verified')) %}
+                                <a href="{{ url_for('admin.edit', inst_id=inst['id']) }}" class="btn btn-xs btn-default" data-i18n="btn_edit">Edit</a>
+                            {% endif %}
+                            {% if session.get('admin_logged')
+                                  or (inst['status'] == 'waiting' and (session.get('can_approve') or session.get('can_edit_waiting')))
+                                  or (inst['status'] == 'verified' and session.get('can_edit_verified')) %}
+                                <a href="{{ url_for('admin.delete', inst_id=inst['id']) }}" class="btn btn-xs btn-warning"
+                                   data-i18n="admin_move_trash"
+                                   onclick="return confirm(this.getAttribute('data-confirm') || 'Move to trash?')"
+                                   data-i18n-confirm="admin_move_trash_confirm">Trash</a>
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>

@@ -134,5 +134,11 @@
   "forgot_pwd_description": "Informe seu usuário ou e-mail. Uma senha temporária de 20 caracteres será enviada. Expira em 1 hora.",
   "forgot_pwd_identifier_label": "Usuário ou e-mail",
   "forgot_pwd_send": "Enviar senha temporária",
-  "admin_back_to_login": "Voltar ao login"
+  "admin_back_to_login": "Voltar ao login",
+  "admin_trash": "Lixeira",
+  "admin_restore": "Restaurar",
+  "admin_perm_delete": "Excluir definitivamente",
+  "admin_move_trash": "Lixeira",
+  "admin_move_trash_confirm": "Mover esta instituição para a lixeira?",
+  "admin_trash_confirm": "Excluir esta instituição permanentemente? Esta ação não pode ser desfeita."
 }

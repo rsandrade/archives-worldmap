@@ -62,3 +62,12 @@ def _init_db(app):
     with sqlite3.connect(db_path) as conn:
         with open(schema_path) as f:
             conn.executescript(f.read())
+        for stmt in [
+            "ALTER TABLE institutions ADD COLUMN deleted_at TEXT",
+            "ALTER TABLE institutions ADD COLUMN deleted_from_status TEXT",
+        ]:
+            try:
+                conn.execute(stmt)
+                conn.commit()
+            except Exception:
+                pass

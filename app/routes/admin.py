@@ -279,9 +279,10 @@ def dashboard():
         ).fetchone()['c']
 
     counts = {
-        'waiting': db.execute("SELECT COUNT(*) AS c FROM institutions WHERE status='waiting'").fetchone()['c'],
+        'waiting':  db.execute("SELECT COUNT(*) AS c FROM institutions WHERE status='waiting'").fetchone()['c'],
         'verified': db.execute("SELECT COUNT(*) AS c FROM institutions WHERE status='verified'").fetchone()['c'],
         'rejected': db.execute("SELECT COUNT(*) AS c FROM institutions WHERE status='rejected'").fetchone()['c'],
+        'deleted':  db.execute("SELECT COUNT(*) AS c FROM institutions WHERE status='deleted'").fetchone()['c'],
     }
 
     return render_template(
@@ -389,13 +390,59 @@ def edit_submit(inst_id):
 
 
 @admin_bp.route('/delete/<int:inst_id>')
-@admin_required
+@login_required
 def delete(inst_id):
     db = get_db()
-    db.execute('DELETE FROM institutions WHERE id=?', (inst_id,))
+    inst = db.execute('SELECT status FROM institutions WHERE id=?', (inst_id,)).fetchone()
+    if not inst:
+        flash('Institution not found.', 'warning')
+        return redirect(url_for('admin.dashboard'))
+    if not session.get('admin_logged'):
+        s = inst['status']
+        allowed = (
+            (s == 'waiting' and (session.get('can_approve') or session.get('can_edit_waiting')))
+            or (s == 'verified' and session.get('can_edit_verified'))
+        )
+        if not allowed:
+            flash('Permission denied.', 'danger')
+            return redirect(url_for('admin.dashboard'))
+    db.execute(
+        "UPDATE institutions SET status='deleted', deleted_at=datetime('now'), "
+        "deleted_from_status=? WHERE id=?",
+        (inst['status'], inst_id),
+    )
     db.commit()
-    flash('Institution deleted.', 'info')
-    return redirect(url_for('admin.dashboard'))
+    flash('Institution moved to trash.', 'warning')
+    return redirect(request.referrer or url_for('admin.dashboard'))
+
+
+@admin_bp.route('/restore/<int:inst_id>')
+@admin_required
+def restore(inst_id):
+    db = get_db()
+    inst = db.execute(
+        "SELECT deleted_from_status FROM institutions WHERE id=? AND status='deleted'",
+        (inst_id,),
+    ).fetchone()
+    if inst:
+        prev = inst['deleted_from_status'] or 'rejected'
+        db.execute(
+            'UPDATE institutions SET status=?, deleted_at=NULL, deleted_from_status=NULL WHERE id=?',
+            (prev, inst_id),
+        )
+        db.commit()
+        flash('Institution restored.', 'success')
+    return redirect(url_for('admin.dashboard', status='deleted'))
+
+
+@admin_bp.route('/permanent-delete/<int:inst_id>', methods=['POST'])
+@admin_required
+def permanent_delete(inst_id):
+    db = get_db()
+    db.execute("DELETE FROM institutions WHERE id=? AND status='deleted'", (inst_id,))
+    db.commit()
+    flash('Institution permanently deleted.', 'danger')
+    return redirect(url_for('admin.dashboard', status='deleted'))
 
 
 # ── User management (admin only) ─────────────────────────────────────────────
