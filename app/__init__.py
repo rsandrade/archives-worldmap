@@ -5,6 +5,7 @@ from flask import Flask
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_wtf.csrf import CSRFProtect
+from werkzeug.middleware.proxy_fix import ProxyFix
 from .extensions import mail
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["200 per hour"])
@@ -14,6 +15,7 @@ csrf = CSRFProtect()
 def create_app():
     app = Flask(__name__)
     app.config.from_object('config.Config')
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
     mail.init_app(app)
     limiter.init_app(app)
