@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Archives World Map"
+version: 1.0.0
+date-released: 2026-05-22
+description: >-
+  A collaborative geospatial platform for cataloging public archive institutions
+  worldwide. The Archives World Map (AWM) enables archivists, researchers, and
+  citizens to discover, locate, and contribute information about archival
+  institutions on every continent. Features include interactive Leaflet.js mapping,
+  community submissions with admin moderation, 6-language interface (English,
+  Portuguese, Spanish, Chinese, Romanian, Polish), OpenStreetMap/Nominatim
+  geocoding, report system for corrections, and Docker deployment.
+authors:
+  - family-names: Andrade
+    given-names: Ricardo Sodré
+    affiliation: Universidade Federal da Bahia — Laboratório de Humanidades Digitais (LABHDUFBA)
+  - family-names: Garcia
+    given-names: Igor
+keywords:
+  - archival science
+  - digital humanities
+  - geospatial mapping
+  - institutional directories
+  - open data
+  - ISDIAH
+  - Flask
+  - Leaflet.js
+repository-code: "https://github.com/rsandrade/archives-worldmap"
+url: "https://www.archivesmap.org"
+license: AGPL-3.0-or-later
+abstract: >-
+  The Archives World Map is an open-source web application that enables
+  archivists, researchers, and citizens to discover, locate, and contribute
+  information about archival institutions on every continent. Created in 2017
+  by Ricardo Sodré Andrade during doctoral research at the University of Porto
+  and University of Aveiro, it was originally built in PHP and rewritten in
+  Python/Flask in 2024–2025. The platform follows FAIR principles with
+  ISDIAH-inspired fields, multilingual interface, and open licensing.
