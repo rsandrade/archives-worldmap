@@ -81,9 +81,10 @@
 
 /* ── Footer ── */
 .site-footer {
-    margin-top: 40px;
-    padding: 20px 0;
-    border-top: 1px solid #e0e0e0;
+    margin-top: 60px;
+    padding: 24px 0 20px;
+    border-top: 1px solid #ddd;
+    text-align: center;
     font-size: 13px;
     color: #777;
 }
@@ -97,28 +98,20 @@
 .site-footer a:hover,
 .site-footer a:focus {
     color: #2c3e50;
+    text-decoration: underline;
 }
 
 .footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 10px;
+    line-height: 1.8;
 }
 
-.footer-links a::after {
-    content: "·";
-    margin-left: 8px;
-    color: #bbb;
-}
-
-.footer-links a:last-child::after {
-    content: none;
+.footer-links .sep {
+    color: #ccc;
+    margin: 0 6px;
 }
 
 .footer-doi {
-    text-align: center;
+    margin-top: 8px;
     font-size: 12px;
     color: #999;
 }
