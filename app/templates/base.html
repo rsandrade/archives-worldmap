@@ -53,13 +53,19 @@
         {% block content %}{% endblock %}
     </div>
 
-    <footer class="container text-center" style="margin-top:40px;padding:20px 0;border-top:1px solid #eee;">
-        <p>
-            <a href="{{ url_for('public.home') }}" data-i18n="footer_copy">Archives World Map</a>
-            / <a href="https://feudo.org" target="_blank">Feudo.org</a>
-            / <a href="https://labhd.ufba.br" target="_blank">LABHDUFBA</a>
-            / <a href="https://github.com/rsandrade/archives-worldmap" target="_blank">GitHub</a>
-        </p>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="{{ url_for('public.home') }}" data-i18n="footer_copy">Archives World Map</a>
+                <a href="https://feudo.org" target="_blank">Feudo.org</a>
+                <a href="https://labhd.ufba.br" target="_blank">LABHDUFBA</a>
+                <a href="https://github.com/rsandrade/archives-worldmap" target="_blank">GitHub</a>
+            </div>
+            <div class="footer-doi">
+                <span data-i18n="footer_doi_label">DOI</span>
+                <a href="https://doi.org/10.5281/zenodo.20346619" target="_blank" rel="noopener">10.5281/zenodo.20346619</a>
+            </div>
+        </div>
     </footer>
 
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>

@@ -140,5 +140,6 @@
   "admin_perm_delete": "Delete forever",
   "admin_move_trash": "Trash",
   "admin_move_trash_confirm": "Move this institution to the trash?",
-  "admin_trash_confirm": "Permanently delete this institution? This action cannot be undone."
+  "admin_trash_confirm": "Permanently delete this institution? This action cannot be undone.",
+  "footer_doi_label": "Cite as"
 }
