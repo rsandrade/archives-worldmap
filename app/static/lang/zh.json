@@ -109,5 +109,6 @@
   "add_map_hint": "点击地图或搜索地址以放置图钉",
   "add_no_pin": "请在提交前在地图上定位图钉。",
   "info_show_email": "显示邮箱",
-  "search_min_length": "请输入至少3个字符进行搜索。"
+  "search_min_length": "请输入至少3个字符进行搜索。",
+  "footer_doi_label": "引用"
 }

@@ -109,5 +109,6 @@
   "add_map_hint": "Haga clic o busque una dirección para colocar el marcador",
   "add_no_pin": "Por favor, posicione el marcador en el mapa antes de enviar.",
   "info_show_email": "Mostrar correo",
-  "search_min_length": "Introduce al menos 3 caracteres para buscar."
+  "search_min_length": "Introduce al menos 3 caracteres para buscar.",
+  "footer_doi_label": "Citar como"
 }
