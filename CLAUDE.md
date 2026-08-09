@@ -1,201 +1,153 @@
-# CLAUDE.md
+# Archives World Map — CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Stack e versões
 
-## Overview
+| Camada | Tecnologia | Versão |
+|--------|-----------|--------|
+| Linguagem | Python | 3.12+ (slim Docker) |
+| Framework Web | Flask | 3.0.3 |
+| ORM/DB | SQLite3 (stdlib) | — |
+| Template Engine | Jinja2 (Flask bundled) | — |
+| Frontend | Bootstrap | 3.3.7 |
+| Mapa | Leaflet.js | 1.9.4 |
+| Cluster de marcadores | Leaflet.markercluster | 1.5.3 |
+| jQuery | jQuery | 1.12.4 |
+| CSRF | Flask-WTF | 1.2.1 |
+| Email | Flask-Mail | 0.10.0 |
+| Rate Limit | Flask-Limiter | 3.8.0 |
+| WSGI Server | Gunicorn | 22.0.0 |
+| Container | Docker + docker-compose | — |
+| HTTP Client | Requests | 2.32.3 |
 
-Archives World Map is a geospatial collaborative platform for cataloging public archive institutions worldwide. The project prioritizes simplicity: visitors submit institutions, the admin moderates via email links or an admin panel, and approved institutions appear on the map.
-
-The legacy PHP versions are archived in the `archive/php` branch. All current work is on `master`.
-
-**Maintainer:** Ricardo Sodré Andrade — https://feudo.org
-**License:** GNU Affero General Public License v3.0 (AGPL-3.0)
-**Repository:** https://github.com/rsandrade/archives-worldmap
-
-## Setup & Running
+## Como rodar localmente
 
 ```bash
-# Option 1: Docker
+# Opção 1: Docker (recomendado)
+cp .env.example .env
+# Edite .env com suas credenciais
 docker compose up --build
-# App runs at http://localhost:5000
+# App em http://localhost:5000
 
-# Option 2: Local
+# Opção 2: Local
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-# Create .env (see Environment Variables below)
+# Crie .env (veja .env.example)
 flask run
 ```
 
-Generate the admin password hash:
+Gerar hash de senha do admin:
 ```bash
-# Using Docker (recommended):
-docker compose exec web flask hash-password yourpassword
-# Local:
-flask hash-password yourpassword
-# Copy the output to ADMIN_PASSWORD_HASH in .env
+docker compose exec web flask hash-password suasenha
+# ou local: flask hash-password suasenha
 ```
 
-After pulling updates on the server (use `--build` if dependencies changed):
+Após pull no servidor:
 ```bash
 git pull && docker compose up --build -d
 ```
 
-There are no automated tests.
+## Como rodar testes
 
-## Architecture
+Não existem testes automatizados no projeto.
 
-Flask app with SQLite. Single table (`institutions`), no user accounts.
+## Estrutura de diretórios
 
-**Request flow:**
-```
-HTTP → run.py → Flask → Blueprint routes → Jinja2 templates
-```
-
-**Directory structure:**
 ```
 .
-├── run.py              # Entry point
-├── config.py           # Config from environment
-├── schema.sql          # SQLite schema (single table: institutions)
-├── migrate.py          # Data migration script (MySQL dump → SQLite)
-├── data/               # SQLite database (bind-mounted by Docker)
-│   └── archivesmap.db
-├── app/
-│   ├── __init__.py     # App factory, DB init, CSRF, security headers
-│   ├── db.py           # get_db() / close_db()
-│   ├── extensions.py   # Flask-Mail instance
-│   ├── email_utils.py  # All email sending functions
-│   ├── countries.py    # Country code → name/flag mapping
-│   ├── routes/
-│   │   ├── public.py      # Map, add, info, stats, search, about, contact, report
-│   │   ├── moderation.py  # Token-based approve/reject (from email links)
-│   │   └── admin.py       # Admin panel (login, dashboard, edit, delete)
-│   ├── templates/
-│   │   ├── base.html         # Layout (Bootstrap 3.3.7 + Leaflet.js)
-│   │   ├── public/           # Public-facing pages
-│   │   ├── admin/            # Admin login, dashboard, edit form
-│   │   └── emails/           # HTML email templates
-│   └── static/
-│       ├── css/style.css
-│       ├── img/              # Logo and images
-│       ├── js/i18n.js        # Client-side async i18n (JSON-based, no reload)
-│       └── lang/             # Translation files (en, pt-br, es, zh, ro, pl)
+├── run.py                    # Entry point WSGI + CLI commands
+├── config.py                 # Config from environment variables
+├── schema.sql                # SQLite schema (4 tabelas)
+├── migrate.py                # Script de migração MySQL → SQLite
+├── requirements.txt
 ├── Dockerfile
 ├── docker-compose.yml
-└── requirements.txt
+├── .env.example
+├── .gitignore
+├── LICENSE                   # AGPL-3.0
+├── README.md
+├── CLAUDE.md                 # ← Este arquivo
+└── app/
+    ├── __init__.py           # App factory, DB init, CSRF, security headers
+    ├── db.py                 # get_db() / close_db()
+    ├── extensions.py         # Flask-Mail instance (mail = Mail())
+    ├── email_utils.py        # Todas as funções de envio de email (assíncrono)
+    ├── countries.py          # ISO 3166-1 alpha-2 → nome/flag
+    ├── routes/
+    │   ├── __init__.py       # Vazio
+    │   ├── public.py         # Rotas públicas (mapa, add, info, stats, etc.)
+    │   ├── moderation.py     # /approve/<token>, /reject/<token>
+    │   └── admin.py          # /admin/* painel, CRUD, gerenciamento de usuários
+    ├── templates/
+    │   ├── base.html         # Layout base (Bootstrap 3 + Leaflet + i18n.js)
+    │   ├── public/           # 10 templates públicos
+    │   ├── admin/            # 7 templates do admin
+    │   ├── emails/           # 5 templates de email HTML
+    │   └── moderation/       # 1 template (confirm.html)
+    └── static/
+        ├── css/style.css     # CSS customizado (~80 linhas)
+        ├── js/i18n.js        # Engine client-side de internacionalização
+        ├── img/LogoArchivesMap.png
+        └── lang/             # 6 arquivos JSON (en, pt-br, es, zh, ro, pl)
 ```
 
-**Database:** Single `institutions` table with status workflow (`waiting` → `verified` | `rejected`). Each submission gets a unique `token` for email-based moderation.
+## Convenções do projeto
 
-**Blueprints:**
-- `public` — all public routes (no auth required)
-- `moderation` — `/approve/<token>` and `/reject/<token>` (stateless, from email)
-- `admin` — `/admin/*` (session-based login, credentials from `.env`)
+### Nomenclatura
+- **Arquivos Python**: snake_case (ex: `email_utils.py`, `config.py`)
+- **Templates Jinja2**: snake_case com contexto (`public/home.html`, `admin/dashboard.html`)
+- **Blueprints**: `public_bp`, `moderation_bp`, `admin_bp`
+- **Rotas**: snake_case, verbos HTTP explícitos (`home()`, `add_submit()`, `login_submit()`)
+- **Funções helpers**: prefixo `_` para privadas (ex: `_verify_recaptcha()`, `_sanitize_text()`)
+- **Variáveis no template**: snake_case (`inst_id`, `qty_institutions`, `status_filter`)
+- **Chaves i18n**: snake_case com prefixo de contexto (`flash_add_success`, `admin_col_name`)
 
-**Frontend:** Bootstrap 3.3.7 + Leaflet.js + Leaflet.markercluster. Map pins loaded via AJAX (`/api/pins`), rendered client-side with optional cluster toggle.
+### i18n
+- 6 idiomas: `en`, `pt-br`, `es`, `zh`, `ro`, `pl`
+- Arquivos JSON em `app/static/lang/{lang}.json`
+- Atributos HTML: `data-i18n` (texto), `data-i18n-html` (HTML com links), `data-i18n-placeholder`, `data-i18n-confirm`
+- Detecção de idioma: `?lang=xx` > localStorage > browser > `en`
+- Evento custom DOM: `awm:langchange` disparado após troca de idioma
+- JS expõe `window.awmLang` (código) e `window.i18nDict` (dict de traduções)
+- Flash messages usam chaves i18n (ex: `flash('flash_add_success', 'success')`)
+- Para NÃO traduzir (admin, emails, change_password): sem `data-i18n`
 
-**Key design decisions:**
-- No user registration or login — the old social features (forum, profiles, scores) were removed because nobody used them
-- Admin is a single account configured via `.env` (username + password hash)
-- Submissions are moderated via email links (approve/reject with one click) or through the admin panel
-- reCAPTCHA v3 on public forms (add institution, contact, report) — score-based, invisible
-- Client-side i18n using `data-i18n` (text) and `data-i18n-html` (HTML with links) attributes; async JSON fetch; 6 languages; no page reload
-- Language detection priority: `?lang=xx` URL param > localStorage > browser language > English
-- Flash messages use i18n keys (e.g. `flash_contact_success`) — JS translates them via `data-i18n` on the `<span>` in `base.html`
-- Geocoding via Nominatim (OpenStreetMap) on the add form — no API key needed
-- Report button on institution info page for flagging incorrect/non-existent entries
-- Docker uses bind mount (`./data:/data`) for the SQLite database
-- SMTP: port 587 + STARTTLS (port 465 is blocked on the server); sender must match authenticated SMTP user (Migadu enforces this)
+### Templates
+- `base.html` é o layout raiz com navbar, footer, flashes, scripts CDN
+- Todos os templates estendem `base.html` via `{% extends "base.html" %}`
+- `{% block scripts %}` para JS específico da página (após jQuery/Bootstrap/Leaflet)
+- `{% block head %}` para CSS extra no `<head>`
+- `{% block container_class %}` para override da classe container (não usado atualmente)
+- Emails HTML são templates separados em `emails/` (sem `base.html`, HTML puro inline)
 
-**Security hardening:**
-- CSRF protection via Flask-WTF (`CSRFProtect`) — all POST forms include `csrf_token()`
-- XSS prevention: `|tojson` for values in JavaScript contexts, `|e` for HTML output in all templates (including emails)
-- Secure session cookies: `HttpOnly`, `SameSite=Lax`, `Secure` (auto-enabled when `BASE_URL` starts with `https`), 4-hour lifetime
-- Session fixation prevention: `session.clear()` before setting login state
-- Input validation in `public.py`: lat/lng as float within range, URL must start with `http(s)://`, email sanitization (newlines stripped), field length limits
-- Email header injection prevention: `_clean_header()` strips newlines/control chars from subjects and reply-to addresses
-- Security headers via `after_request`: `X-Frame-Options: DENY`, `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Strict-Transport-Security` (non-debug only)
-- `SECRET_KEY` generates a random value if not set (no weak fallback); `debug=True` removed from `run.py` (requires `FLASK_DEBUG=1` env var)
-- reCAPTCHA verification uses `timeout=5` to prevent worker hangs
+### Banco de dados
+- SQLite puro (sem ORM), acesso via `app.db.get_db()` que retorna `sqlite3.Row`
+- Conexão por requisição, fechada em `teardown_appcontext`
+- `schema.sql` executado no `create_app()` com `CREATE TABLE IF NOT EXISTS`
+- Migrações schema: ALTER TABLE com `try/except` em `_init_db()` (colunas adicionais)
+- 4 tabelas: `institutions`, `settings`, `password_resets`, `users`
 
-**Rate limiting (flask-limiter, in-memory storage):**
-- Global default: 200/hour
-- Home/pins: 10/min
-- Info: 60/min
-- Search: 30/min
-- Admin login: 5/min
-- Forgot password: 3/hour
-- Moderation endpoints (approve/reject): 10/min
+## O que NÃO fazer (armadilhas conhecidas)
 
-**Anti-scraping measures:**
-- Map pins served via `/api/pins` AJAX endpoint (not inline JSON) with 5-min cache header
-- `robots.txt` disallows `/q`, `/bycountry`, `/admin`, `/api/`
-- Pagination capped at 50 results per page (`qty` parameter clamped); search query capped at 200 chars
-- Database queries use explicit column lists (no `SELECT *`) to avoid leaking internal fields (token, admin_notes, collaborator_email)
+1. **NÃO use `SELECT *` em rotas públicas** — as colunas internas (token, admin_notes, collaborator_email) vazariam para o frontend. Sempre liste colunas explicitamente.
+2. **NÃO bloqueie a thread com envio de email** — `email_utils.py` usa `threading.Thread` (daemon) para envio assíncrono. O `_send_async()` pega o `current_app._get_current_object()` para evitar contextos perdidos.
+3. **NÃO remova o `ProxyFix`** em `app/__init__.py` — necessário para login funcionar atrás de proxy HTTPS.
+4. **NÃO use porta 465 para SMTP** — o servidor bloqueia. Use 587 + STARTTLS.
+5. **NÃO hardcode `debug=True`** no `run.py` — use variável de ambiente `FLASK_DEBUG=1`.
+6. **NÃO esqueça o `csrf_token()`** em formulários POST — Flask-WTF exige.
+7. **NÃO confie no `REMOTE_ADDR`** para rate limiting atrás de proxy — o `ProxyFix` já trata `x_for=1`.
+8. **NÃO use `|safe` em dados de instituições** nos templates públicos — sempre use `|e` (escaping), exceto `data-i18n-html` que tem HTML seguro controlado.
+9. **NÃO armazene `token` no session** — tokens vão na URL para email, são one-time use.
+10. **NÃO adicione novas chaves i18n só no `en.json`** — repita para todos os 6 idiomas, mesmo que seja só o placeholder em inglês.
 
-**Data migration:**
-- `migrate.py` converts the old MySQL dump (`OldDump.sql`) to the new SQLite schema
-- Run: `python migrate.py ../OldDump.sql ./data/archivesmap.db`
-- Handles type casting (VARCHAR lat/lng → REAL), UUID token generation, NULL cleanup
-- 777 institutions migrated from the legacy platform
+## Links úteis
 
-## i18n
-
-Translations live in `app/static/lang/{lang}.json`. To update text across all 6 languages at once, use a Python snippet:
-
-```python
-import json
-base = "app/static/lang"
-updates = {"key": "value"}  # repeat per language as needed
-for lang in ["en", "pt-br", "es", "zh", "ro", "pl"]:
-    path = f"{base}/{lang}.json"
-    with open(path) as f: data = json.load(f)
-    data.update(updates)
-    with open(path, "w") as f: json.dump(data, f, ensure_ascii=False, indent=2)
-```
-
-Keys used with HTML content (links, etc.) must use `data-i18n-html` in the template, not `data-i18n`.
-
-Flash message keys: `flash_recaptcha_fail`, `flash_add_success`, `flash_not_found`, `flash_report_success`, `flash_contact_success`.
-
-**i18n globals exposed by `i18n.js`:**
-- `window.awmLang` — current language code (e.g. `'pt-br'`); set at boot and updated on every language switch
-- `window.i18nDict` — current translation dict (only populated for non-English; undefined for `en`)
-- `awm:langchange` custom DOM event — dispatched after each language switch and dict load
-
-**Country name translation in JS:** use `Intl.DisplayNames` with `window.awmLang` (map `'pt-br'` → `'pt-BR'` for BCP 47). Flag emoji: convert each letter of the 2-letter ISO code to its regional indicator (`0x1F1E6 + charCode - 65`).
-
-**Leaflet popup content and language:** Leaflet may cache popup content. For popups that must reflect the current language, listen to the map's `popupopen` event and call `popup.setContent(buildPopup(src._awmPin))` — do not rely solely on a function passed to `bindPopup`. Store pin data on the marker as `marker._awmPin = p`.
-
-## Environment Variables
-
-Configured via `.env` file in the repo root:
-
-```
-SECRET_KEY=your-secret-key
-DATABASE_PATH=/data/archivesmap.db
-
-# SMTP — port 587 + STARTTLS; MAIL_DEFAULT_SENDER must match MAIL_USERNAME (Migadu requirement)
-MAIL_SERVER=smtp.migadu.com
-MAIL_PORT=587
-MAIL_USE_TLS=true
-MAIL_USE_SSL=false
-MAIL_USERNAME=contact@archivesmap.org
-MAIL_PASSWORD=password
-MAIL_DEFAULT_SENDER=Archives World Map <contact@archivesmap.org>
-MAIL_TIMEOUT=15
-
-# Admin (single account)
-ADMIN_EMAIL=admin@archivesmap.org
-ADMIN_USERNAME=admin
-ADMIN_PASSWORD_HASH=pbkdf2:sha256:...   # Generated with: flask hash-password
-
-# reCAPTCHA v3
-RECAPTCHA_SITE_KEY=...
-RECAPTCHA_SECRET_KEY=...
-RECAPTCHA_THRESHOLD=0.5
-
-# Public URL (used in email links)
-BASE_URL=https://www.archivesmap.org
-```
+- **Site ao vivo**: https://www.archivesmap.org
+- **Repositório**: https://github.com/rsandrade/archives-worldmap
+- **Maintainer**: https://feudo.org
+- **LABHDUFBA**: https://labhd.ufba.br
+- **Leaflet.js**: https://leafletjs.com
+- **Nominatim (geocoding)**: https://nominatim.openstreetmap.org
+- **Bootstrap 3.3.7**: https://getbootstrap.com/docs/3.3/
+- **Flask-Mail**: https://pythonhosted.org/flask-mail/
+- **Flask-Limiter**: https://flask-limiter.readthedocs.io
