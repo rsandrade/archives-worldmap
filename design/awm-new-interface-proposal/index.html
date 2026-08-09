@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AWM · Proposta de nova interface</title>
+  <style>
+    /*
+      AWM redesign proposal · Huashu pass
+      Assumptions:
+      1. AWM deve continuar sendo mapa/porta de entrada institucional, não virar exploração completa de acervos.
+      2. A camada de acervos descritos deve apontar para ArchivAI quando disponível.
+      3. Interface pública precisa ser útil para pesquisador, cidadão, arquivista colaborador e moderador.
+      4. Dados reais usados como âncora visual: 849 instituições / 95 países via API pública em 2026-05-10.
+    */
+    :root {
+      --awm-blue: #3060c0;
+      --awm-navy: #203060;
+      --awm-ink: #16213d;
+      --awm-paper: #f7f3ea;
+      --awm-paper-2: #efe8da;
+      --awm-line: rgba(32, 48, 96, .14);
+      --awm-muted: #657089;
+      --awm-rust: #b65a36;
+      --awm-green: #4c7a69;
+      --awm-gold: #c8a85a;
+      --awm-white: #fffdf7;
+      --awm-shadow: 0 28px 80px rgba(25, 37, 76, .18);
+      --radius-xl: 32px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --font-display: Georgia, "Times New Roman", serif;
+      --font-body: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(48, 96, 192, .16), transparent 34%),
+        radial-gradient(circle at 82% 16%, rgba(182, 90, 54, .13), transparent 30%),
+        linear-gradient(135deg, #f9f6ee 0%, #eee7d8 100%);
+      color: var(--awm-ink);
+      font-family: var(--font-body);
+      line-height: 1.45;
+    }
+
+    .board {
+      width: min(1500px, calc(100vw - 36px));
+      margin: 28px auto;
+      display: grid;
+      gap: 22px;
+    }
+
+    .brief {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .brief-card {
+      background: rgba(255, 253, 247, .82);
+      border: 1px solid var(--awm-line);
+      border-radius: var(--radius-xl);
+      box-shadow: 0 18px 60px rgba(32,48,96,.12);
+      padding: 24px 28px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(18px);
+    }
+
+    .brief-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -110px auto;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      border: 1px solid rgba(48, 96, 192, .18);
+      box-shadow: inset 0 0 0 24px rgba(48, 96, 192, .035);
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 11px;
+      color: var(--awm-blue);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(40px, 4vw, 68px);
+      line-height: .97;
+      letter-spacing: -.045em;
+      max-width: 920px;
+    }
+
+    .lead {
+      margin-top: 16px;
+      max-width: 760px;
+      font-size: 18px;
+      color: #3e4862;
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .principle {
+      border: 1px solid var(--awm-line);
+      border-radius: 18px;
+      padding: 14px 15px;
+      background: rgba(255,255,255,.58);
+      min-height: 98px;
+    }
+
+    .principle strong {
+      display: block;
+      font-size: 13px;
+      color: var(--awm-navy);
+      margin-bottom: 6px;
+    }
+
+    .principle span {
+      display: block;
+      font-size: 12.5px;
+      color: var(--awm-muted);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-content: center;
+    }
+
+    .metric {
+      background: var(--awm-white);
+      border: 1px solid var(--awm-line);
+      border-radius: 22px;
+      padding: 18px;
+      min-height: 118px;
+      box-shadow: 0 18px 40px rgba(32,48,96,.08);
+    }
+
+    .metric b {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: -.04em;
+      color: var(--awm-navy);
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--awm-muted);
+    }
+
+    .app-shell {
+      background: rgba(255, 253, 247, .9);
+      border: 1px solid rgba(32,48,96,.18);
+      border-radius: 42px;
+      min-height: 890px;
+      overflow: hidden;
+      box-shadow: var(--awm-shadow);
+      display: grid;
+      grid-template-rows: 78px 1fr;
+      position: relative;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--awm-line);
+      padding: 0 24px 0 22px;
+      background: rgba(255, 253, 247, .78);
+      backdrop-filter: blur(16px);
+      z-index: 3;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 320px;
+    }
+
+    .brand img {
+      width: 144px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-mark {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--awm-blue);
+      color: white;
+      place-items: center;
+      font-family: var(--font-display);
+      font-size: 24px;
+      box-shadow: 0 12px 24px rgba(48,96,192,.28);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(32,48,96,.045);
+      padding: 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(32,48,96,.08);
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #506079;
+      font-weight: 650;
+      font-size: 13px;
+      padding: 10px 15px;
+      border-radius: 999px;
+    }
+
+    .nav a.active {
+      background: var(--awm-navy);
+      color: white;
+      box-shadow: 0 10px 22px rgba(32,48,96,.2);
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .lang-pill, .ghost-btn, .solid-btn {
+      border: 1px solid var(--awm-line);
+      border-radius: 999px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,.7);
+      color: var(--awm-navy);
+      font-weight: 700;
+    }
+
+    .solid-btn {
+      color: white;
+      background: var(--awm-blue);
+      border-color: var(--awm-blue);
+      box-shadow: 0 12px 24px rgba(48,96,192,.25);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 330px 1fr 378px;
+      min-height: 812px;
+    }
+
+    .side, .detail {
+      padding: 22px;
+      background: rgba(255,253,247,.70);
+      z-index: 2;
+    }
+
+    .side {
+      border-right: 1px solid var(--awm-line);
+    }
+
+    .detail {
+      border-left: 1px solid var(--awm-line);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .search-box {
+      border-radius: 24px;
+      border: 1px solid rgba(48,96,192,.24);
+      background: white;
+      padding: 15px;
+      box-shadow: 0 14px 36px rgba(32,48,96,.1);
+    }
+
+    .search-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      color: var(--awm-muted);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: 800;
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .query {
+      font-size: 19px;
+      font-family: var(--font-display);
+      color: var(--awm-navy);
+      letter-spacing: -.02em;
+    }
+
+    .key {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+      border: 1px solid var(--awm-line);
+      display: grid;
+      place-items: center;
+      color: var(--awm-blue);
+      background: #f7f9ff;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .panel-title {
+      margin-top: 22px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--awm-muted);
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-family: var(--font-mono);
+    }
+
+    .filter-stack {
+      display: grid;
+      gap: 8px;
+    }
+
+    .filter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--awm-line);
+      border-radius: 16px;
+      padding: 12px 13px;
+      background: rgba(255,255,255,.58);
+      color: var(--awm-navy);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .filter em {
+      font-style: normal;
+      color: var(--awm-muted);
+      font-weight: 650;
+      font-size: 12px;
+    }
+
+    .layer-card {
+      border-radius: 22px;
+      background: linear-gradient(160deg, rgba(32,48,96,.96), rgba(48,96,192,.86));
+      color: white;
+      padding: 18px;
+      box-shadow: 0 20px 48px rgba(32,48,96,.24);
+      margin-top: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .layer-card::after {
+      content: "";
+      position: absolute;
+      width: 190px;
+      height: 190px;
+      right: -80px;
+      top: -80px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.12);
+    }
+
+    .layer-card small {
+      display: block;
+      opacity: .72;
+      font-family: var(--font-mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .layer-card strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 24px;
+      line-height: 1.08;
+      font-weight: 500;
+      max-width: 250px;
+    }
+
+    .layer-card p {
+      margin-top: 12px;
+      font-size: 13px;
+      opacity: .82;
+    }
+
+    .country-bars {
+      display: grid;
+      gap: 11px;
+      margin-top: 8px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 38px 1fr 36px;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--awm-muted);
+      font-family: var(--font-mono);
+      font-weight: 800;
+    }
+
+    .bar-track {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(32,48,96,.08);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--awm-blue), #6c91df);
+    }
+
+    .map-area {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(255,253,247,.72), transparent 22%),
+        linear-gradient(0deg, rgba(32,48,96,.04), rgba(32,48,96,.04));
+    }
+
+    .map-toolbar {
+      position: absolute;
+      left: 24px;
+      top: 22px;
+      right: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .view-title {
+      background: rgba(255,253,247,.82);
+      border: 1px solid var(--awm-line);
+      backdrop-filter: blur(18px);
+      border-radius: 22px;
+      padding: 16px 18px;
+      box-shadow: 0 14px 32px rgba(32,48,96,.1);
+    }
+
+    .view-title h2 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: -.035em;
+      color: var(--awm-navy);
+    }
+
+    .view-title p {
+      font-size: 12.5px;
+      color: var(--awm-muted);
+      margin-top: 5px;
+    }
+
+    .map-chips {
+      display: flex;
+      gap: 8px;
+      background: rgba(255,253,247,.82);
+      border: 1px solid var(--awm-line);
+      border-radius: 999px;
+      padding: 6px;
+      box-shadow: 0 14px 32px rgba(32,48,96,.1);
+      backdrop-filter: blur(18px);
+    }
+
+    .chip {
+      padding: 9px 13px;
+      border-radius: 999px;
+      color: var(--awm-muted);
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+
+    .chip.active {
+      background: white;
+      color: var(--awm-blue);
+      box-shadow: 0 8px 18px rgba(32,48,96,.12);
+    }
+
+    .world-map {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(48,96,192,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(48,96,192,.05) 1px, transparent 1px);
+      background-size: 54px 54px;
+    }
+
+    .continent {
+      position: absolute;
+      background: rgba(64, 92, 145, .13);
+      border: 1px solid rgba(48, 96, 192, .10);
+      filter: drop-shadow(0 18px 45px rgba(32,48,96,.07));
+      transform: rotate(var(--rot, 0deg));
+    }
+
+    .c1 { width: 22%; height: 28%; left: 12%; top: 29%; border-radius: 55% 45% 60% 40%; --rot: -12deg; }
+    .c2 { width: 14%; height: 26%; left: 24%; top: 55%; border-radius: 46% 54% 62% 38%; --rot: 14deg; }
+    .c3 { width: 28%; height: 22%; left: 47%; top: 27%; border-radius: 60% 40% 42% 58%; --rot: 4deg; }
+    .c4 { width: 17%; height: 30%; left: 51%; top: 48%; border-radius: 50% 50% 66% 34%; --rot: -6deg; }
+    .c5 { width: 16%; height: 12%; left: 74%; top: 64%; border-radius: 58% 42% 48% 52%; --rot: 9deg; }
+
+    .pin {
+      --size: 13px;
+      position: absolute;
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      background: var(--awm-blue);
+      box-shadow: 0 0 0 5px rgba(48,96,192,.12), 0 12px 18px rgba(32,48,96,.25);
+      border: 2px solid white;
+      z-index: 2;
+    }
+
+    .pin.hot { background: var(--awm-rust); box-shadow: 0 0 0 7px rgba(182,90,54,.14), 0 12px 18px rgba(120,61,43,.22); }
+    .pin.gold { background: var(--awm-gold); box-shadow: 0 0 0 6px rgba(200,168,90,.16), 0 12px 18px rgba(100,70,20,.18); }
+    .pin.green { background: var(--awm-green); box-shadow: 0 0 0 6px rgba(76,122,105,.15), 0 12px 18px rgba(32,76,64,.18); }
+
+    .callout {
+      position: absolute;
+      width: 310px;
+      left: 46%;
+      top: 39%;
+      transform: translate(-50%, -50%);
+      background: rgba(255,253,247,.92);
+      border: 1px solid rgba(32,48,96,.18);
+      border-radius: 24px;
+      padding: 15px;
+      box-shadow: 0 22px 62px rgba(32,48,96,.20);
+      z-index: 4;
+      backdrop-filter: blur(18px);
+    }
+
+    .callout::after {
+      content: "";
+      position: absolute;
+      left: 58px;
+      bottom: -9px;
+      width: 18px;
+      height: 18px;
+      background: rgba(255,253,247,.92);
+      border-right: 1px solid rgba(32,48,96,.18);
+      border-bottom: 1px solid rgba(32,48,96,.18);
+      transform: rotate(45deg);
+    }
+
+    .callout small {
+      color: var(--awm-blue);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: 900;
+      font-size: 10px;
+    }
+
+    .callout strong {
+      display: block;
+      color: var(--awm-navy);
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      margin-top: 6px;
+    }
+
+    .callout p {
+      color: var(--awm-muted);
+      font-size: 12.5px;
+      margin-top: 6px;
+    }
+
+    .mini-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .mini-actions span {
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: #f4f6ff;
+      color: var(--awm-blue);
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .zoom-stack {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      display: grid;
+      gap: 8px;
+      z-index: 4;
+    }
+
+    .zoom-stack button {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid var(--awm-line);
+      background: rgba(255,255,255,.86);
+      color: var(--awm-navy);
+      font-size: 20px;
+      font-weight: 800;
+      box-shadow: 0 10px 22px rgba(32,48,96,.1);
+    }
+
+    .map-legend {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      background: rgba(255,253,247,.88);
+      border: 1px solid var(--awm-line);
+      border-radius: 20px;
+      padding: 14px;
+      z-index: 4;
+      box-shadow: 0 12px 30px rgba(32,48,96,.1);
+      backdrop-filter: blur(16px);
+      width: 260px;
+    }
+
+    .legend-row {
+      display: grid;
+      grid-template-columns: 14px 1fr auto;
+      gap: 9px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--awm-muted);
+      margin: 8px 0;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--awm-blue); }
+    .dot.rust { background: var(--awm-rust); }
+    .dot.gold { background: var(--awm-gold); }
+    .dot.green { background: var(--awm-green); }
+    .legend-row b { color: var(--awm-navy); font-family: var(--font-mono); font-size: 11px; }
+
+    .institution-card {
+      border-radius: 26px;
+      background: white;
+      border: 1px solid var(--awm-line);
+      box-shadow: 0 18px 45px rgba(32,48,96,.1);
+      overflow: hidden;
+    }
+
+    .photo-placeholder {
+      height: 126px;
+      background:
+        linear-gradient(135deg, rgba(32,48,96,.75), rgba(48,96,192,.66)),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.08) 0 1px, transparent 1px 12px);
+      position: relative;
+    }
+
+    .photo-placeholder span {
+      position: absolute;
+      left: 18px;
+      bottom: 16px;
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      opacity: .78;
+    }
+
+    .institution-body { padding: 18px; }
+
+    .tagline {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--awm-green);
+      background: rgba(76,122,105,.10);
+      border: 1px solid rgba(76,122,105,.18);
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .institution-card h3 {
+      font-family: var(--font-display);
+      font-size: 30px;
+      line-height: 1.02;
+      font-weight: 500;
+      letter-spacing: -.035em;
+      color: var(--awm-navy);
+    }
+
+    .meta {
+      margin-top: 8px;
+      color: var(--awm-muted);
+      font-size: 13px;
+    }
+
+    .isidiah-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .isidiah-item {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 10px;
+      border-top: 1px solid rgba(32,48,96,.09);
+      padding-top: 10px;
+      font-size: 12.5px;
+    }
+
+    .isidiah-item b {
+      color: var(--awm-muted);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 10px;
+    }
+
+    .isidiah-item span { color: #38445f; }
+
+    .archivai-card {
+      border-radius: 24px;
+      background: linear-gradient(150deg, #fffaf1, #edf3ff);
+      border: 1px solid rgba(48,96,192,.18);
+      padding: 18px;
+    }
+
+    .archivai-card small {
+      display: block;
+      color: var(--awm-blue);
+      font-family: var(--font-mono);
+      font-weight: 900;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+      font-size: 10px;
+    }
+
+    .availability {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 13px 0 14px;
+    }
+
+    .avail-box {
+      background: white;
+      border: 1px solid rgba(48,96,192,.12);
+      border-radius: 15px;
+      padding: 10px;
+    }
+
+    .avail-box b {
+      display: block;
+      color: var(--awm-navy);
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .avail-box span {
+      display: block;
+      margin-top: 5px;
+      color: var(--awm-muted);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .primary-wide {
+      border: 0;
+      width: 100%;
+      border-radius: 16px;
+      padding: 13px;
+      color: white;
+      background: var(--awm-navy);
+      font-weight: 850;
+      box-shadow: 0 14px 28px rgba(32,48,96,.22);
+    }
+
+    .quality-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--awm-line);
+      border-radius: 20px;
+      padding: 14px;
+      background: rgba(255,255,255,.62);
+    }
+
+    .quality-score {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: var(--awm-white);
+      color: var(--awm-blue);
+      font-family: var(--font-display);
+      font-size: 22px;
+      box-shadow: inset 0 0 0 1px rgba(48,96,192,.12);
+    }
+
+    .quality-card strong {
+      display: block;
+      font-size: 13px;
+      color: var(--awm-navy);
+    }
+
+    .quality-card span {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--awm-muted);
+    }
+
+    .mobile-preview {
+      position: absolute;
+      right: 28px;
+      top: 120px;
+      width: 178px;
+      height: 354px;
+      border-radius: 32px;
+      background: #11182d;
+      padding: 8px;
+      box-shadow: 0 30px 70px rgba(32,48,96,.26);
+      z-index: 5;
+      transform: translateX(44px) rotate(2deg);
+      display: none;
+    }
+
+    .phone-screen {
+      height: 100%;
+      border-radius: 25px;
+      background: var(--awm-paper);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .phone-map {
+      height: 58%;
+      background:
+        linear-gradient(rgba(48,96,192,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(48,96,192,.06) 1px, transparent 1px),
+        #f5efe2;
+      background-size: 26px 26px;
+      position: relative;
+    }
+
+    .bottom-sheet {
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      border-radius: 22px;
+      background: white;
+      padding: 13px;
+      box-shadow: 0 -16px 34px rgba(32,48,96,.14);
+    }
+
+    .bottom-sheet b {
+      display: block;
+      color: var(--awm-navy);
+      font-size: 13px;
+      line-height: 1.1;
+    }
+
+    .bottom-sheet span {
+      display: block;
+      margin-top: 6px;
+      color: var(--awm-muted);
+      font-size: 10px;
+    }
+
+    .bottom-sheet .phone-cta {
+      margin-top: 10px;
+      background: var(--awm-blue);
+      color: white;
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .footer-spec {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+    }
+
+    .spec-card {
+      background: rgba(255,253,247,.78);
+      border: 1px solid var(--awm-line);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: 0 18px 50px rgba(32,48,96,.08);
+    }
+
+    .spec-card h3 {
+      color: var(--awm-navy);
+      font-size: 17px;
+      letter-spacing: -.01em;
+      margin-bottom: 10px;
+    }
+
+    .spec-card p, .spec-card li {
+      color: var(--awm-muted);
+      font-size: 13px;
+    }
+
+    .spec-card ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+    @media (max-width: 1280px) {
+      .workspace { grid-template-columns: 310px 1fr; }
+      .detail { display: none; }
+      .mobile-preview { display: block; }
+      .nav a:nth-child(n+4) { display: none; }
+    }
+
+    @media (max-width: 920px) {
+      .brief, .footer-spec { grid-template-columns: 1fr; }
+      .principles, .metrics { grid-template-columns: 1fr; }
+      .app-shell { border-radius: 30px; grid-template-rows: auto 1fr; }
+      .topbar { flex-wrap: wrap; gap: 12px; padding: 16px; }
+      .brand img { display: none; }
+      .brand-mark { display: grid; }
+      .workspace { grid-template-columns: 1fr; }
+      .side { border-right: 0; border-bottom: 1px solid var(--awm-line); }
+      .map-area { min-height: 620px; }
+      .mobile-preview { display: none; }
+      .actions .ghost-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="board">
+    <section class="brief" aria-label="Resumo da proposta">
+      <div class="brief-card">
+        <div class="eyebrow">Proposta Huashu · Archives World Map</div>
+        <h1>Um mapa institucional que vira ponto de decisão, não só uma coleção de pins.</h1>
+        <p class="lead">A nova interface mantém o AWM como camada ISDIAH: localizar instituições, qualificar dados, favorecer colaboração e abrir caminho para exploração de acervos no ArchivAI quando houver metadados disponíveis.</p>
+        <div class="principles">
+          <div class="principle"><strong>Mapa como superfície de trabalho</strong><span>Busca, filtros e contexto ficam sobre o mapa, sem obrigar o usuário a sair da tela principal.</span></div>
+          <div class="principle"><strong>Ficha institucional legível</strong><span>Resumo ISDIAH, qualidade dos dados e disponibilidade de acervos em um painel lateral.</span></div>
+          <div class="principle"><strong>Colaboração sem fricção</strong><span>Adicionar, corrigir e reportar passam a ser ações visíveis no fluxo, não links escondidos.</span></div>
+        </div>
+      </div>
+      <aside class="metrics" aria-label="Dados públicos usados como referência">
+        <div class="metric"><b>849</b><span>instituições no endpoint público `/api/pins`</span></div>
+        <div class="metric"><b>95</b><span>países representados na camada atual</span></div>
+        <div class="metric"><b>6</b><span>idiomas já suportados pela base de i18n</span></div>
+        <div class="metric"><b>ISDIAH</b><span>foco conceitual da interface pública</span></div>
+      </aside>
+    </section>
+
+    <section class="app-shell" aria-label="Protótipo visual da nova home">
+      <header class="topbar">
+        <div class="brand">
+          <img src="../../app/static/img/LogoArchivesMap.png" alt="Archives World Map" />
+          <div class="brand-mark">A</div>
+        </div>
+        <nav class="nav" aria-label="Navegação principal proposta">
+          <a class="active" href="#">Mapa</a>
+          <a href="#">Instituições</a>
+          <a href="#">Estatísticas</a>
+          <a href="#">Sobre</a>
+          <a href="#">Contato</a>
+        </nav>
+        <div class="actions">
+          <span class="lang-pill">PT · EN · ES</span>
+          <span class="ghost-btn">Entrar</span>
+          <span class="solid-btn">Adicionar instituição</span>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <aside class="side">
+          <div class="search-box">
+            <div class="search-label"><span>Busca unificada</span><span>⌘K</span></div>
+            <div class="search-row">
+              <div class="query">Arquivo, cidade, país ou identificador</div>
+              <div class="key">↵</div>
+            </div>
+          </div>
+
+          <div class="panel-title">Filtros de decisão</div>
+          <div class="filter-stack">
+            <div class="filter"><span>País / região</span><em>95</em></div>
+            <div class="filter"><span>Tipo de instituição</span><em>Arquivo público</em></div>
+            <div class="filter"><span>Qualidade dos dados</span><em>Verificados</em></div>
+            <div class="filter"><span>Acervos disponíveis</span><em>com ArchivAI</em></div>
+            <div class="filter"><span>Última atualização</span><em>12 meses</em></div>
+          </div>
+
+          <div class="layer-card">
+            <small>Camada especial</small>
+            <strong>Instituições com descrições arquivísticas coletadas</strong>
+            <p>Quando houver metadados, o painel da instituição apresenta a ponte: “Explorar acervos no ArchivAI”.</p>
+          </div>
+
+          <div class="panel-title">Distribuição atual</div>
+          <div class="country-bars">
+            <div class="bar-row"><span>US</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span>241</span></div>
+            <div class="bar-row"><span>ES</span><div class="bar-track"><div class="bar-fill" style="width:41%"></div></div><span>100</span></div>
+            <div class="bar-row"><span>CA</span><div class="bar-track"><div class="bar-fill" style="width:36%"></div></div><span>87</span></div>
+            <div class="bar-row"><span>GB</span><div class="bar-track"><div class="bar-fill" style="width:24%"></div></div><span>58</span></div>
+            <div class="bar-row"><span>BR</span><div class="bar-track"><div class="bar-fill" style="width:19%"></div></div><span>46</span></div>
+            <div class="bar-row"><span>AT</span><div class="bar-track"><div class="bar-fill" style="width:14%"></div></div><span>34</span></div>
+          </div>
+        </aside>
+
+        <section class="map-area" aria-label="Mapa mundial proposto">
+          <div class="world-map">
+            <div class="continent c1"></div><div class="continent c2"></div><div class="continent c3"></div><div class="continent c4"></div><div class="continent c5"></div>
+            <i class="pin hot" style="left:24%;top:40%"></i>
+            <i class="pin" style="left:29%;top:36%"></i>
+            <i class="pin green" style="left:37%;top:67%"></i>
+            <i class="pin hot" style="left:49%;top:38%"></i>
+            <i class="pin" style="left:52%;top:34%"></i>
+            <i class="pin gold" style="left:55%;top:42%"></i>
+            <i class="pin green" style="left:59%;top:62%"></i>
+            <i class="pin" style="left:68%;top:40%"></i>
+            <i class="pin gold" style="left:78%;top:68%"></i>
+          </div>
+
+          <div class="map-toolbar">
+            <div class="view-title">
+              <h2>Mapa mundial de instituições arquivísticas</h2>
+              <p>Use o mapa para localizar onde estão os arquivos; use ArchivAI para explorar o que descrevem.</p>
+            </div>
+            <div class="map-chips">
+              <span class="chip active">Instituições</span>
+              <span class="chip">Clusters</span>
+              <span class="chip">Lacunas</span>
+            </div>
+          </div>
+
+          <article class="callout">
+            <small>Instituição selecionada</small>
+            <strong>Arquivo Nacional</strong>
+            <p>Rio de Janeiro, Brasil · registro verificado · dados institucionais suficientes para referência pública.</p>
+            <div class="mini-actions"><span>Ver ficha</span><span>Reportar correção</span></div>
+          </article>
+
+          <div class="zoom-stack" aria-hidden="true"><button>+</button><button>−</button></div>
+          <div class="map-legend">
+            <div class="legend-row"><span class="dot"></span><span>Instituição verificada</span><b>core</b></div>
+            <div class="legend-row"><span class="dot rust"></span><span>Alta concentração regional</span><b>hot</b></div>
+            <div class="legend-row"><span class="dot green"></span><span>Acervos integráveis ao ArchivAI</span><b>ai</b></div>
+            <div class="legend-row"><span class="dot gold"></span><span>Registro precisa revisão</span><b>qa</b></div>
+          </div>
+
+          <div class="mobile-preview" aria-label="Preview mobile">
+            <div class="phone-screen">
+              <div class="phone-map">
+                <i class="pin hot" style="left:48%;top:42%;--size:10px"></i>
+                <i class="pin green" style="left:58%;top:54%;--size:9px"></i>
+              </div>
+              <div class="bottom-sheet">
+                <b>Arquivo Nacional</b>
+                <span>Ficha institucional em formato bottom sheet no celular.</span>
+                <div class="phone-cta">Explorar acervos</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="detail">
+          <article class="institution-card">
+            <div class="photo-placeholder"><span>Imagem institucional opcional · placeholder honesto</span></div>
+            <div class="institution-body">
+              <div class="tagline"><span class="status">● verificado</span><span class="status" style="color:var(--awm-blue);background:rgba(48,96,192,.08);border-color:rgba(48,96,192,.15)">ISDIAH</span></div>
+              <h3>Arquivo Nacional</h3>
+              <p class="meta">Rio de Janeiro, RJ · Brasil · Instituição custodiadora pública</p>
+              <div class="isidiah-list">
+                <div class="isidiah-item"><b>Identidade</b><span>Nome autorizado, localidade e país em destaque.</span></div>
+                <div class="isidiah-item"><b>Contato</b><span>URL, e-mail e links externos quando validados.</span></div>
+                <div class="isidiah-item"><b>Contexto</b><span>Notas curtas: função, cobertura e relações institucionais.</span></div>
+                <div class="isidiah-item"><b>Colaboração</b><span>Corrigir dados, reportar erro ou propor atualização.</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="archivai-card">
+            <small>Disponibilidade de acervos</small>
+            <p>O AWM mostra a instituição. Quando houver metadados colhidos, a exploração passa para o ArchivAI filtrado por esta instituição.</p>
+            <div class="availability">
+              <div class="avail-box"><b>12k</b><span>descrições</span></div>
+              <div class="avail-box"><b>3</b><span>fontes</span></div>
+              <div class="avail-box"><b>2026</b><span>coleta</span></div>
+            </div>
+            <button class="primary-wide">Explorar acervos no ArchivAI</button>
+          </article>
+
+          <article class="quality-card">
+            <div class="quality-score">B+</div>
+            <div><strong>Índice de completude do registro</strong><span>Ajuda o público a confiar no dado e orienta colaboradores sobre o que falta completar.</span></div>
+          </article>
+          <article class="quality-card">
+            <div class="quality-score" style="color:var(--awm-rust)">!</div>
+            <div><strong>Ação editorial sugerida</strong><span>Separar “instituição inexistente”, “endereço incorreto” e “duplicidade” melhora a moderação.</span></div>
+          </article>
+        </aside>
+      </div>
+    </section>
+
+    <section class="footer-spec" aria-label="Especificação resumida">
+      <article class="spec-card">
+        <h3>Direção visual</h3>
+        <ul>
+          <li>Base “papel cartográfico” quente, para sair do Bootstrap genérico sem parecer landing page de SaaS.</li>
+          <li>Azul do logotipo como cor estrutural; ferrugem, verde e ouro só para estados do mapa.</li>
+          <li>Tipografia display serifada para dar autoridade patrimonial; sans neutra para leitura operacional.</li>
+        </ul>
+      </article>
+      <article class="spec-card">
+        <h3>Arquitetura de interação</h3>
+        <ul>
+          <li>Busca global com filtros persistentes no painel esquerdo.</li>
+          <li>Painel lateral direito para ficha institucional; no mobile, vira bottom sheet.</li>
+          <li>Camadas claras: instituições, clusters, lacunas e acervos disponíveis via ArchivAI.</li>
+        </ul>
+      </article>
+      <article class="spec-card">
+        <h3>Próximo passo técnico</h3>
+        <ul>
+          <li>Implementar primeiro como nova home pública mantendo Flask/Jinja + Leaflet.</li>
+          <li>Não mexer em moderação/admin nesta etapa; só preparar componentes reutilizáveis.</li>
+          <li>Adicionar testes visuais mínimos depois que a primeira tela for codificada.</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
