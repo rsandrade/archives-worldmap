@@ -10,29 +10,29 @@
             {% if institution['district'] %}<tr><td><strong data-i18n="info_district">District</strong></td><td>{{ institution['district']|e }}</td></tr>{% endif %}
             {% if institution['country'] %}<tr><td><strong data-i18n="info_country">Country</strong></td><td id="country-display">{{ institution['country']|e }}</td></tr>{% endif %}
             {% if institution['url'] %}{% set safe_url = institution['url'].replace('http://', 'https://', 1) if institution['url'].startswith('http://') else institution['url'] %}<tr><td><strong data-i18n="info_website">Website</strong></td><td><a href="{{ safe_url|e }}" target="_blank" rel="noopener noreferrer">{{ institution['url']|e }}</a></td></tr>{% endif %}
-            {% if has_email %}<tr><td><strong data-i18n="info_email">Email</strong></td><td><button type="button" id="show-email-btn" class="btn btn-xs btn-default" data-i18n="info_show_email">Show email</button><span id="email-display" style="display:none;"></span></td></tr>{% endif %}
+            {% if has_email %}<tr><td><strong data-i18n="info_email">Email</strong></td><td><button type="button" id="show-email-btn" class="btn btn-sm btn-outline-secondary" data-i18n="info_show_email">Show email</button><span id="email-display" style="display:none;"></span></td></tr>{% endif %}
             {% if institution['identifier'] %}<tr><td><strong data-i18n="info_identifier">Identifier</strong></td><td>{{ institution['identifier']|e }}</td></tr>{% endif %}
             <tr><td><strong data-i18n="info_collaborator">Collaborator</strong></td><td>{{ (institution['collaborator_name'] or '')|e }}</td></tr>
         </table>
 
         <p>
-            <a href="#report-form" class="text-muted small" id="report-toggle" data-i18n="report_link">Report incorrect or non-existent institution</a>
+            <a href="#report-form" class="text-body-secondary small" id="report-toggle" data-i18n="report_link">Report incorrect or non-existent institution</a>
         </p>
         <div id="report-form" style="display:none;margin-top:10px;">
             <form method="post" action="{{ url_for('public.report', inst_id=institution['id']) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <div class="form-group">
+                <div class="mb-3">
                     <label class="small" data-i18n="report_email">Your email (optional)</label>
-                    <input type="email" name="email" class="form-control input-sm">
+                    <input type="email" name="email" class="form-control form-control-sm">
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label class="small" data-i18n="report_reason">What is wrong?</label>
-                    <textarea name="reason" class="form-control input-sm" rows="2" required></textarea>
+                    <textarea name="reason" class="form-control form-control-sm" rows="2" required></textarea>
                 </div>
                 {% if recaptcha_enabled %}
                 <input type="hidden" name="g-recaptcha-response" id="recaptcha-report">
                 {% endif %}
-                <button type="submit" class="btn btn-xs btn-warning" data-i18n="report_submit">Send report</button>
+                <button type="submit" class="btn btn-sm btn-warning" data-i18n="report_submit">Send report</button>
             </form>
         </div>
     </div>
@@ -51,8 +51,13 @@ var mymap = L.map('mapid').setView([lat, lng], 14);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
 }).addTo(mymap);
+function escapeHtml(value) {
+    var el = document.createElement('span');
+    el.textContent = value == null ? '' : value;
+    return el.innerHTML;
+}
 L.marker([lat, lng]).addTo(mymap)
- .bindPopup('<div style="font-size:15px;line-height:1.5;"><strong>' + $('<span>').text({{ institution["name"]|tojson }}).html() + '</strong></div>', {maxWidth: 300, minWidth: 150}).openPopup();
+ .bindPopup('<div style="font-size:15px;line-height:1.5;"><strong>' + escapeHtml({{ institution["name"]|tojson }}) + '</strong></div>', {maxWidth: 300, minWidth: 150}).openPopup();
 
 // Render country as flag + name in current language
 (function() {

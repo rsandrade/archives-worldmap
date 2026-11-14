@@ -38,13 +38,17 @@ ADMIN = [
 VIEWPORTS = {"desktop": (1440, 900), "mobile": (390, 844)}
 
 
-async def capture(page, url, path, problems):
-    page.on("console", lambda m: problems.append(f"console[{m.type}] {url}: {m.text}")
+def attach_diagnostics(page, problems):
+    """Uma única inscrição por página; usa page.url para não atribuir erro ao URL errado."""
+    page.on("console", lambda m: problems.append(f"console[{m.type}] {page.url}: {m.text}")
             if m.type == "error" else None)
-    page.on("pageerror", lambda e: problems.append(f"pageerror {url}: {e}"))
-    page.on("requestfailed", lambda r: problems.append(f"requestfailed {url}: {r.url} {r.failure}"))
-    page.on("response", lambda r: problems.append(f"http {r.status} {url}: {r.url}")
+    page.on("pageerror", lambda e: problems.append(f"pageerror {page.url}: {e}"))
+    page.on("requestfailed", lambda r: problems.append(f"requestfailed {page.url}: {r.url} {r.failure}"))
+    page.on("response", lambda r: problems.append(f"http {r.status} {page.url}: {r.url}")
             if r.status >= 400 else None)
+
+
+async def capture(page, url, path):
     await page.goto(BASE + url, wait_until="load")
     await page.wait_for_timeout(700)
     await page.screenshot(path=str(path), full_page=True)
@@ -58,8 +62,9 @@ async def main():
         for name, (width, height) in VIEWPORTS.items():
             ctx = await browser.new_context(viewport={"width": width, "height": height})
             page = await ctx.new_page()
+            attach_diagnostics(page, problems)
             for url, slug in PUBLIC:
-                await capture(page, url, OUT / f"{name}__{slug}.png", problems)
+                await capture(page, url, OUT / f"{name}__{slug}.png")
 
             if ADMIN_USER:
                 await page.goto(BASE + "/admin/", wait_until="load")
@@ -68,14 +73,15 @@ async def main():
                 await page.click('button[type="submit"]')
                 await page.wait_for_load_state("load")
                 for url, slug in ADMIN:
-                    await capture(page, url, OUT / f"{name}__{slug}.png", problems)
+                    await capture(page, url, OUT / f"{name}__{slug}.png")
             await ctx.close()
         await browser.close()
 
-    (OUT / "problems.txt").write_text("\n".join(problems) + ("\n" if problems else ""))
+    unique = list(dict.fromkeys(problems))
+    (OUT / "problems.txt").write_text("\n".join(unique) + ("\n" if unique else ""))
     print(f"{len(list(OUT.glob('*.png')))} screenshots em {OUT}")
-    print(f"{len(problems)} problemas de console/rede")
-    for line in problems[:15]:
+    print(f"{len(unique)} problemas de console/rede")
+    for line in unique[:15]:
         print("  " + line)
 
 

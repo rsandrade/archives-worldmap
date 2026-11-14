@@ -41,7 +41,16 @@ After pulling updates on the server (use `--build` if dependencies changed):
 git pull && docker compose up --build -d
 ```
 
-There are no automated tests.
+Tests and visual QA:
+```bash
+pip install -r requirements-dev.txt && playwright install chromium
+pytest -q                                  # smoke tests das páginas públicas
+python scripts/visual_baseline.py http://127.0.0.1:5000 /tmp/awm-visual/atual
+```
+
+Bootstrap, Leaflet e Leaflet.markercluster são servidos de `app/static/vendor/`
+(sem CDN). Atualizar com `scripts/update_vendor.sh` e conferir com
+`scripts/check_vendor.sh`; versões e SHA256 em `app/static/vendor/VERSIONS.md`.
 
 ## Architecture
 

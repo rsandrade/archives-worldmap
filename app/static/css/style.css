@@ -1,15 +1,12 @@
 #map-wrapper {
     position: relative;
-    /* On desktop: full width of the .container (aligned with navbar) */
-    /* On mobile: full viewport width, breaking out of container padding */
-    margin-left: -15px;
-    margin-right: -15px;
+    /* Em mobile: largura cheia da viewport, saindo do padding do .container */
+    margin-inline: calc(var(--bs-gutter-x, 1.5rem) * -0.5);
 }
 
 @media (min-width: 768px) {
     #map-wrapper {
-        margin-left: 0;
-        margin-right: 0;
+        margin-inline: 0;
     }
 }
 
@@ -47,35 +44,30 @@
     font-weight: bold;
 }
 
-.lang-selector a {
-    padding: 15px 8px !important;
+.lang-selector .nav-link {
+    padding: 8px !important;
     font-size: 12px;
     opacity: 0.6;
 }
 
-.lang-selector a.active-lang {
+.lang-selector .nav-link.active-lang {
     opacity: 1;
     font-weight: bold;
 }
 
 /* Mobile: lang selector as a compact horizontal row */
-@media (max-width: 767px) {
+@media (max-width: 767.98px) {
     .lang-selector {
-        display: flex !important;
         flex-direction: row;
         flex-wrap: wrap;
-        padding: 8px 15px;
-        border-top: 1px solid #e7e7e7;
+        padding: 8px 0;
+        border-top: 1px solid var(--bs-border-color);
     }
-    .lang-selector > li {
-        float: none;
-    }
-    .lang-selector a {
+    .lang-selector .nav-link {
         padding: 4px 8px !important;
     }
-    .navbar-nav > li > a {
-        padding-top: 8px;
-        padding-bottom: 8px;
+    .navbar-nav .nav-link {
+        padding-block: 8px;
     }
 }
 
@@ -124,4 +116,34 @@
 
 .footer-doi a:hover {
     color: #2c5f8a;
+}
+
+/* ── Base tipográfica ──
+   BS5 usa 16px e links sublinhados; o site sempre foi 14px com links sem
+   sublinhado. Manter a densidade visual existente na migração. */
+body {
+    font-size: 0.875rem;
+    line-height: 1.42857143;
+}
+
+h1, .h1 { font-size: 2.25rem; }
+h2, .h2 { font-size: 1.875rem; }
+h3, .h3 { font-size: 1.5rem; }
+h4, .h4 { font-size: 1.125rem; }
+h5, .h5 { font-size: 0.875rem; }
+h6, .h6 { font-size: 0.75rem; }
+
+a {
+    text-decoration: none;
+}
+
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+
+.form-control,
+.form-select,
+.btn {
+    font-size: 0.875rem;
 }
