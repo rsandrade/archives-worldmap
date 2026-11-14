@@ -271,6 +271,9 @@ document.getElementById('geocode-input').addEventListener('input', function() {
 });
 document.getElementById('geocode-btn').addEventListener('click', geocodeAddress);
 document.getElementById('geocode-input').addEventListener('keydown', function(e) {
+    // IME (zh/ja/ko): Enter confirma o candidato da composição, não envia o formulário.
+    // keyCode 229 cobre o Safari, que zera isComposing no keydown de confirmação (WebKit 165004).
+    if (e.isComposing || e.keyCode === 229) return;
     if (e.key === 'Enter') { e.preventDefault(); geocodeAddress(); }
 });
 document.addEventListener('click', function(e) {
