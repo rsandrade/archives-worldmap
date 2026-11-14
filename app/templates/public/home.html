@@ -2,12 +2,8 @@
 {% block title %}Archives World Map{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"
-      integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV"
-      crossorigin="anonymous" referrerpolicy="no-referrer">
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"
-      integrity="sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+"
-      crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet-markercluster/MarkerCluster.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet-markercluster/MarkerCluster.Default.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -21,16 +17,14 @@
     </div>
 </div>
 <div class="row" style="margin-top:25px;">
-    <div class="col-md-6 col-md-offset-3 text-center">
+    <div class="col-md-6 offset-md-3 text-center">
         <h4 data-i18n="home_search_title">Search institutions</h4>
         <form action="{{ url_for('public.search') }}" method="get">
             <div class="input-group input-group-lg">
                 <input type="text" name="search" class="form-control" placeholder="Search by name..." data-i18n-placeholder="home_search_placeholder">
                 <input type="hidden" name="qty" value="10">
                 <input type="hidden" name="since" value="0">
-                <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary" data-i18n="btn_search">Search</button>
-                </span>
+                <button type="submit" class="btn btn-primary" data-i18n="btn_search">Search</button>
             </div>
         </form>
     </div>
@@ -38,9 +32,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"
-        integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr"
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ url_for('static', filename='vendor/leaflet-markercluster/leaflet.markercluster.js') }}"></script>
 <script>
 var isMobile = window.innerWidth < 768;
 var defaultView = isMobile ? [10, -15] : [20, 0];
