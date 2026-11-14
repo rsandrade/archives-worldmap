@@ -2,20 +2,20 @@
 {% block title %}Edit User - Archives World Map{% endblock %}
 {% block content %}
 <div class="row">
-    <div class="col-md-6 col-md-offset-3">
+    <div class="col-md-6 offset-md-3">
         <h2><span data-i18n="admin_edit_user_title">Edit user:</span> {{ user['username'] }} <small><a href="{{ url_for('admin.users') }}" data-i18n="admin_back_users">Back to users</a></small></h2>
 
         <form method="post" action="{{ url_for('admin.user_edit_submit', user_id=user['id']) }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="form-group">
+            <div class="mb-3">
                 <label data-i18n="admin_username">Username</label>
                 <input type="text" class="form-control" value="{{ user['username'] | e }}" disabled>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label>Email</label>
                 <input type="email" name="email" class="form-control" value="{{ user['email'] | e }}" required>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label data-i18n="admin_permissions">Permissions</label>
                 <div class="checkbox">
                     <label>
@@ -43,7 +43,7 @@
                 </label>
             </div>
             <button type="submit" class="btn btn-primary" data-i18n="btn_save_changes">Save changes</button>
-            <a href="{{ url_for('admin.users') }}" class="btn btn-default" data-i18n="btn_cancel">Cancel</a>
+            <a href="{{ url_for('admin.users') }}" class="btn btn-outline-secondary" data-i18n="btn_cancel">Cancel</a>
         </form>
     </div>
 </div>
